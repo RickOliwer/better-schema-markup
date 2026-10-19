@@ -3,7 +3,7 @@ Contributors: rickoliwer
 Tags: schema, json-ld, seo, structured data, wpgraphql
 Requires at least: 6.6
 Tested up to: 7.1
-Requires PHP: 7.4
+Requires PHP: 8.3
 Stable tag: 0.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -90,6 +90,7 @@ Entities refer to each other by `@id`. If you remove a piece, also remove refere
 * Pages now default to WebPage instead of Article.
 * Titles and names are output as plain text, without HTML entities.
 * Add the `better_schema_context` and `better_schema_breadcrumb_category` filters.
+* Require PHP 8.3. The code now uses strict types and typed functions.
 
 = 0.4.0 =
 * Add the site identity piece (Organization or Person) with name, logo and social profiles. Defaults to the site title and site icon.

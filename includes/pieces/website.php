@@ -3,6 +3,8 @@
  * WebSite schema piece.
  */
 
+declare( strict_types=1 );
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -10,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string
  */
-function better_schema_website_id() {
+function better_schema_website_id(): string {
 	return better_schema_entity_id( home_url( '/' ), 'website' );
 }
 
@@ -22,7 +24,7 @@ function better_schema_website_id() {
  * @param array $context Context.
  * @return array List with one entity.
  */
-function better_schema_piece_website( array $context ) {
+function better_schema_piece_website( array $context ): array {
 	$entity = array(
 		'@type'     => 'WebSite',
 		'@id'       => better_schema_website_id(),

@@ -3,6 +3,8 @@
  * Article schema piece.
  */
 
+declare( strict_types=1 );
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -11,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * @param WP_Post $post Post.
  * @return bool
  */
-function better_schema_post_is_article( WP_Post $post ) {
+function better_schema_post_is_article( WP_Post $post ): bool {
 	return in_array( better_schema_post_schema_type( $post ), array( 'Article', 'BlogPosting' ), true );
 }
 
@@ -23,7 +25,7 @@ function better_schema_post_is_article( WP_Post $post ) {
  * @param array $context Context.
  * @return array List with one entity, or an empty array.
  */
-function better_schema_piece_article( array $context ) {
+function better_schema_piece_article( array $context ): array {
 	$post = $context['post'] ?? null;
 
 	if ( 'post' !== ( $context['type'] ?? '' ) || ! $post instanceof WP_Post || ! better_schema_post_is_article( $post ) ) {

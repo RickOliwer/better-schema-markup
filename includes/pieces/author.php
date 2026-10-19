@@ -3,6 +3,8 @@
  * Author schema piece: the Person who wrote an article, or whose archive is viewed.
  */
 
+declare( strict_types=1 );
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -11,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * @param WP_Post $post Post.
  * @return WP_User|null
  */
-function better_schema_post_author( WP_Post $post ) {
+function better_schema_post_author( WP_Post $post ): ?WP_User {
 	$user = get_userdata( (int) $post->post_author );
 
 	return $user instanceof WP_User ? $user : null;
@@ -25,7 +27,7 @@ function better_schema_post_author( WP_Post $post ) {
  * @param WP_User $user User.
  * @return string
  */
-function better_schema_person_id( WP_User $user ) {
+function better_schema_person_id( WP_User $user ): string {
 	return better_schema_entity_id( home_url( '/' ), 'person-' . substr( wp_hash( 'better_schema_person_' . $user->ID ), 0, 12 ) );
 }
 
@@ -35,7 +37,7 @@ function better_schema_person_id( WP_User $user ) {
  * @param array $context Context.
  * @return array List with one entity, or an empty array.
  */
-function better_schema_piece_author( array $context ) {
+function better_schema_piece_author( array $context ): array {
 	$type = $context['type'] ?? '';
 	$user = null;
 

@@ -3,6 +3,8 @@
  * Site identity schema piece (Organization or Person).
  */
 
+declare( strict_types=1 );
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -11,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * @param array $identity Identity settings from `better_schema_get_identity()`.
  * @return array|null ImageObject entity, or null when no image is available.
  */
-function better_schema_identity_logo( array $identity ) {
+function better_schema_identity_logo( array $identity ): ?array {
 	$candidates = array_filter( array( $identity['logo'], (int) get_option( 'site_icon' ) ) );
 
 	foreach ( $candidates as $attachment_id ) {
@@ -51,7 +53,7 @@ function better_schema_identity_logo( array $identity ) {
  * @param array $context Context from `better_schema_post_context()`.
  * @return array List with one entity.
  */
-function better_schema_piece_identity( array $context ) {
+function better_schema_piece_identity( array $context ): array {
 	$identity = better_schema_get_identity();
 
 	$entity = array(

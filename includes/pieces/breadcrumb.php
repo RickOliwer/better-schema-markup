@@ -3,6 +3,8 @@
  * BreadcrumbList schema piece.
  */
 
+declare( strict_types=1 );
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -11,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * @param array $context Context.
  * @return string
  */
-function better_schema_breadcrumb_id( array $context ) {
+function better_schema_breadcrumb_id( array $context ): string {
 	return better_schema_entity_id( better_schema_context_url( $context ), 'breadcrumb' );
 }
 
@@ -23,7 +25,7 @@ function better_schema_breadcrumb_id( array $context ) {
  * @param array $context Context.
  * @return array<int, array{name: string, url: string}> Items in order, or an empty array.
  */
-function better_schema_breadcrumb_items( array $context ) {
+function better_schema_breadcrumb_items( array $context ): array {
 	if ( 'search' === ( $context['type'] ?? '' ) || better_schema_context_is_front_page( $context ) ) {
 		return array();
 	}
@@ -60,7 +62,7 @@ function better_schema_breadcrumb_items( array $context ) {
  * @param array $context Context.
  * @return array<int, array{name: string, url: string}>
  */
-function better_schema_breadcrumb_parents( array $context ) {
+function better_schema_breadcrumb_parents( array $context ): array {
 	switch ( $context['type'] ?? '' ) {
 		case 'post':
 			$post = $context['post'] ?? null;
@@ -102,15 +104,19 @@ function better_schema_breadcrumb_parents( array $context ) {
  * @param WP_Post $post Post.
  * @return array<int, array{name: string, url: string}>
  */
-function better_schema_post_breadcrumb_parents( WP_Post $post ) {
+function better_schema_post_breadcrumb_parents( WP_Post $post ): array {
 	if ( is_post_type_hierarchical( $post->post_type ) ) {
 		$items = array();
 
 		foreach ( array_reverse( get_post_ancestors( $post ) ) as $ancestor_id ) {
-			$items[] = array(
-				'name' => better_schema_plain_text( get_the_title( $ancestor_id ) ),
-				'url'  => get_permalink( $ancestor_id ),
-			);
+			$link = get_permalink( $ancestor_id );
+
+			if ( is_string( $link ) ) {
+				$items[] = array(
+					'name' => better_schema_plain_text( get_the_title( $ancestor_id ) ),
+					'url'  => $link,
+				);
+			}
 		}
 
 		return $items;
@@ -138,11 +144,15 @@ function better_schema_post_breadcrumb_parents( WP_Post $post ) {
 		return array();
 	}
 
-	$items   = better_schema_term_ancestor_items( $category );
-	$items[] = array(
-		'name' => better_schema_plain_text( $category->name ),
-		'url'  => get_term_link( $category ),
-	);
+	$items = better_schema_term_ancestor_items( $category );
+	$link  = get_term_link( $category );
+
+	if ( is_string( $link ) ) {
+		$items[] = array(
+			'name' => better_schema_plain_text( $category->name ),
+			'url'  => $link,
+		);
+	}
 
 	return $items;
 }
@@ -157,7 +167,7 @@ function better_schema_post_breadcrumb_parents( WP_Post $post ) {
  * @param WP_Post $post Post.
  * @return WP_Term|null
  */
-function better_schema_breadcrumb_category( WP_Post $post ) {
+function better_schema_breadcrumb_category( WP_Post $post ): ?WP_Term {
 	$default  = (int) get_option( 'default_category' );
 	$category = null;
 
@@ -179,7 +189,7 @@ function better_schema_breadcrumb_category( WP_Post $post ) {
  * @param WP_Term $term Term.
  * @return array<int, array{name: string, url: string}>
  */
-function better_schema_term_ancestor_items( WP_Term $term ) {
+function better_schema_term_ancestor_items( WP_Term $term ): array {
 	$items = array();
 
 	foreach ( array_reverse( get_ancestors( $term->term_id, $term->taxonomy, 'taxonomy' ) ) as $ancestor_id ) {
@@ -203,7 +213,7 @@ function better_schema_term_ancestor_items( WP_Term $term ) {
  * @param array $context Context.
  * @return array List with one entity, or an empty array when there is no trail.
  */
-function better_schema_piece_breadcrumb( array $context ) {
+function better_schema_piece_breadcrumb( array $context ): array {
 	$items = better_schema_breadcrumb_items( $context );
 
 	if ( count( $items ) < 2 ) {

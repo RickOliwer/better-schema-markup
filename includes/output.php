@@ -3,6 +3,8 @@
  * Frontend integration: resolves the current request and prints the JSON-LD.
  */
 
+declare( strict_types=1 );
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -14,17 +16,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array|null Context, or null when the request has no schema (for example a 404).
  */
-function better_schema_resolve_current_context() {
-	$context = better_schema_context_for_request();
-	$context = apply_filters( 'better_schema_context', $context );
+function better_schema_resolve_current_context(): ?array {
+	$context = apply_filters( 'better_schema_context', better_schema_context_for_request() );
 
 	return is_array( $context ) ? $context : null;
 }
 
-/**
- * @return array|null
- */
-function better_schema_context_for_request() {
+function better_schema_context_for_request(): ?array {
 	if ( is_404() ) {
 		return null;
 	}
@@ -44,7 +42,7 @@ function better_schema_context_for_request() {
 	}
 
 	if ( is_search() ) {
-		return better_schema_search_context( get_search_query( false ) );
+		return better_schema_search_context( (string) get_search_query( false ) );
 	}
 
 	if ( is_category() || is_tag() || is_tax() ) {
@@ -71,14 +69,12 @@ function better_schema_context_for_request() {
 
 /**
  * Date archives come from `year`/`monthnum`/`day` with pretty permalinks, or from `m` (e.g. 202610) without.
- *
- * @return array
  */
-function better_schema_date_context_for_request() {
+function better_schema_date_context_for_request(): array {
 	$year  = (int) get_query_var( 'year' );
 	$month = (int) get_query_var( 'monthnum' );
 	$day   = (int) get_query_var( 'day' );
-	$m     = preg_replace( '/\D/', '', (string) get_query_var( 'm' ) );
+	$m     = (string) preg_replace( '/\D/', '', (string) get_query_var( 'm' ) );
 
 	if ( ! $year && strlen( $m ) >= 4 ) {
 		$year  = (int) substr( $m, 0, 4 );
@@ -89,7 +85,7 @@ function better_schema_date_context_for_request() {
 	return better_schema_date_context( $year, $month, $day );
 }
 
-function better_schema_print() {
+function better_schema_print(): void {
 	$context = better_schema_resolve_current_context();
 
 	if ( null === $context ) {

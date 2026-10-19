@@ -3,9 +3,11 @@
  * Registers the plugin's site-wide settings.
  */
 
+declare( strict_types=1 );
+
 defined( 'ABSPATH' ) || exit;
 
-function better_schema_register_settings() {
+function better_schema_register_settings(): void {
 	register_setting(
 		'better_schema',
 		'better_schema_identity',

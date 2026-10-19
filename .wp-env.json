@@ -1,5 +1,6 @@
 {
 	"core": null,
+	"phpVersion": "8.3",
 	"plugins": [ "." ],
 	"port": 8888,
 	"testsPort": 8889,

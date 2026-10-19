@@ -3,6 +3,8 @@
  * WebPage schema piece: the page being viewed.
  */
 
+declare( strict_types=1 );
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -11,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * @param array $context Context.
  * @return string The `@id`, or an empty string when the context has no URL.
  */
-function better_schema_webpage_id( array $context ) {
+function better_schema_webpage_id( array $context ): string {
 	$url = better_schema_context_url( $context );
 
 	return '' === $url ? '' : better_schema_entity_id( $url, 'webpage' );
@@ -23,23 +25,13 @@ function better_schema_webpage_id( array $context ) {
  * @param array $context Context.
  * @return string
  */
-function better_schema_webpage_type( array $context ) {
-	switch ( $context['type'] ?? '' ) {
-		case 'author':
-			return 'ProfilePage';
-
-		case 'search':
-			return 'SearchResultsPage';
-
-		case 'home':
-		case 'blog':
-		case 'term':
-		case 'post_type_archive':
-		case 'date':
-			return 'CollectionPage';
-	}
-
-	return 'WebPage';
+function better_schema_webpage_type( array $context ): string {
+	return match ( $context['type'] ?? '' ) {
+		'author' => 'ProfilePage',
+		'search' => 'SearchResultsPage',
+		'home', 'blog', 'term', 'post_type_archive', 'date' => 'CollectionPage',
+		default => 'WebPage',
+	};
 }
 
 /**
@@ -48,7 +40,7 @@ function better_schema_webpage_type( array $context ) {
  * @param array $context Context.
  * @return array List with one entity, or an empty array when the context has no URL.
  */
-function better_schema_piece_webpage( array $context ) {
+function better_schema_piece_webpage( array $context ): array {
 	$url = better_schema_context_url( $context );
 
 	if ( '' === $url ) {
