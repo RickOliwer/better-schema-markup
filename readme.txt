@@ -4,7 +4,7 @@ Tags: schema, json-ld, seo, structured data, wpgraphql
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.7.0
+Stable tag: 0.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,10 @@ Build contexts with the `better_schema_*_context()` functions in `includes/conte
 Entities refer to each other by `@id`. If you remove a piece, also remove references to it from the others. For example, without `identity`, remove `publisher` from `better_schema_piece_website` and `better_schema_piece_article`. Without `breadcrumb`, remove `breadcrumb` from `better_schema_piece_webpage`. Without `author`, remove `author` from `better_schema_piece_article`.
 
 == Changelog ==
+
+= 0.8.0 =
+* Add WPGraphQL content and site graphs, effective schema types, and frontend URL mapping for headless sites.
+* Add a Next.js integration and migration guide in docs/wpgraphql.md.
 
 = 0.7.0 =
 * Add a React settings page and first-run setup for site identity, logo and social profiles.

@@ -56,4 +56,10 @@ jobs:
         run: |
           sudo systemctl start mysql.service
           mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS wordpress_test"
+      - name: Install WPGraphQL for integration tests
+        run: |
+          curl --fail --location https://downloads.wordpress.org/plugin/wp-graphql.latest-stable.zip -o /tmp/wpgraphql.zip
+          unzip -q /tmp/wpgraphql.zip -d /tmp
       - run: vendor/bin/phpunit
+        env:
+          WPGRAPHQL_PLUGIN_FILE: /tmp/wp-graphql/wp-graphql.php

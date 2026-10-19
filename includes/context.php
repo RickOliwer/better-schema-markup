@@ -7,6 +7,7 @@
  * includes/output.php builds one for the current request.
  *
  * Context types:
+ * - `site`              site-level WebSite and identity only
  * - `post`              a single post, page or other singular item (`post`)
  * - `blog`              the page set as the posts page (`post`)
  * - `home`              a front page that lists the latest posts
@@ -250,4 +251,9 @@ function better_schema_context_opted_out( array $context ): bool {
 	}
 
 	return 'none' === better_schema_post_schema_type( $post );
+}
+
+/** Site-level graph, independent of a page or request. */
+function better_schema_site_context(): array {
+	return array( 'type' => 'site' );
 }

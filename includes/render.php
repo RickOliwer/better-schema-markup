@@ -14,16 +14,15 @@ defined( 'ABSPATH' ) || exit;
  * @return string The script element, or an empty string when there is nothing to render.
  */
 function better_schema_render_script( array $document ): string {
+	$json = better_schema_encode_graph( $document );
+	return '' === $json ? '' : sprintf( "<script type=\"application/ld+json\">%s</script>\n", $json );
+}
+
+/** Encode once for HTML output and GraphQL, safely embeddable in a script. */
+function better_schema_encode_graph( array $document ): string {
 	if ( empty( $document ) ) {
 		return '';
 	}
-
-	// JSON_HEX_TAG keeps "</script>" in any value from ending the element early.
 	$json = wp_json_encode( $document, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG );
-
-	if ( false === $json ) {
-		return '';
-	}
-
-	return sprintf( "<script type=\"application/ld+json\">%s</script>\n", $json );
+	return false === $json ? '' : $json;
 }

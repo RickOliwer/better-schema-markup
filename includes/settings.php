@@ -8,6 +8,12 @@ declare( strict_types=1 );
 defined( 'ABSPATH' ) || exit;
 
 function better_schema_register_settings(): void {
+	register_setting( 'better_schema', 'better_schema_frontend_url', array(
+		'type' => 'string',
+		'default' => '',
+		'sanitize_callback' => 'better_schema_sanitize_frontend_url',
+		'show_in_rest' => true,
+	) );
 	register_setting(
 		'better_schema',
 		'better_schema_identity',

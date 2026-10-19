@@ -17,6 +17,8 @@ require_once $better_schema_tests_dir . '/includes/functions.php';
 tests_add_filter(
 	'muplugins_loaded',
 	function () {
+		$graphql_file = getenv( 'WPGRAPHQL_PLUGIN_FILE' ) ?: dirname( __DIR__, 2 ) . '/wp-graphql.latest-stable/wp-graphql.php';
+		require $graphql_file;
 		require dirname( __DIR__ ) . '/better-schema-markup.php';
 	}
 );
