@@ -15,17 +15,17 @@ function SchemaPanel() {
 	const postType = useSelect((select) => select(editorStore).getCurrentPostType(), []);
 	const [meta, setMeta] = useEntityProp('postType', postType, 'meta');
 
-	if (!meta || !('_schema_ld_type' in meta)) {
+	if (!meta || !('_better_schema_type' in meta)) {
 		return null;
 	}
 
 	return (
-		<PluginDocumentSettingPanel name="schema-ld" title="Schema">
+		<PluginDocumentSettingPanel name="better-schema" title="Schema">
 			<SelectControl
 				label="Schema type"
-				value={meta._schema_ld_type}
+				value={meta._better_schema_type}
 				options={TYPES}
-				onChange={(value) => setMeta({ ...meta, _schema_ld_type: value })}
+				onChange={(value) => setMeta({ ...meta, _better_schema_type: value })}
 				__next40pxDefaultSize
 				__nextHasNoMarginBottom
 			/>
@@ -33,4 +33,4 @@ function SchemaPanel() {
 	);
 }
 
-registerPlugin('schema-ld', { render: SchemaPanel });
+registerPlugin('better-schema', { render: SchemaPanel });

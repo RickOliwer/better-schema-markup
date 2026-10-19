@@ -55,7 +55,7 @@ export default defineConfig({
 		lib: {
 			entry: 'src/index.jsx',
 			formats: ['iife'],
-			name: 'schemaLd',
+			name: 'betterSchema',
 			fileName: () => 'index.js',
 		},
 		rolldownOptions: {

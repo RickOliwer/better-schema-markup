@@ -5,8 +5,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-function schema_ld_enqueue_editor_assets() {
-	$asset_file = SCHEMA_LD_PATH . 'build/index.asset.php';
+function better_schema_enqueue_editor_assets() {
+	$asset_file = BETTER_SCHEMA_PATH . 'build/index.asset.php';
 
 	if ( ! file_exists( $asset_file ) ) {
 		return;
@@ -15,11 +15,11 @@ function schema_ld_enqueue_editor_assets() {
 	$asset = require $asset_file;
 
 	wp_enqueue_script(
-		'schema-ld-editor',
-		SCHEMA_LD_URL . 'build/index.js',
+		'better-schema-editor',
+		BETTER_SCHEMA_URL . 'build/index.js',
 		$asset['dependencies'],
-		filemtime( SCHEMA_LD_PATH . 'build/index.js' ),
+		filemtime( BETTER_SCHEMA_PATH . 'build/index.js' ),
 		true
 	);
 }
-add_action( 'enqueue_block_editor_assets', 'schema_ld_enqueue_editor_assets' );
+add_action( 'enqueue_block_editor_assets', 'better_schema_enqueue_editor_assets' );
