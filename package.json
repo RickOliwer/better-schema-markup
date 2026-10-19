@@ -1,6 +1,6 @@
 {
   "name": "better-schema-markup",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "scripts": {
     "start": "wp-env start",
     "stop": "wp-env stop",

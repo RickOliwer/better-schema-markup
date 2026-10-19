@@ -1,57 +1,40 @@
 <?php
 /**
- * Prints the JSON-LD block in the page head.
+ * Frontend integration: resolves the current request and prints the JSON-LD.
  */
 
 defined( 'ABSPATH' ) || exit;
 
-function better_schema_build_data( WP_Post $post ) {
-	// Stored meta is untrusted: a bad or legacy value falls back to the default type.
-	$type = better_schema_sanitize_type( get_post_meta( $post->ID, '_better_schema_type', true ) );
-
-	if ( 'none' === $type ) {
+/**
+ * Resolves what the current request describes.
+ *
+ * This is the only place that reads request state. Everything it returns is
+ * passed on explicitly.
+ *
+ * @return array|null Context, or null when the request has no schema.
+ */
+function better_schema_resolve_current_context() {
+	if ( ! is_singular() ) {
 		return null;
 	}
 
-	$data = array(
-		'@context'      => 'https://schema.org',
-		'@type'         => $type,
-		'headline'      => wp_strip_all_tags( get_the_title( $post ) ),
-		'url'           => get_permalink( $post ),
-		'datePublished' => get_the_date( 'c', $post ),
-		'dateModified'  => get_the_modified_date( 'c', $post ),
-	);
+	$post = get_queried_object();
 
-	$author = get_the_author_meta( 'display_name', $post->post_author );
-	if ( $author ) {
-		$data['author'] = array(
-			'@type' => 'Person',
-			'name'  => $author,
-		);
+	if ( ! $post instanceof WP_Post ) {
+		return null;
 	}
 
-	$image = get_the_post_thumbnail_url( $post, 'full' );
-	if ( $image ) {
-		$data['image'] = $image;
-	}
-
-	return $data;
+	return better_schema_post_context( $post );
 }
 
 function better_schema_print() {
-	if ( ! is_singular() ) {
+	$context = better_schema_resolve_current_context();
+
+	if ( null === $context ) {
 		return;
 	}
 
-	$data = better_schema_build_data( get_queried_object() );
-
-	if ( ! $data ) {
-		return;
-	}
-
-	printf(
-		"<script type=\"application/ld+json\">%s</script>\n",
-		wp_json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG )
-	);
+	// Already JSON-encoded with JSON_HEX_TAG in better_schema_render_script().
+	echo better_schema_render_script( better_schema_build_graph( $context ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 add_action( 'wp_head', 'better_schema_print' );

@@ -1,102 +1,68 @@
 <?php
 /**
- * Tests for the JSON-LD data builder.
+ * Tests for the frontend output integration.
  */
 
 class OutputTest extends WP_UnitTestCase {
 
-	public function test_defaults_to_article() {
+	private function printed() {
+		ob_start();
+		better_schema_print();
+
+		return ob_get_clean();
+	}
+
+	public function test_prints_one_json_ld_script_on_a_singular_post() {
 		$post_id = self::factory()->post->create( array( 'post_title' => 'Hello' ) );
+		$this->go_to( get_permalink( $post_id ) );
 
-		$data = better_schema_build_data( get_post( $post_id ) );
+		$html = $this->printed();
 
-		$this->assertSame( 'https://schema.org', $data['@context'] );
-		$this->assertSame( 'Article', $data['@type'] );
-		$this->assertSame( 'Hello', $data['headline'] );
+		$this->assertSame( 1, substr_count( $html, '<script type="application/ld+json">' ) );
+		preg_match( '#<script type="application/ld\+json">(.*)</script>#s', $html, $matches );
+		$document = json_decode( $matches[1], true );
+		$this->assertSame( 'https://schema.org', $document['@context'] );
+		$this->assertSame( 'Hello', $document['@graph'][0]['headline'] );
 	}
 
-	public function test_uses_the_type_saved_on_the_post() {
-		$post_id = self::factory()->post->create();
-		update_post_meta( $post_id, '_better_schema_type', 'BlogPosting' );
+	public function test_prints_nothing_outside_singular_requests() {
+		self::factory()->post->create();
+		$this->go_to( home_url( '/' ) );
 
-		$data = better_schema_build_data( get_post( $post_id ) );
-
-		$this->assertSame( 'BlogPosting', $data['@type'] );
+		$this->assertSame( '', $this->printed() );
 	}
 
-	public function test_falls_back_to_article_when_stored_type_is_invalid() {
-		$post_id = self::factory()->post->create();
-		// Bypass the registered sanitize callback, as a direct database edit would.
-		global $wpdb;
-		$wpdb->insert(
-			$wpdb->postmeta,
-			array(
-				'post_id'    => $post_id,
-				'meta_key'   => '_better_schema_type',
-				'meta_value' => 'NotARealType',
-			)
-		);
-		wp_cache_flush();
-
-		$data = better_schema_build_data( get_post( $post_id ) );
-
-		$this->assertSame( 'Article', $data['@type'] );
-	}
-
-	public function test_describes_pages_too() {
-		$page_id = self::factory()->post->create(
-			array(
-				'post_type'  => 'page',
-				'post_title' => 'About',
-			)
-		);
-		update_post_meta( $page_id, '_better_schema_type', 'WebPage' );
-
-		$data = better_schema_build_data( get_post( $page_id ) );
-
-		$this->assertSame( 'WebPage', $data['@type'] );
-		$this->assertSame( 'About', $data['headline'] );
-	}
-
-	public function test_includes_featured_image_when_set() {
-		$post_id       = self::factory()->post->create();
-		$attachment_id = self::factory()->attachment->create_object(
-			'photo.jpg',
-			$post_id,
-			array( 'post_mime_type' => 'image/jpeg' )
-		);
-		set_post_thumbnail( $post_id, $attachment_id );
-
-		$data = better_schema_build_data( get_post( $post_id ) );
-
-		$this->assertStringEndsWith( 'photo.jpg', $data['image'] );
-	}
-
-	public function test_omits_image_without_featured_image() {
-		$post_id = self::factory()->post->create();
-
-		$data = better_schema_build_data( get_post( $post_id ) );
-
-		$this->assertArrayNotHasKey( 'image', $data );
-	}
-
-	public function test_returns_null_when_type_is_none() {
+	public function test_prints_nothing_when_the_post_opts_out() {
 		$post_id = self::factory()->post->create();
 		update_post_meta( $post_id, '_better_schema_type', 'none' );
+		$this->go_to( get_permalink( $post_id ) );
 
-		$this->assertNull( better_schema_build_data( get_post( $post_id ) ) );
+		$this->assertSame( '', $this->printed() );
 	}
 
-	public function test_omits_author_when_post_has_no_author() {
-		$post_id = self::factory()->post->create( array( 'post_author' => 0 ) );
+	public function test_output_comes_from_the_graph_builder() {
+		$post_id = self::factory()->post->create();
+		$this->go_to( get_permalink( $post_id ) );
+		add_filter(
+			'better_schema_graph',
+			function ( $graph ) {
+				$graph[] = array( '@type' => 'Thing' );
+				return $graph;
+			}
+		);
 
-		$data = better_schema_build_data( get_post( $post_id ) );
-
-		$this->assertArrayNotHasKey( 'author', $data );
+		$this->assertStringContainsString( '"@type":"Thing"', $this->printed() );
 	}
 
-	public function test_sanitize_rejects_unknown_types() {
-		$this->assertSame( 'Article', better_schema_sanitize_type( 'Product' ) );
-		$this->assertSame( 'WebPage', better_schema_sanitize_type( 'WebPage' ) );
+	public function test_resolves_a_post_context_for_singular_requests_only() {
+		$post_id = self::factory()->post->create();
+
+		$this->go_to( home_url( '/' ) );
+		$this->assertNull( better_schema_resolve_current_context() );
+
+		$this->go_to( get_permalink( $post_id ) );
+		$context = better_schema_resolve_current_context();
+		$this->assertSame( 'post', $context['type'] );
+		$this->assertSame( $post_id, $context['post']->ID );
 	}
 }
