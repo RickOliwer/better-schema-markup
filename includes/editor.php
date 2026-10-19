@@ -3,9 +3,11 @@
  * Loads the React panel in the block editor.
  */
 
+declare( strict_types=1 );
+
 defined( 'ABSPATH' ) || exit;
 
-function better_schema_enqueue_editor_assets() {
+function better_schema_enqueue_editor_assets(): void {
 	$asset_file = BETTER_SCHEMA_PATH . 'build/index.asset.php';
 
 	if ( ! file_exists( $asset_file ) ) {

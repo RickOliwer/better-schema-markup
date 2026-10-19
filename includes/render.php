@@ -3,6 +3,8 @@
  * JSON-LD rendering. The only place that encodes the graph as JSON.
  */
 
+declare( strict_types=1 );
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -11,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * @param array $document Document from `better_schema_build_graph()`.
  * @return string The script element, or an empty string when there is nothing to render.
  */
-function better_schema_render_script( array $document ) {
+function better_schema_render_script( array $document ): string {
 	if ( empty( $document ) ) {
 		return '';
 	}

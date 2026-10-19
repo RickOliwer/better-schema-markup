@@ -5,6 +5,8 @@
  * Domain logic only. The option is registered in includes/settings.php.
  */
 
+declare( strict_types=1 );
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -12,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string[]
  */
-function better_schema_identity_types() {
+function better_schema_identity_types(): array {
 	return array( 'Organization', 'Person' );
 }
 
@@ -24,7 +26,7 @@ function better_schema_identity_types() {
  *
  * @return array{type: string, name: string, logo: int, same_as: string[]}
  */
-function better_schema_identity_defaults() {
+function better_schema_identity_defaults(): array {
 	return array(
 		'type'    => 'Organization',
 		'name'    => '',
@@ -41,7 +43,7 @@ function better_schema_identity_defaults() {
  * @param mixed $value Stored or submitted value.
  * @return array{type: string, name: string, logo: int, same_as: string[]}
  */
-function better_schema_sanitize_identity( $value ) {
+function better_schema_sanitize_identity( mixed $value ): array {
 	$defaults = better_schema_identity_defaults();
 
 	if ( ! is_array( $value ) ) {
@@ -66,7 +68,7 @@ function better_schema_sanitize_identity( $value ) {
  * @param mixed $urls List of URLs.
  * @return string[]
  */
-function better_schema_sanitize_urls( $urls ) {
+function better_schema_sanitize_urls( mixed $urls ): array {
 	if ( ! is_array( $urls ) ) {
 		return array();
 	}
@@ -100,7 +102,7 @@ function better_schema_sanitize_urls( $urls ) {
  *
  * @return array{type: string, name: string, logo: int, same_as: string[]}
  */
-function better_schema_get_identity() {
+function better_schema_get_identity(): array {
 	return better_schema_sanitize_identity( get_option( 'better_schema_identity', better_schema_identity_defaults() ) );
 }
 
@@ -109,6 +111,6 @@ function better_schema_get_identity() {
  *
  * @return string
  */
-function better_schema_identity_id() {
+function better_schema_identity_id(): string {
 	return better_schema_entity_id( home_url( '/' ), 'identity' );
 }

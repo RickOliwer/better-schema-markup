@@ -3,50 +3,72 @@
  * Article schema piece.
  */
 
+declare( strict_types=1 );
+
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Describes the post as an Article, BlogPosting or WebPage.
+ * Tells whether a post is described as an Article or BlogPosting.
  *
- * @param array $context Context from `better_schema_post_context()`.
- * @return array List with one entity, or an empty array when the post opts out.
+ * @param WP_Post $post Post.
+ * @return bool
  */
-function better_schema_piece_article( array $context ) {
+function better_schema_post_is_article( WP_Post $post ): bool {
+	return in_array( better_schema_post_schema_type( $post ), array( 'Article', 'BlogPosting' ), true );
+}
+
+/**
+ * Describes a post as an Article or BlogPosting on its WebPage.
+ *
+ * Posts whose schema type is WebPage are described by the WebPage piece only.
+ *
+ * @param array $context Context.
+ * @return array List with one entity, or an empty array.
+ */
+function better_schema_piece_article( array $context ): array {
 	$post = $context['post'] ?? null;
 
-	if ( ! $post instanceof WP_Post ) {
-		return array();
-	}
-
-	// Stored meta is untrusted: a bad or legacy value falls back to the default type.
-	$type = better_schema_sanitize_type( get_post_meta( $post->ID, '_better_schema_type', true ) );
-
-	if ( 'none' === $type ) {
+	if ( 'post' !== ( $context['type'] ?? '' ) || ! $post instanceof WP_Post || ! better_schema_post_is_article( $post ) ) {
 		return array();
 	}
 
 	$url = get_permalink( $post );
 
+	if ( ! $url ) {
+		return array();
+	}
+
+	$webpage = array( '@id' => better_schema_webpage_id( $context ) );
+
 	$entity = array(
-		'@type'         => $type,
-		'@id'           => better_schema_entity_id( $url, 'article' ),
-		'headline'      => wp_strip_all_tags( get_the_title( $post ) ),
-		'url'           => $url,
-		'datePublished' => get_the_date( 'c', $post ),
-		'dateModified'  => get_the_modified_date( 'c', $post ),
+		'@type'            => better_schema_post_schema_type( $post ),
+		'@id'              => better_schema_entity_id( $url, 'article' ),
+		'isPartOf'         => $webpage,
+		'mainEntityOfPage' => $webpage,
+		'url'              => $url,
+		'datePublished'    => get_the_date( 'c', $post ),
+		'dateModified'     => get_the_modified_date( 'c', $post ),
+		'publisher'        => array( '@id' => better_schema_identity_id() ),
 	);
 
-	$author = get_the_author_meta( 'display_name', $post->post_author );
+	$headline = better_schema_plain_text( get_the_title( $post ) );
+	if ( '' !== $headline ) {
+		$entity['headline'] = $headline;
+	}
+
+	$author = better_schema_post_author( $post );
 	if ( $author ) {
-		$entity['author'] = array(
-			'@type' => 'Person',
-			'name'  => $author,
-		);
+		$entity['author'] = array( '@id' => better_schema_person_id( $author ) );
 	}
 
 	$image = get_the_post_thumbnail_url( $post, 'full' );
 	if ( $image ) {
 		$entity['image'] = $image;
+	}
+
+	$language = get_bloginfo( 'language' );
+	if ( $language ) {
+		$entity['inLanguage'] = $language;
 	}
 
 	return array( $entity );

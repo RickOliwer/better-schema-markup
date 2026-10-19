@@ -6,6 +6,8 @@
  * read request globals and does not render HTML.
  */
 
+declare( strict_types=1 );
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -18,13 +20,16 @@ defined( 'ABSPATH' ) || exit;
  *                                        (an empty array omits the piece).
  * @return array<string, callable>
  */
-function better_schema_pieces() {
+function better_schema_pieces(): array {
 	$pieces = apply_filters(
 		'better_schema_pieces',
 		array(
-			'website'  => 'better_schema_piece_website',
-			'identity' => 'better_schema_piece_identity',
-			'article'  => 'better_schema_piece_article',
+			'website'    => 'better_schema_piece_website',
+			'identity'   => 'better_schema_piece_identity',
+			'webpage'    => 'better_schema_piece_webpage',
+			'breadcrumb' => 'better_schema_piece_breadcrumb',
+			'article'    => 'better_schema_piece_article',
+			'author'     => 'better_schema_piece_author',
 		)
 	);
 
@@ -43,7 +48,7 @@ function better_schema_pieces() {
  * @param array $context Context from `better_schema_post_context()`.
  * @return array Document with `@context` and `@graph`, or an empty array when there is nothing to describe.
  */
-function better_schema_build_graph( array $context ) {
+function better_schema_build_graph( array $context ): array {
 	// "None" means no schema at all, so site-wide pieces must not be output either.
 	if ( better_schema_context_opted_out( $context ) ) {
 		return array();
