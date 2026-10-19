@@ -22,7 +22,8 @@ class OutputTest extends WP_UnitTestCase {
 		preg_match( '#<script type="application/ld\+json">(.*)</script>#s', $html, $matches );
 		$document = json_decode( $matches[1], true );
 		$this->assertSame( 'https://schema.org', $document['@context'] );
-		$this->assertSame( 'Hello', $document['@graph'][0]['headline'] );
+		$this->assertSame( array( 'WebSite', 'Article' ), wp_list_pluck( $document['@graph'], '@type' ) );
+		$this->assertSame( 'Hello', $document['@graph'][1]['headline'] );
 	}
 
 	public function test_prints_nothing_outside_singular_requests() {
