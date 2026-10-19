@@ -27,15 +27,33 @@ jobs:
       - run: vp build
       - run: vp run test:js
 
+  # Runs PHPUnit directly on the runner (PHP + its preinstalled MySQL) instead of
+  # through wp-env, which spends ~100 s starting Docker containers. Locally,
+  # `vp run test:php` still uses wp-env.
   php:
     name: PHP tests
     runs-on: ubuntu-latest
+    env:
+      WP_CORE_DIR: /tmp/wordpress
+      WP_TESTS_DIR: ${{ github.workspace }}/vendor/wp-phpunit/wp-phpunit
+      WP_PHPUNIT__TESTS_CONFIG: ${{ github.workspace }}/tests/wp-tests-config.php
     steps:
       - uses: actions/checkout@v7
-      - uses: voidzero-dev/setup-vp@v1.21.2
+      - uses: shivammathur/setup-php@2.40.0
         with:
-          node-version: "24"
-          cache: true
-      - run: vp run start
-      - run: vp run composer install
-      - run: vp run test:php
+          php-version: "8.3"
+          extensions: mysqli
+          tools: composer
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+      - name: Cache WordPress core
+        uses: actions/cache@v6
+        with:
+          path: ${{ env.WP_CORE_DIR }}
+          key: wordpress-core-${{ hashFiles('composer.lock') }}
+      - run: bin/install-ci-wordpress.sh
+      - name: Start MySQL and create the test database
+        run: |
+          sudo systemctl start mysql.service
+          mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS wordpress_test"
+      - run: vendor/bin/phpunit
