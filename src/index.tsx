@@ -4,21 +4,11 @@ import { SelectControl } from "@wordpress/components";
 import { useSelect } from "@wordpress/data";
 import { useEntityProp } from "@wordpress/core-data";
 
-const SCHEMA_TYPES = [
-  { label: "Article", value: "Article" },
-  { label: "Blog posting", value: "BlogPosting" },
-  { label: "Web page", value: "WebPage" },
-  { label: "None", value: "none" },
-] as const;
-
-type SchemaType = (typeof SCHEMA_TYPES)[number]["value"];
+import { SCHEMA_TYPES, isSchemaType } from "./schema-types";
+import type { SchemaType } from "./schema-types";
 
 interface SchemaMeta {
   readonly _better_schema_type: SchemaType;
-}
-
-function isSchemaType(value: unknown): value is SchemaType {
-  return SCHEMA_TYPES.some((schemaType) => schemaType.value === value);
 }
 
 function isSchemaMeta(value: unknown): value is SchemaMeta {
