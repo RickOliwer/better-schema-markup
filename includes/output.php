@@ -6,7 +6,8 @@
 defined( 'ABSPATH' ) || exit;
 
 function better_schema_build_data( WP_Post $post ) {
-	$type = get_post_meta( $post->ID, '_better_schema_type', true );
+	// Stored meta is untrusted: a bad or legacy value falls back to the default type.
+	$type = better_schema_sanitize_type( get_post_meta( $post->ID, '_better_schema_type', true ) );
 
 	if ( 'none' === $type ) {
 		return null;
@@ -14,7 +15,7 @@ function better_schema_build_data( WP_Post $post ) {
 
 	$data = array(
 		'@context'      => 'https://schema.org',
-		'@type'         => $type ? $type : 'Article',
+		'@type'         => $type,
 		'headline'      => wp_strip_all_tags( get_the_title( $post ) ),
 		'url'           => get_permalink( $post ),
 		'datePublished' => get_the_date( 'c', $post ),
