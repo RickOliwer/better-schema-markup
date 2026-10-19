@@ -22,6 +22,7 @@ function better_schema_pieces() {
 	$pieces = apply_filters(
 		'better_schema_pieces',
 		array(
+			'website' => 'better_schema_piece_website',
 			'article' => 'better_schema_piece_article',
 		)
 	);
@@ -42,6 +43,11 @@ function better_schema_pieces() {
  * @return array Document with `@context` and `@graph`, or an empty array when there is nothing to describe.
  */
 function better_schema_build_graph( array $context ) {
+	// "None" means no schema at all, so site-wide pieces must not be output either.
+	if ( better_schema_context_opted_out( $context ) ) {
+		return array();
+	}
+
 	$graph = array();
 
 	foreach ( better_schema_pieces() as $id => $piece ) {

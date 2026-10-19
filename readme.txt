@@ -4,7 +4,7 @@ Tags: schema, json-ld, seo, structured data, wpgraphql
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.2.0
+Stable tag: 0.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,10 @@ The schema is one JSON-LD `@graph` built from small pieces. Each piece returns a
 The context is an array such as `array( 'type' => 'post', 'post' => WP_Post )`.
 
 == Changelog ==
+
+= 0.3.0 =
+* Add the WebSite piece: site name, URL, tagline and language, with the stable `@id` `{home}/#website`.
+* Choosing "None" for a post now turns off all schema for it, including the WebSite entity.
 
 = 0.2.0 =
 * Add the graph builder: schema is now one JSON-LD `@graph` with stable `@id`s, built from pieces and extendable with filters.
