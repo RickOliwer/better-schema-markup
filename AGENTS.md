@@ -1,35 +1,64 @@
-# Better-Schema
+# Better Schema Markup
 
-This is a plugin that will allow users to add schema markdown to there wp sites for better SEO and better UX
+Better Schema Markup is a WordPress plugin that generates schema.org JSON-LD for SEO and rich results.
+
+Its goals are to:
+
+- replace the schema output from Yoast SEO and Rank Math while preserving their other SEO features;
+- provide the same schema data through WPGraphQL for headless sites; and
+- produce useful, correct schema immediately after activation, with simple settings for refinement.
 
 ## Package manager and tooling
 
-* Use Vite+ (`vp`) for everything: `vp install`, `vp add <pkg>`, `vp remove <pkg>`, `vp run <script>`, `vp check`, `vp fmt`, `vp lint` and `vp test`. Bun is the underlying package manager (pinned in `package.json`).
-* If the global `vp` isn't available, fall back to Bun: `bunx vp <command>`, `bun install` or `bun run <script>`.
-* Do not use npm, pnpm, or Yarn.
+- Use Vite+ (`vp`) for project tooling. Bun is the underlying package manager, pinned in `package.json`.
+- Use `vp build` to build JavaScript and `vp run dev` for watch rebuilding.
+- Use `vp run start` and `vp run stop` for local WordPress through wp-env.
+- Use `vp run wp <arguments>` to run WP-CLI.
+- If the global `vp` command is unavailable, use `bunx vp <command>`.
+- Do not use npm, pnpm, or Yarn.
 
 ## Repository safety
 
-* Never add `.env` files, credentials, or secrets to version control.
-* Do not create Git commits or push changes. The repository owner reviews and performs all commits and pushes.
-* after every task give me a short commit msg like "feat: implemented a new form for recipies"
-* **Confirm the branch before planning implementation work.** When asked to plan an
-implementation task, ask whether to continue on the current branch or create a new branch from the latest `main` branch. If creating a branch, use a short, descriptive name, such as
-`feat/profile-form` or `fix/checkout-validation`.
+- Never add `.env` files, credentials, or secrets to version control.
+- Do not create Git commits or push changes. The repository owner reviews and performs all commits and pushes.
+- After every completed task, provide a short suggested conventional commit message, for example: `feat: add WebSite schema piece`.
+- Before planning implementation work, ask whether to continue on the current branch or create a new branch from the latest `main` branch.
+- If creating a branch, use a short, descriptive name such as `feat/graph-builder` or `fix/schema-output`.
 
 ## Checks and tests
 
-* Linting (Oxlint) and formatting (Oxfmt) are configured in the root `vite.config.ts`.
-* After making changes, run `vp check` (format, lint and type check) and fix all errors. Run `vp fmt` to format.
-* Run tests with `vp run test` from the repository root (all packages) or `vp test` inside a package.
-* Write tests as `*.test.ts` next to the code they test and import from `vite-plus/test`, not `vitest`.
+- Linting, formatting, and TypeScript settings are configured in `vite.config.ts`.
+- After making changes, run `vp check --no-fmt` and fix all reported errors.
+- Run `vp fmt` only when intentionally formatting files. A repository-wide formatting cleanup is tracked separately.
+- Run all tests with `vp run test`.
+- Write tests next to the code they test when that matches the existing repository pattern.
+- Use the repository’s existing Vitest and PHPUnit test setup. Do not change test frameworks or imports without a task that requires it.
 
 ## Versioning
 
-* When adding a feature or fixing a bug, bump `version` in the `package.json`.
+When adding a feature or fixing a bug, update all of the following:
+
+- `version` in `package.json`;
+- the plugin header version in `better-schema-markup.php`; and
+- `readme.txt`, including a changelog entry.
+
+## Naming
+
+- Prefix PHP functions with `better_schema_`.
+- Prefix PHP constants with `BETTER_SCHEMA_`.
+- Use `better-schema-markup` as the WordPress text domain.
 
 ## Task-specific instructions
 
 Read only the documentation relevant to the current task:
 
-* Before creating or modifying TypeScript code, read `docs/typescript-conventions.md`.
+- Before creating or modifying schema-generation code, read `docs/schema-architecture.md`.
+- Before creating or modifying a schema.org entity or its rules, read `docs/schema-pieces.md`.
+- Before creating or modifying WordPress hooks, post meta, options, REST exposure, frontend output, or WPGraphQL integration, read `docs/wordpress-integration.md`.
+- Before creating or modifying editor or settings UI, read `docs/editor-ui.md`.
+- Before creating or modifying TypeScript code, read `docs/typescript-conventions.md`.
+- Before creating or modifying PHP code, read `docs/php-conventions.md`.
+- Before creating or modifying tests, read `docs/testing.md`.
+- Before changing dependencies, build tooling, scripts, CI, releases, or repository metadata, read `docs/project-workflow.md`.
+
+Read `CLAUDE.md` before beginning any task.
