@@ -4,7 +4,7 @@ Tags: schema, json-ld, seo, structured data, wpgraphql
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.5.0
+Stable tag: 0.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,7 +34,16 @@ Every page gets one JSON-LD `@graph`. Entities refer to each other by `@id`.
 * Search results: WebSite, Organization/Person, SearchResultsPage
 * 404: nothing
 
-Each post and page has a schema type in the editor sidebar: Article, BlogPosting, WebPage or None. Posts default to Article and everything else to WebPage. WebPage adds no Article. None turns off all schema for that post, including the site-wide entities.
+Each post and page has a schema type in the editor sidebar: Article, Blog post (BlogPosting), Regular page (WebPage) or No schema. Posts default to Article and everything else to WebPage. WebPage adds no Article. No schema turns off all schema for that post, including the site-wide entities.
+
+== In the editor ==
+
+The Schema panel in the post sidebar shows:
+
+* the schema type picker, with a short explanation of each type;
+* hints when Google recommends a property the page is missing, for example a featured image for an article, or a logo for the organization;
+* the JSON-LD the page outputs, under "Show JSON-LD". It uses the type picked in the panel, even before you save, and the rest of the saved post; and
+* a "Test with Google" link to the Rich Results Test, once the post is published.
 
 Breadcrumbs start at Home. Posts go through their first category by name, skipping the default category ("Uncategorized"); change it with `better_schema_breadcrumb_category`. Pages go through their parent pages, custom post types through their archive, and terms through their parent terms.
 
@@ -64,6 +73,9 @@ The schema is one JSON-LD `@graph` built from small pieces. Each piece returns a
 * `better_schema_piece_{id}` (array $entities, array $context): change the entities one piece returned, for example `better_schema_piece_article`. Return a list of entities.
 * `better_schema_graph` (array $graph, array $context): change the full list of entities before it is output. Return a list of entities.
 * `better_schema_breadcrumb_category` (WP_Term|null $category, WP_Post $post): the category used in a post's breadcrumbs. Return a WP_Term or null.
+* `better_schema_validation_hints` (array $hints, array $document): the hints shown in the editor. Each hint is an array with `type` (the entity `@type`), `property`, `level` (`required` or `recommended`) and `message`. Return a list of hints.
+
+The editor preview comes from `GET /wp-json/better-schema/v1/preview/{id}`, which needs permission to edit the post. The optional `type` parameter previews another schema type without saving it. The response has `document` (the JSON-LD document, or null when there is no schema) and `hints`. The preview uses the post's context directly, so the `better_schema_context` filter, which applies to frontend requests, is not run.
 
 The context is an array with a `type` key:
 
@@ -81,6 +93,12 @@ Build contexts with the `better_schema_*_context()` functions in `includes/conte
 Entities refer to each other by `@id`. If you remove a piece, also remove references to it from the others. For example, without `identity`, remove `publisher` from `better_schema_piece_website` and `better_schema_piece_article`. Without `breadcrumb`, remove `breadcrumb` from `better_schema_piece_webpage`. Without `author`, remove `author` from `better_schema_piece_article`.
 
 == Changelog ==
+
+= 0.6.0 =
+* The schema type picker in the editor now uses plain-language labels and explains each type.
+* Add a live JSON-LD preview to the editor, from a new REST endpoint that runs the same graph builder as the frontend.
+* Add hints in the editor when Google recommends a property the page is missing, and the `better_schema_validation_hints` filter.
+* Add a "Test with Google" link to the Rich Results Test for published posts.
 
 = 0.5.0 =
 * Add the WebPage piece for every page: WebPage, CollectionPage, ProfilePage or SearchResultsPage, linked to the WebSite.

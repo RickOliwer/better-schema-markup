@@ -1,12 +1,37 @@
+import { __ } from "@wordpress/i18n";
+
 export const SCHEMA_TYPES = [
-  { label: "Article", value: "Article" },
-  { label: "Blog posting", value: "BlogPosting" },
-  { label: "Web page", value: "WebPage" },
-  { label: "None", value: "none" },
+  {
+    label: __("Article", "better-schema-markup"),
+    value: "Article",
+    description: __("News, guides and other editorial content.", "better-schema-markup"),
+  },
+  {
+    label: __("Blog post", "better-schema-markup"),
+    value: "BlogPosting",
+    description: __("A post on a blog, often more personal or informal.", "better-schema-markup"),
+  },
+  {
+    label: __("Regular page", "better-schema-markup"),
+    value: "WebPage",
+    description: __("A page that is not an article, such as About or Contact.", "better-schema-markup"),
+  },
+  {
+    label: __("No schema", "better-schema-markup"),
+    value: "none",
+    description: __(
+      "Turns off all schema on this page, including the site-wide information.",
+      "better-schema-markup",
+    ),
+  },
 ] as const;
 
 export type SchemaType = (typeof SCHEMA_TYPES)[number]["value"];
 
 export function isSchemaType(value: unknown): value is SchemaType {
   return SCHEMA_TYPES.some((schemaType) => schemaType.value === value);
+}
+
+export function schemaTypeDescription(value: SchemaType): string {
+  return SCHEMA_TYPES.find((schemaType) => schemaType.value === value)?.description ?? "";
 }

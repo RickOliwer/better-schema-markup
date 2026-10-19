@@ -43,6 +43,18 @@ function better_schema_blog_context( WP_Post $page ): array {
 }
 
 /**
+ * Context for a post outside a request, for example in the editor preview.
+ * The page set as the posts page is described as the blog, as it is on the frontend.
+ *
+ * @return array{type: string, post: WP_Post}
+ */
+function better_schema_context_for_post( WP_Post $post ): array {
+	$is_posts_page = 'page' === get_option( 'show_on_front' ) && (int) get_option( 'page_for_posts' ) === $post->ID;
+
+	return $is_posts_page ? better_schema_blog_context( $post ) : better_schema_post_context( $post );
+}
+
+/**
  * @return array{type: string}
  */
 function better_schema_home_context(): array {
