@@ -4,7 +4,7 @@ Tags: schema, json-ld, seo, structured data, wpgraphql
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.3.0
+Stable tag: 0.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,6 +21,21 @@ Work in progress.
 1. Upload the plugin folder to `/wp-content/plugins/`.
 2. Activate the plugin through the Plugins screen in WordPress.
 
+== Site identity ==
+
+The site is described as an Organization (default) or a Person. With no setup it uses the site title as the name and the site icon as the logo.
+
+To change it before the settings page exists, set the `better_schema_identity` option. All keys are optional:
+
+`wp option update better_schema_identity --format=json '{"type":"Person","name":"Ada Lovelace","logo":123,"same_as":["https://example.com/ada"]}'`
+
+* `type`: `Organization` or `Person`.
+* `name`: overrides the site title.
+* `logo`: media library attachment ID. An Organization outputs it as `logo`, a Person as `image`. Overrides the site icon.
+* `same_as`: list of `http(s)` URLs for the social profiles, output as `sameAs`.
+
+Invalid values are ignored. The WebSite entity points to the identity as its `publisher`. If you remove the `identity` piece with `better_schema_pieces`, also remove that reference with `better_schema_piece_website`.
+
 == Developer filters ==
 
 The schema is one JSON-LD `@graph` built from small pieces. Each piece returns a list of entity arrays.
@@ -32,6 +47,11 @@ The schema is one JSON-LD `@graph` built from small pieces. Each piece returns a
 The context is an array such as `array( 'type' => 'post', 'post' => WP_Post )`.
 
 == Changelog ==
+
+= 0.4.0 =
+* Add the site identity piece (Organization or Person) with name, logo and social profiles. Defaults to the site title and site icon.
+* Add the `better_schema_identity` option, validated on save and available through the REST API.
+* The WebSite entity now references the identity as its `publisher`.
 
 = 0.3.0 =
 * Add the WebSite piece: site name, URL, tagline and language, with the stable `@id` `{home}/#website`.

@@ -22,8 +22,9 @@ function better_schema_pieces() {
 	$pieces = apply_filters(
 		'better_schema_pieces',
 		array(
-			'website' => 'better_schema_piece_website',
-			'article' => 'better_schema_piece_article',
+			'website'  => 'better_schema_piece_website',
+			'identity' => 'better_schema_piece_identity',
+			'article'  => 'better_schema_piece_article',
 		)
 	);
 

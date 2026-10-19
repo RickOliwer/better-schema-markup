@@ -18,9 +18,10 @@ function better_schema_piece_website( array $context ) {
 	$home = home_url( '/' );
 
 	$entity = array(
-		'@type' => 'WebSite',
-		'@id'   => better_schema_entity_id( $home, 'website' ),
-		'url'   => $home,
+		'@type'     => 'WebSite',
+		'@id'       => better_schema_entity_id( $home, 'website' ),
+		'url'       => $home,
+		'publisher' => array( '@id' => better_schema_identity_id() ),
 	);
 
 	// Site options are stored HTML-escaped; JSON-LD wants plain text.
