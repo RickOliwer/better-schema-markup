@@ -60,5 +60,3 @@ Read only the documentation relevant to the current task:
 - Before creating or modifying PHP code, read `docs/php-conventions.md`.
 - Before creating or modifying tests, read `docs/testing.md`.
 - Before changing dependencies, build tooling, scripts, CI, releases, or repository metadata, read `docs/project-workflow.md`.
-
-Read `CLAUDE.md` before beginning any task.
