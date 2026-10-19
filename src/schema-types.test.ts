@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vite-plus/test";
-import { SCHEMA_TYPES, isSchemaType } from "./schema-types";
+import { SCHEMA_TYPES, isSchemaType, schemaTypeDescription } from "./schema-types";
 
 describe("isSchemaType", () => {
   it("accepts every type offered in the editor panel", () => {
@@ -25,5 +25,13 @@ describe("SCHEMA_TYPES", () => {
       "WebPage",
       "none",
     ]);
+  });
+});
+
+describe("schemaTypeDescription", () => {
+  it("explains every type in plain language", () => {
+    for (const { value } of SCHEMA_TYPES) {
+      expect(schemaTypeDescription(value)).not.toBe("");
+    }
   });
 });

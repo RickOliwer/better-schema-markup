@@ -152,4 +152,21 @@ class ContextTest extends WP_UnitTestCase {
 		$this->assertTrue( better_schema_context_opted_out( better_schema_blog_context( get_post( $page_id ) ) ) );
 		$this->assertFalse( better_schema_context_opted_out( better_schema_home_context() ) );
 	}
+
+	public function test_context_for_a_post() {
+		$post_id = self::factory()->post->create();
+
+		$this->assertSame( 'post', better_schema_context_for_post( get_post( $post_id ) )['type'] );
+	}
+
+	public function test_context_for_the_posts_page_is_the_blog() {
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( 'page_for_posts', $page_id );
+
+		// WordPress only uses the posts page when the front page is a static page.
+		$this->assertSame( 'post', better_schema_context_for_post( get_post( $page_id ) )['type'] );
+
+		update_option( 'show_on_front', 'page' );
+		$this->assertSame( 'blog', better_schema_context_for_post( get_post( $page_id ) )['type'] );
+	}
 }
