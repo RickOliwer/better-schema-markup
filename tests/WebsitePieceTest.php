@@ -27,6 +27,19 @@ class WebsitePieceTest extends WP_UnitTestCase {
 		$this->assertSame( $this->website()['@id'], $this->website()['@id'] );
 	}
 
+	public function test_refers_to_the_identity_as_its_publisher() {
+		$this->assertSame( array( '@id' => home_url( '/' ) . '#identity' ), $this->website()['publisher'] );
+	}
+
+	public function test_the_publisher_reference_matches_an_entity_in_the_graph() {
+		$post_id  = self::factory()->post->create();
+		$document = better_schema_build_graph( better_schema_post_context( get_post( $post_id ) ) );
+		$ids      = wp_list_pluck( $document['@graph'], '@id' );
+		$website  = wp_list_filter( $document['@graph'], array( '@type' => 'WebSite' ) );
+
+		$this->assertContains( reset( $website )['publisher']['@id'], $ids );
+	}
+
 	public function test_is_the_same_for_every_context() {
 		$first  = self::factory()->post->create();
 		$second = self::factory()->post->create( array( 'post_type' => 'page' ) );

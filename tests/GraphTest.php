@@ -21,7 +21,7 @@ class GraphTest extends WP_UnitTestCase {
 		$document = better_schema_build_graph( $this->context_for( $post_id ) );
 
 		$this->assertSame( 'https://schema.org', $document['@context'] );
-		$this->assertSame( array( 'WebSite', 'Article' ), wp_list_pluck( $document['@graph'], '@type' ) );
+		$this->assertSame( array( 'WebSite', 'Organization', 'Article' ), wp_list_pluck( $document['@graph'], '@type' ) );
 		$this->assertSame( 'Hello', $this->entity_of_type( $document, 'Article' )['headline'] );
 	}
 
@@ -58,7 +58,7 @@ class GraphTest extends WP_UnitTestCase {
 		$second = better_schema_build_graph( $this->context_for( $post_id ) );
 		$ids    = wp_list_pluck( $first['@graph'], '@id' );
 
-		$this->assertCount( 2, $ids );
+		$this->assertCount( 3, $ids );
 		$this->assertSame( $ids, array_values( array_unique( $ids ) ) );
 		$this->assertSame( $ids, wp_list_pluck( $second['@graph'], '@id' ) );
 	}
@@ -75,7 +75,7 @@ class GraphTest extends WP_UnitTestCase {
 
 		$document = better_schema_build_graph( $this->context_for( $post_id ) );
 
-		$this->assertSame( array( 'WebSite' ), wp_list_pluck( $document['@graph'], '@type' ) );
+		$this->assertSame( array( 'WebSite', 'Organization' ), wp_list_pluck( $document['@graph'], '@type' ) );
 	}
 
 	public function test_pieces_filter_can_add_a_piece() {
@@ -97,7 +97,7 @@ class GraphTest extends WP_UnitTestCase {
 
 		$document = better_schema_build_graph( $this->context_for( $post_id ) );
 
-		$this->assertSame( array( 'WebSite', 'Article', 'Thing' ), wp_list_pluck( $document['@graph'], '@type' ) );
+		$this->assertSame( array( 'WebSite', 'Organization', 'Article', 'Thing' ), wp_list_pluck( $document['@graph'], '@type' ) );
 	}
 
 	public function test_ignores_pieces_that_are_not_callable() {
@@ -112,7 +112,7 @@ class GraphTest extends WP_UnitTestCase {
 
 		$document = better_schema_build_graph( $this->context_for( $post_id ) );
 
-		$this->assertCount( 2, $document['@graph'] );
+		$this->assertCount( 3, $document['@graph'] );
 	}
 
 	public function test_piece_filter_can_change_one_piece() {
@@ -136,7 +136,7 @@ class GraphTest extends WP_UnitTestCase {
 
 		$document = better_schema_build_graph( $this->context_for( $post_id ) );
 
-		$this->assertSame( array( 'WebSite' ), wp_list_pluck( $document['@graph'], '@type' ) );
+		$this->assertSame( array( 'WebSite', 'Organization' ), wp_list_pluck( $document['@graph'], '@type' ) );
 	}
 
 	public function test_graph_filter_receives_the_context_and_can_change_the_graph() {
@@ -157,6 +157,6 @@ class GraphTest extends WP_UnitTestCase {
 
 		$this->assertSame( 'post', $received['type'] );
 		$this->assertSame( $post_id, $received['post']->ID );
-		$this->assertCount( 3, $document['@graph'] );
+		$this->assertCount( 4, $document['@graph'] );
 	}
 }
