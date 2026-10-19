@@ -1,0 +1,49 @@
+import { describe, expect, it } from "vite-plus/test";
+import {
+  invalidSocialProfiles,
+  parseSocialProfiles,
+  readPluginSettings,
+  readSettingsConfig,
+} from "./settings-data";
+
+const config = {
+  postTypes: [{ name: "post", label: "Posts" }, { name: "book", label: "Books" }],
+  showSetup: true,
+  logoUrl: "",
+  siteName: "My Site",
+};
+
+describe("settings data from WordPress", () => {
+  it("accepts the screen configuration and rejects malformed values", () => {
+    expect(readSettingsConfig(config)).toEqual(config);
+    expect(readSettingsConfig({ ...config, postTypes: [{ name: 1, label: "Books" }] })).toBeNull();
+    expect(readSettingsConfig({ ...config, showSetup: "yes" })).toBeNull();
+  });
+
+  it("reads valid settings and fills a missing custom post type default", () => {
+    expect(readPluginSettings({
+      better_schema_identity: { type: "Person", name: "Ada", logo: 7, same_as: ["https://example.com"] },
+      better_schema_type_defaults: { post: "BlogPosting" },
+    }, config)).toEqual({
+      identity: { type: "Person", name: "Ada", logo: 7, same_as: ["https://example.com"] },
+      defaults: { post: "BlogPosting", book: "WebPage" },
+    });
+  });
+
+  it("rejects invalid identity settings from the REST API", () => {
+    const valid = {
+      better_schema_identity: { type: "Organization", name: "Acme", logo: 0, same_as: [] },
+      better_schema_type_defaults: {},
+    };
+    expect(readPluginSettings({ ...valid, better_schema_identity: { ...valid.better_schema_identity, logo: "7" } }, config)).toBeNull();
+    expect(readPluginSettings({ ...valid, better_schema_identity: { ...valid.better_schema_identity, same_as: "https://example.com" } }, config)).toBeNull();
+  });
+});
+
+describe("social profiles", () => {
+  it("parses one URL per line and rejects unsafe or malformed URLs", () => {
+    const urls = parseSocialProfiles(" https://example.com/a \n\n javascript:alert(1)\nhttp://example.org/x");
+    expect(urls).toEqual(["https://example.com/a", "javascript:alert(1)", "http://example.org/x"]);
+    expect(invalidSocialProfiles(urls)).toEqual(["javascript:alert(1)"]);
+  });
+});

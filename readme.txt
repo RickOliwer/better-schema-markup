@@ -4,7 +4,7 @@ Tags: schema, json-ld, seo, structured data, wpgraphql
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.6.0
+Stable tag: 0.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,7 +34,7 @@ Every page gets one JSON-LD `@graph`. Entities refer to each other by `@id`.
 * Search results: WebSite, Organization/Person, SearchResultsPage
 * 404: nothing
 
-Each post and page has a schema type in the editor sidebar: Article, Blog post (BlogPosting), Regular page (WebPage) or No schema. Posts default to Article and everything else to WebPage. WebPage adds no Article. No schema turns off all schema for that post, including the site-wide entities.
+In the block editor, each post, page and public REST-enabled custom post type has a schema type in the sidebar: Article, Blog post (BlogPosting), Regular page (WebPage) or No schema. Posts default to Article and everything else to WebPage until changed in Settings → Better Schema. Individual post choices take precedence over these defaults. WebPage adds no Article. No schema turns off all schema for that post, including the site-wide entities.
 
 == In the editor ==
 
@@ -53,7 +53,11 @@ The author Person `@id` uses a site-specific hash, so it does not reveal the use
 
 The site is described as an Organization (default) or a Person. With no setup it uses the site title as the name and the site icon as the logo.
 
-To change it before the settings page exists, set the `better_schema_identity` option. All keys are optional:
+Open Settings → Better Schema to choose the identity type, name, logo from the media library, social profiles, and a default schema type for each public REST-enabled post type. The first visit offers a three-question setup that can be completed or skipped. Existing configured sites open the full settings page.
+
+Post type defaults are stored in the `better_schema_type_defaults` option as a map from post type slug to `Article`, `BlogPosting`, `WebPage` or `none`. Missing or invalid entries use the built-in defaults. Posts with a saved `_better_schema_type` choice keep that choice when the site default changes.
+
+The identity is stored in the `better_schema_identity` option. All keys are optional:
 
 `wp option update better_schema_identity --format=json '{"type":"Person","name":"Ada Lovelace","logo":123,"same_as":["https://example.com/ada"]}'`
 
@@ -93,6 +97,10 @@ Build contexts with the `better_schema_*_context()` functions in `includes/conte
 Entities refer to each other by `@id`. If you remove a piece, also remove references to it from the others. For example, without `identity`, remove `publisher` from `better_schema_piece_website` and `better_schema_piece_article`. Without `breadcrumb`, remove `breadcrumb` from `better_schema_piece_webpage`. Without `author`, remove `author` from `better_schema_piece_article`.
 
 == Changelog ==
+
+= 0.7.0 =
+* Add a React settings page and first-run setup for site identity, logo and social profiles.
+* Add configurable default schema types for posts, pages and public REST-enabled custom post types while preserving individual post choices.
 
 = 0.6.0 =
 * The schema type picker in the editor now uses plain-language labels and explains each type.
