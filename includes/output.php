@@ -5,8 +5,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-function schema_ld_build_data( WP_Post $post ) {
-	$type = get_post_meta( $post->ID, '_schema_ld_type', true );
+function better_schema_build_data( WP_Post $post ) {
+	$type = get_post_meta( $post->ID, '_better_schema_type', true );
 
 	if ( 'none' === $type ) {
 		return null;
@@ -37,12 +37,12 @@ function schema_ld_build_data( WP_Post $post ) {
 	return $data;
 }
 
-function schema_ld_print() {
+function better_schema_print() {
 	if ( ! is_singular() ) {
 		return;
 	}
 
-	$data = schema_ld_build_data( get_queried_object() );
+	$data = better_schema_build_data( get_queried_object() );
 
 	if ( ! $data ) {
 		return;
@@ -53,4 +53,4 @@ function schema_ld_print() {
 		wp_json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG )
 	);
 }
-add_action( 'wp_head', 'schema_ld_print' );
+add_action( 'wp_head', 'better_schema_print' );
