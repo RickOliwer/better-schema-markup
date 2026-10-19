@@ -11,7 +11,7 @@ class ArticlePieceTest extends WP_UnitTestCase {
 		return $entities[0] ?? null;
 	}
 
-	public function test_defaults_to_article() {
+	public function test_posts_are_articles_by_default() {
 		$post_id = self::factory()->post->create( array( 'post_title' => 'Hello' ) );
 
 		$article = $this->article_for( $post_id );
@@ -28,11 +28,27 @@ class ArticlePieceTest extends WP_UnitTestCase {
 		$this->assertSame( 'BlogPosting', $this->article_for( $post_id )['@type'] );
 	}
 
-	public function test_returns_no_entity_when_type_is_none() {
-		$post_id = self::factory()->post->create();
-		update_post_meta( $post_id, '_better_schema_type', 'none' );
+	public function test_pages_are_not_articles_by_default() {
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
 
-		$this->assertSame( array(), better_schema_piece_article( better_schema_post_context( get_post( $post_id ) ) ) );
+		$this->assertNull( $this->article_for( $page_id ) );
+	}
+
+	public function test_a_page_can_be_marked_as_an_article() {
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_post_meta( $page_id, '_better_schema_type', 'Article' );
+
+		$this->assertSame( 'Article', $this->article_for( $page_id )['@type'] );
+	}
+
+	public function test_webpage_and_none_produce_no_article() {
+		$webpage = self::factory()->post->create();
+		$none    = self::factory()->post->create();
+		update_post_meta( $webpage, '_better_schema_type', 'WebPage' );
+		update_post_meta( $none, '_better_schema_type', 'none' );
+
+		$this->assertNull( $this->article_for( $webpage ) );
+		$this->assertNull( $this->article_for( $none ) );
 	}
 
 	public function test_falls_back_to_article_when_stored_type_is_invalid() {
@@ -52,29 +68,30 @@ class ArticlePieceTest extends WP_UnitTestCase {
 		$this->assertSame( 'Article', $this->article_for( $post_id )['@type'] );
 	}
 
-	public function test_describes_pages_too() {
-		$page_id = self::factory()->post->create(
-			array(
-				'post_type'  => 'page',
-				'post_title' => 'About',
-			)
-		);
-		update_post_meta( $page_id, '_better_schema_type', 'WebPage' );
+	public function test_is_the_main_entity_of_its_webpage() {
+		$post_id = self::factory()->post->create();
+		$webpage = array( '@id' => get_permalink( $post_id ) . '#webpage' );
 
-		$article = $this->article_for( $page_id );
+		$article = $this->article_for( $post_id );
 
-		$this->assertSame( 'WebPage', $article['@type'] );
-		$this->assertSame( 'About', $article['headline'] );
+		$this->assertSame( $webpage, $article['isPartOf'] );
+		$this->assertSame( $webpage, $article['mainEntityOfPage'] );
 	}
 
-	public function test_has_a_stable_id_based_on_the_permalink() {
+	public function test_is_published_by_the_site_identity() {
 		$post_id = self::factory()->post->create();
 
-		$first  = $this->article_for( $post_id )['@id'];
-		$second = $this->article_for( $post_id )['@id'];
+		$this->assertSame( array( '@id' => home_url( '/' ) . '#identity' ), $this->article_for( $post_id )['publisher'] );
+	}
 
-		$this->assertSame( get_permalink( $post_id ) . '#article', $first );
-		$this->assertSame( $first, $second );
+	public function test_refers_to_its_author_by_id() {
+		$user_id = self::factory()->user->create();
+		$post_id = self::factory()->post->create( array( 'post_author' => $user_id ) );
+
+		$this->assertSame(
+			array( '@id' => better_schema_person_id( get_userdata( $user_id ) ) ),
+			$this->article_for( $post_id )['author']
+		);
 	}
 
 	public function test_omits_author_when_post_has_no_author() {
@@ -83,17 +100,27 @@ class ArticlePieceTest extends WP_UnitTestCase {
 		$this->assertArrayNotHasKey( 'author', $this->article_for( $post_id ) );
 	}
 
-	public function test_includes_author_when_post_has_one() {
-		$user_id = self::factory()->user->create( array( 'display_name' => 'Ada' ) );
-		$post_id = self::factory()->post->create( array( 'post_author' => $user_id ) );
+	public function test_has_a_stable_id_based_on_the_permalink() {
+		$post_id = self::factory()->post->create();
 
-		$this->assertSame(
-			array(
-				'@type' => 'Person',
-				'name'  => 'Ada',
-			),
-			$this->article_for( $post_id )['author']
-		);
+		$this->assertSame( get_permalink( $post_id ) . '#article', $this->article_for( $post_id )['@id'] );
+		$this->assertSame( $this->article_for( $post_id )['@id'], $this->article_for( $post_id )['@id'] );
+	}
+
+	public function test_headline_is_plain_text() {
+		$post_id = self::factory()->post->create( array( 'post_title' => 'It\'s <em>new</em> & "fresh"' ) );
+
+		$headline = $this->article_for( $post_id )['headline'];
+
+		$this->assertStringNotContainsString( '&#', $headline );
+		$this->assertStringNotContainsString( '<em>', $headline );
+		$this->assertStringContainsString( ' & ', $headline );
+	}
+
+	public function test_omits_an_empty_headline() {
+		$post_id = self::factory()->post->create( array( 'post_title' => '' ) );
+
+		$this->assertArrayNotHasKey( 'headline', $this->article_for( $post_id ) );
 	}
 
 	public function test_includes_featured_image_when_set() {
@@ -114,12 +141,12 @@ class ArticlePieceTest extends WP_UnitTestCase {
 		$this->assertArrayNotHasKey( 'image', $this->article_for( $post_id ) );
 	}
 
-	public function test_returns_no_entity_without_a_post_in_the_context() {
-		$this->assertSame( array(), better_schema_piece_article( array( 'type' => 'post' ) ) );
-	}
+	public function test_only_describes_post_contexts() {
+		$post_id = self::factory()->post->create();
+		$term_id = self::factory()->category->create();
 
-	public function test_sanitize_rejects_unknown_types() {
-		$this->assertSame( 'Article', better_schema_sanitize_type( 'Product' ) );
-		$this->assertSame( 'WebPage', better_schema_sanitize_type( 'WebPage' ) );
+		$this->assertSame( array(), better_schema_piece_article( better_schema_blog_context( get_post( $post_id ) ) ) );
+		$this->assertSame( array(), better_schema_piece_article( better_schema_term_context( get_term( $term_id ) ) ) );
+		$this->assertSame( array(), better_schema_piece_article( array( 'type' => 'post' ) ) );
 	}
 }

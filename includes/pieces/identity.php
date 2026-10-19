@@ -60,9 +60,7 @@ function better_schema_piece_identity( array $context ) {
 		'url'   => home_url( '/' ),
 	);
 
-	// Site options are stored HTML-escaped; JSON-LD wants plain text.
-	$name = '' !== $identity['name'] ? $identity['name'] : wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
-	$name = trim( $name );
+	$name = better_schema_plain_text( '' !== $identity['name'] ? $identity['name'] : get_bloginfo( 'name' ) );
 	if ( '' !== $name ) {
 		$entity['name'] = $name;
 	}

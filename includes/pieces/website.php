@@ -6,31 +6,36 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Stable `@id` of the WebSite entity, so other entities can refer to it.
+ *
+ * @return string
+ */
+function better_schema_website_id() {
+	return better_schema_entity_id( home_url( '/' ), 'website' );
+}
+
+/**
  * Describes the site as a WebSite.
  *
  * The site is the same whatever the context is, so the context is not used.
- * Other pieces refer to this entity through its `@id`.
  *
- * @param array $context Context from `better_schema_post_context()`.
+ * @param array $context Context.
  * @return array List with one entity.
  */
 function better_schema_piece_website( array $context ) {
-	$home = home_url( '/' );
-
 	$entity = array(
 		'@type'     => 'WebSite',
-		'@id'       => better_schema_entity_id( $home, 'website' ),
-		'url'       => $home,
+		'@id'       => better_schema_website_id(),
+		'url'       => home_url( '/' ),
 		'publisher' => array( '@id' => better_schema_identity_id() ),
 	);
 
-	// Site options are stored HTML-escaped; JSON-LD wants plain text.
-	$name = trim( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
+	$name = better_schema_plain_text( get_bloginfo( 'name' ) );
 	if ( '' !== $name ) {
 		$entity['name'] = $name;
 	}
 
-	$description = trim( wp_specialchars_decode( get_bloginfo( 'description' ), ENT_QUOTES ) );
+	$description = better_schema_plain_text( get_bloginfo( 'description' ) );
 	if ( '' !== $description ) {
 		$entity['description'] = $description;
 	}

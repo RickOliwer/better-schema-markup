@@ -9,7 +9,7 @@ if ( ! $better_schema_tests_dir ) {
 	$better_schema_tests_dir = '/wordpress-phpunit';
 }
 
-// The WP test suite needs Yoast's PHPUnit Polyfills (installed with `bun run composer install`).
+// The WP test suite needs Yoast's PHPUnit Polyfills (installed with `vp run composer install`).
 define( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH', dirname( __DIR__ ) . '/vendor/yoast/phpunit-polyfills' );
 
 require_once $better_schema_tests_dir . '/includes/functions.php';
@@ -22,3 +22,5 @@ tests_add_filter(
 );
 
 require $better_schema_tests_dir . '/includes/bootstrap.php';
+
+require __DIR__ . '/GraphAssertions.php';
