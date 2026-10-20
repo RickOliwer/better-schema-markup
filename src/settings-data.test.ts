@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vite-plus/test";
 import {
+  isFrontendUrl,
   invalidSocialProfiles,
   parseSocialProfiles,
   readPluginSettings,
@@ -22,9 +23,11 @@ describe("settings data from WordPress", () => {
 
   it("reads valid settings and fills a missing custom post type default", () => {
     expect(readPluginSettings({
+      better_schema_frontend_url: "",
       better_schema_identity: { type: "Person", name: "Ada", logo: 7, same_as: ["https://example.com"] },
       better_schema_type_defaults: { post: "BlogPosting" },
     }, config)).toEqual({
+      frontendUrl: "",
       identity: { type: "Person", name: "Ada", logo: 7, same_as: ["https://example.com"] },
       defaults: { post: "BlogPosting", book: "WebPage" },
     });
@@ -32,6 +35,7 @@ describe("settings data from WordPress", () => {
 
   it("rejects invalid identity settings from the REST API", () => {
     const valid = {
+      better_schema_frontend_url: "",
       better_schema_identity: { type: "Organization", name: "Acme", logo: 0, same_as: [] },
       better_schema_type_defaults: {},
     };
@@ -45,5 +49,12 @@ describe("social profiles", () => {
     const urls = parseSocialProfiles(" https://example.com/a \n\n javascript:alert(1)\nhttp://example.org/x");
     expect(urls).toEqual(["https://example.com/a", "javascript:alert(1)", "http://example.org/x"]);
     expect(invalidSocialProfiles(urls)).toEqual(["javascript:alert(1)"]);
+  });
+});
+
+describe("frontend URL", () => {
+  it("accepts empty or absolute web bases and rejects credentials and suffixes", () => {
+    for (const url of ["", "https://example.com", "http://localhost:3000/blog/"]) expect(isFrontendUrl(url)).toBe(true);
+    for (const url of ["/blog", "javascript:alert(1)", "https://user:pass@example.com", "https://example.com?q=1", "https://example.com#x"]) expect(isFrontendUrl(url)).toBe(false);
   });
 });

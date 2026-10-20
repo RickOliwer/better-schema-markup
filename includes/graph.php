@@ -80,6 +80,6 @@ function better_schema_build_graph( array $context ): array {
 
 	return array(
 		'@context' => 'https://schema.org',
-		'@graph'   => array_values( $graph ),
+		'@graph'   => better_schema_rewrite_urls( array_values( $graph ) ),
 	);
 }

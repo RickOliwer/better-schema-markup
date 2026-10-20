@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 
 import { SCHEMA_TYPES, isSchemaType } from "./schema-types";
 import type { SchemaType } from "./schema-types";
-import { invalidSocialProfiles, parseSocialProfiles, readPluginSettings } from "./settings-data";
+import { isFrontendUrl, invalidSocialProfiles, parseSocialProfiles, readPluginSettings } from "./settings-data";
 import type { PluginSettings, SettingsConfig, SiteIdentity } from "./settings-data";
 
 interface MediaFrame {
@@ -93,6 +93,7 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
   const [identity, setIdentity] = useState<SiteIdentity | null>(null);
   const [defaults, setDefaults] = useState<Readonly<Record<string, SchemaType>>>({});
   const [logoUrl, setLogoUrl] = useState(config.logoUrl);
+  const [frontendUrl, setFrontendUrl] = useState("");
   const [socialText, setSocialText] = useState("");
   const [showSetup, setShowSetup] = useState(config.showSetup);
   const [saving, setSaving] = useState(false);
@@ -107,6 +108,7 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
         const parsed = readPluginSettings(response, config);
         if (!parsed) throw new Error(__("Could not read schema settings.", "better-schema-markup"));
         setSettings(parsed);
+        setFrontendUrl(parsed.frontendUrl);
         setIdentity(parsed.identity);
         setDefaults(parsed.defaults);
         setSocialText(parsed.identity.same_as.join("\n"));
@@ -123,6 +125,10 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
       return;
     }
 
+    if (!setupOnly && !isFrontendUrl(frontendUrl)) {
+      setError(__("Enter a full http or https frontend URL without credentials, a query, or a fragment.", "better-schema-markup"));
+      return;
+    }
     setSaving(true);
     setError("");
     setSuccess("");
@@ -133,6 +139,7 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
         method: "POST",
         data: {
           better_schema_identity: nextIdentity,
+          better_schema_frontend_url: frontendUrl.trim(),
           better_schema_type_defaults: defaults,
           better_schema_setup_complete: true,
         },
@@ -140,6 +147,7 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
       const parsed = readPluginSettings(response, config);
       if (!parsed) throw new Error(__("The saved settings could not be read.", "better-schema-markup"));
       setSettings(parsed);
+      setFrontendUrl(parsed.frontendUrl);
       setIdentity(parsed.identity);
       setDefaults(parsed.defaults);
       setSocialText(parsed.identity.same_as.join("\n"));
@@ -217,6 +225,14 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
 
       {!showSetup ? (
         <>
+          <TextControl
+            label={__("Frontend URL", "better-schema-markup")}
+            help={__("For headless sites, enter the public site URL. Local schema URLs, including media, use this base. Leave empty to use WordPress URLs.", "better-schema-markup")}
+            value={frontendUrl}
+            onChange={setFrontendUrl}
+            __next40pxDefaultSize
+            __nextHasNoMarginBottom
+          />
           <TextareaControl
             label={__("Social profiles", "better-schema-markup")}
             help={__("Enter one full URL per line.", "better-schema-markup")}

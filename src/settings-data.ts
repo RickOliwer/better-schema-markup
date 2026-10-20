@@ -21,6 +21,7 @@ export interface SettingsConfig {
 }
 
 export interface PluginSettings {
+  readonly frontendUrl: string;
   readonly identity: SiteIdentity;
   readonly defaults: Readonly<Record<string, SchemaType>>;
 }
@@ -56,6 +57,7 @@ export function readSettingsConfig(value: unknown): SettingsConfig | null {
 export function readPluginSettings(value: unknown, config: SettingsConfig): PluginSettings | null {
   if (!isRecord(value) || !isRecord(value.better_schema_identity)) return null;
 
+  if (typeof value.better_schema_frontend_url !== "string") return null;
   const identity = value.better_schema_identity;
   if (
     (identity.type !== "Organization" && identity.type !== "Person") ||
@@ -78,6 +80,7 @@ export function readPluginSettings(value: unknown, config: SettingsConfig): Plug
   }
 
   return {
+    frontendUrl: value.better_schema_frontend_url,
     identity: {
       type: identity.type,
       name: identity.name,
@@ -101,4 +104,15 @@ export function invalidSocialProfiles(urls: readonly string[]): string[] {
       return true;
     }
   });
+}
+
+export function isFrontendUrl(value: string): boolean {
+  if (!value.trim()) return true;
+  try {
+    const url = new URL(value);
+    return ["http:", "https:"].includes(url.protocol) && !!url.hostname &&
+      !url.username && !url.password && !value.includes("?") && !value.includes("#");
+  } catch {
+    return false;
+  }
 }
