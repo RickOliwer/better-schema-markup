@@ -47,6 +47,7 @@ function better_schema_enqueue_settings_assets( string $hook_suffix ): void {
 		filemtime( BETTER_SCHEMA_PATH . 'build/index.js' ),
 		true
 	);
+	wp_set_script_translations( 'better-schema-editor', 'better-schema-markup', BETTER_SCHEMA_PATH . 'languages' );
 
 	$post_types = array();
 	foreach ( better_schema_configurable_post_types() as $post_type ) {

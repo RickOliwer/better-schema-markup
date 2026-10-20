@@ -2,13 +2,15 @@
 /**
  * Plugin Name: Better Schema Markup
  * Description: Schema.org JSON-LD for better SEO and rich results. Replaces the schema output of Yoast SEO and Rank Math, with WPGraphQL support.
- * Version:     0.15.0
+ * Version:     0.16.0
  * Requires at least: 6.6
  * Requires PHP: 8.3
  * Author:      Rick Centerhall
+ * Author URI:  https://rickcenterhall.com/
  * License:     GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: better-schema-markup
+ * Domain Path: /languages
  */
 
 declare( strict_types=1 );
@@ -47,3 +49,7 @@ require_once BETTER_SCHEMA_PATH . 'includes/preview.php';
 
 require_once BETTER_SCHEMA_PATH . 'includes/frontend-url.php';
 require_once BETTER_SCHEMA_PATH . 'includes/graphql.php';
+
+require_once BETTER_SCHEMA_PATH . 'includes/compatibility.php';
+require_once BETTER_SCHEMA_PATH . 'includes/import.php';
+require_once BETTER_SCHEMA_PATH . 'includes/import-api.php';

@@ -9,6 +9,16 @@ interface BusinessFieldsProps {
   readonly onChange: (value: BusinessSettings) => void;
 }
 
+const WEEKDAY_LABELS = {
+  Monday: __("Monday", "better-schema-markup"),
+  Tuesday: __("Tuesday", "better-schema-markup"),
+  Wednesday: __("Wednesday", "better-schema-markup"),
+  Thursday: __("Thursday", "better-schema-markup"),
+  Friday: __("Friday", "better-schema-markup"),
+  Saturday: __("Saturday", "better-schema-markup"),
+  Sunday: __("Sunday", "better-schema-markup"),
+};
+
 const NEW_HOURS: OpeningHours = { days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "09:00", closes: "17:00" };
 
 export function BusinessFields({ value, onChange }: BusinessFieldsProps) {
@@ -103,7 +113,7 @@ export function BusinessFields({ value, onChange }: BusinessFieldsProps) {
               {WEEKDAYS.map((day) => (
                 <CheckboxControl
                   key={day}
-                  label={day}
+                  label={WEEKDAY_LABELS[day]}
                   checked={row.days.includes(day)}
                   onChange={(checked) =>
                     updateHours(index, {

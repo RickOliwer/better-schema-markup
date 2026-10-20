@@ -57,6 +57,7 @@ export default defineConfig({
   },
   build: {
     outDir: "build",
+    minify: false,
     emptyOutDir: true,
     lib: {
       entry: "src/index.tsx",

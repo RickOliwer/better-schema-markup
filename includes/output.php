@@ -86,6 +86,10 @@ function better_schema_date_context_for_request(): array {
 }
 
 function better_schema_print(): void {
+	if ( better_schema_other_seo_active() && ! better_schema_takeover_enabled() ) {
+		return;
+	}
+
 	$context = better_schema_resolve_current_context();
 
 	if ( null === $context ) {

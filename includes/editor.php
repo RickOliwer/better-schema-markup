@@ -23,5 +23,6 @@ function better_schema_enqueue_editor_assets(): void {
 		filemtime( BETTER_SCHEMA_PATH . 'build/index.js' ),
 		true
 	);
+	wp_set_script_translations( 'better-schema-editor', 'better-schema-markup', BETTER_SCHEMA_PATH . 'languages' );
 }
 add_action( 'enqueue_block_editor_assets', 'better_schema_enqueue_editor_assets' );

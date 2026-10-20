@@ -1,10 +1,9 @@
 === Better Schema Markup ===
-Contributors: rickoliwer
 Tags: schema, json-ld, seo, structured data, wpgraphql
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.15.0
+Stable tag: 0.16.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,12 +13,60 @@ Schema.org JSON-LD for better SEO and rich results. Replaces the schema output o
 
 Better Schema Markup adds schema.org structured data (JSON-LD) to your site so search engines can show rich results.
 
-Work in progress.
+Get a connected schema graph immediately after activation. Refine it in Settings → Better Schema, or choose a schema type and review the JSON-LD in the block editor.
+
+* Connected WebSite, Organization or Person, WebPage, Article, BlogPosting and breadcrumb entities.
+* Event, Recipe, FAQPage, LocalBusiness and video schema, plus WooCommerce product data.
+* Replaces only Yoast SEO and Rank Math schema, preserving their other SEO features.
+* One shared PHP graph builder for WordPress pages, editor previews and WPGraphQL.
+* A frontend URL setting for headless sites, and validated custom JSON-LD for advanced use.
+* Translation-ready PHP and JavaScript interfaces.
+
+Developed by [Rick Centerhall](https://rickcenterhall.com/). Schema does not guarantee eligibility for a rich result or improved rankings.
 
 == Installation ==
 
 1. Upload the plugin folder to `/wp-content/plugins/`.
 2. Activate the plugin through the Plugins screen in WordPress.
+
+== Frequently Asked Questions ==
+
+= Will it work without an SEO plugin? =
+
+Yes. The plugin generates useful schema from WordPress data without additional plugins or configuration.
+
+= What happens to Yoast SEO or Rank Math? =
+
+With schema takeover enabled (the default), Better Schema Markup suppresses their JSON-LD only. Titles, descriptions, canonical links, social metadata and sitemaps remain with your SEO plugin. Turn takeover off in Settings → Better Schema to restore its schema and pause Better Schema frontend output. Editor previews and WPGraphQL continue to work. Other plugins and themes may output their own structured data; this plugin does not suppress those.
+
+= Can I import existing schema choices? =
+
+Use Preview import, then Import settings under Settings → Better Schema. Select Yoast or Rank Math explicitly. The importer reads saved post metadata, even if that source plugin has been deactivated. Existing Better Schema settings and source data are preserved. Repeated imports skip existing choices.
+
+Supported explicit schema types and compatible Event, Recipe and FAQ fields are transferred. Source overrides for WordPress-derived properties, unsupported types, unresolved templates and additional entities are reported for manual review. Yoast's "None" article type becomes WebPage, retaining site and page schema. Inherited source defaults, schema generated from source blocks, premium templates and legacy Rank Math detail fields are not migrated. WooCommerce products continue to use WooCommerce data. Review the report and resulting schema before switching a production site.
+
+WP-CLI: `wp better-schema import --source=yoast --dry-run` or `wp better-schema import --source=rank-math`. Omit `--dry-run` to save. The browser interface uses batches of at most 100 posts; an interrupted import can safely be retried.
+
+= Does the plugin send data to external services? =
+
+For Vimeo links or embeds already in post content, the server requests https://vimeo.com/api/oembed.json with the public video URL to obtain its title and thumbnail. Successful results are cached for a week; failures for an hour. No account credentials or post content are sent. See [Vimeo terms](https://vimeo.com/terms) and [privacy policy](https://vimeo.com/privacy).
+
+YouTube embed and thumbnail URLs are derived locally without an API request. Video schema contains public YouTube or Vimeo URLs. The optional Test with Google link opens Google's Rich Results Test with the published page URL only when clicked. See [Google terms](https://policies.google.com/terms) and [privacy policy](https://policies.google.com/privacy). The plugin does not add analytics or tracking.
+
+= What happens when I delete the plugin? =
+
+Deactivation keeps your settings. Deletion removes all Better Schema settings, per-post schema metadata and database-backed video caches, including across multisite. Your content, media, and Yoast or Rank Math settings remain intact.
+
+= Where is the source code? =
+
+Original TypeScript sources and build configuration are included in the package. Development, issue tracking and the headless integration guide are at https://github.com/RickOliwer/better-schema-markup. Install the toolchain with Vite+ and Bun, then run `vp install` and `vp build` to rebuild JavaScript. See docs/project-workflow.md in the source repository for testing and packaging.
+
+== Screenshots ==
+
+1. First-run site identity setup.
+2. Site identity and schema defaults in Settings → Better Schema.
+3. The editor Schema panel with validation hints and JSON-LD preview.
+4. SEO plugin takeover and migration controls with an import report.
 
 == What is output where ==
 
@@ -103,7 +150,20 @@ Build contexts with the `better_schema_*_context()` functions in `includes/conte
 
 Entities refer to each other by `@id`. If you remove a piece, also remove references to it from the others. For example, without `identity`, remove `publisher` from `better_schema_piece_website` and `better_schema_piece_article`. Without `breadcrumb`, remove `breadcrumb` from `better_schema_piece_webpage`. Without `author`, remove `author` from `better_schema_piece_article`.
 
+== Upgrade Notice ==
+
+= 0.16.0 =
+Release preparation adds SEO schema takeover and migration, translations and uninstall cleanup. Review migration reports before switching production sites. Deleting the plugin removes its saved settings and per-post choices.
+
 == Changelog ==
+
+= 0.16.0 =
+* Replace Yoast SEO and Rank Math schema with an optional takeover setting.
+* Import supported saved schema choices through Settings or WP-CLI, with dry runs and limitation reports.
+* Add script translation loading, translated weekdays and the translation template.
+* Remove plugin-owned settings, metadata and video caches on uninstall.
+* Add release packaging, directory artwork and complete plugin documentation.
+* Keep the editor JSON preview and validation hints within the sidebar width.
 
 = 0.15.0 =
 * Add a custom JSON-LD field per post, under Advanced in the Schema panel. It accepts one object, a list or a document with `@graph`. Invalid JSON is not saved, and the output cannot break out of the script tag.
