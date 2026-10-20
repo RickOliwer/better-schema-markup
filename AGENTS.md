@@ -72,3 +72,12 @@ Read only the documentation relevant to the current task:
 - Do not replace meaningful assertions with weaker assertions such as checking only that a value exists, has a type, or matches a snapshot if the previous test verified important behavior.
 - Do not add `.skip`, `.only`, broad mocks, or error suppression to hide a failure unless the task explicitly requires it.
 - When fixing a bug, add a regression test that fails before the fix and passes after it.
+
+
+## Issue tracking
+
+- When working from a GitHub issue that contains a task checklist, mark each task complete only after its implementation is finished and the relevant checks or tests have passed.
+- Update the checklist in the same GitHub issue as part of completing the task.
+- Do not mark tasks complete when they are only planned, partially implemented, blocked, or awaiting review.
+- If a task cannot be completed, leave it unchecked and briefly explain the blocker in the final handoff.
+- Do not mark unrelated checklist items as complete.
