@@ -3,7 +3,7 @@ Tags: schema, json-ld, seo, structured data, wpgraphql
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.16.1
+Stable tag: 0.17.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,7 +86,9 @@ Every page gets one JSON-LD `@graph`. Entities refer to each other by `@id`.
 * Search results: WebSite, Organization/Person, SearchResultsPage
 * 404: nothing
 
-In the block editor, each post, page and public REST-enabled custom post type has a schema type in the sidebar: Article, Blog post (BlogPosting), Regular page (WebPage), Event, Recipe, FAQ page or No schema. Event, Recipe and FAQ page show their own fields in the panel. Posts default to Article and everything else to WebPage until changed in Settings → Better Schema. Individual post choices take precedence over these defaults. WebPage adds no Article. No schema turns off all schema for that post, including the site-wide entities.
+In the block editor sidebar or the classic editor's Schema meta box, each post, page and public REST-enabled custom post type has a schema type: Article, Blog post (BlogPosting), Regular page (WebPage), Event, Recipe, FAQ page or No schema. Event, Recipe and FAQ page show their own fields. Posts default to Article and everything else to WebPage until changed in Settings → Better Schema. Individual post choices take precedence over these defaults. WebPage adds no Article. No schema turns off all schema for that post, including the site-wide entities.
+
+The classic editor is supported, including sites using Disable Gutenberg. Schema fields, custom JSON-LD and the preview work in either editor, using the same saved settings. In the classic editor, click Update, Publish or Save Draft to save schema changes with the post. Saving without changing a schema field preserves its existing value and an inherited type default. If the meta box is hidden, enable Schema in Screen Options. JavaScript is required for the controls, and the backend must allow authenticated REST requests for the preview.
 
 == In the editor ==
 
@@ -152,6 +154,9 @@ Entities refer to each other by `@id`. If you remove a piece, also remove refere
 
 == Upgrade Notice ==
 
+= 0.17.0 =
+Adds a Schema meta box when using the classic editor, including Disable Gutenberg. Save schema changes with Update or Publish.
+
 = 0.16.1 =
 Fix admin API requests on headless WordPress sites with a separate frontend domain. No site URL changes are required.
 
@@ -159,6 +164,10 @@ Fix admin API requests on headless WordPress sites with a separate frontend doma
 Release preparation adds SEO schema takeover and migration, translations and uninstall cleanup. Review migration reports before switching production sites. Deleting the plugin removes its saved settings and per-post choices.
 
 == Changelog ==
+
+= 0.17.0 =
+* Add classic editor support with the schema type selector, Event/Recipe/FAQ fields, custom JSON-LD, validation hints and preview.
+* Save classic editor schema fields with the post, preserving untouched values and inherited defaults.
 
 = 0.16.1 =
 * Fix settings, imports and editor previews on headless sites by sending admin API requests to the WordPress backend instead of the public frontend domain. Standard WordPress sites remain supported.

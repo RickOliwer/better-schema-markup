@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Better Schema Markup
  * Description: Schema.org JSON-LD for better SEO and rich results. Replaces the schema output of Yoast SEO and Rank Math, with WPGraphQL support.
- * Version:     0.16.1
+ * Version:     0.17.0
  * Requires at least: 6.6
  * Requires PHP: 8.3
  * Author:      Rick Centerhall
@@ -25,6 +25,7 @@ require_once BETTER_SCHEMA_PATH . 'includes/meta.php';
 require_once BETTER_SCHEMA_PATH . 'includes/post-details.php';
 require_once BETTER_SCHEMA_PATH . 'includes/admin-api.php';
 require_once BETTER_SCHEMA_PATH . 'includes/editor.php';
+require_once BETTER_SCHEMA_PATH . 'includes/classic-editor.php';
 require_once BETTER_SCHEMA_PATH . 'includes/context.php';
 require_once BETTER_SCHEMA_PATH . 'includes/identity.php';
 require_once BETTER_SCHEMA_PATH . 'includes/business.php';

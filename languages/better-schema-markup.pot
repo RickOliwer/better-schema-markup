@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Better Schema Markup 0.16.1\n"
+"Project-Id-Version: Better Schema Markup 0.17.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/better-schema-markup\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-20T08:55:01+00:00\n"
+"POT-Creation-Date: 2026-10-20T13:38:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: better-schema-markup\n"
@@ -32,6 +32,19 @@ msgstr ""
 #. Author URI of the plugin
 #: better-schema-markup.php
 msgid "https://rickcenterhall.com/"
+msgstr ""
+
+#: includes/classic-editor.php:15
+#: build/index.js:707
+msgid "Schema"
+msgstr ""
+
+#: includes/classic-editor.php:21
+msgid "Loading schema controls…"
+msgstr ""
+
+#: includes/classic-editor.php:22
+msgid "Enable JavaScript to edit schema settings. Existing settings are preserved when you save."
 msgstr ""
 
 #: includes/compatibility.php:38
@@ -446,350 +459,350 @@ msgstr ""
 msgid "Turns off all schema on this page, including the site-wide information."
 msgstr ""
 
-#: build/index.js:570
+#: build/index.js:561
 msgid "What is this page?"
 msgstr ""
 
-#: build/index.js:589
+#: build/index.js:580
 msgid "Could not configure the WordPress backend request. Reload this page and try again."
 msgstr ""
 
-#: build/index.js:685
-msgid "Schema"
-msgstr ""
-
-#: build/index.js:718
+#: build/index.js:677
 msgid "Test with Google"
 msgstr ""
 
-#: build/index.js:860
+#: build/index.js:862
 msgid "Monday"
 msgstr ""
 
-#: build/index.js:861
+#: build/index.js:863
 msgid "Tuesday"
 msgstr ""
 
-#: build/index.js:862
+#: build/index.js:864
 msgid "Wednesday"
 msgstr ""
 
-#: build/index.js:863
+#: build/index.js:865
 msgid "Thursday"
 msgstr ""
 
-#: build/index.js:864
+#: build/index.js:866
 msgid "Friday"
 msgstr ""
 
-#: build/index.js:865
+#: build/index.js:867
 msgid "Saturday"
 msgstr ""
 
-#: build/index.js:866
+#: build/index.js:868
 msgid "Sunday"
 msgstr ""
 
-#: build/index.js:887
+#: build/index.js:889
 msgid "Local business"
 msgstr ""
 
-#: build/index.js:889
+#: build/index.js:891
 msgid "This is a local business with a physical location"
 msgstr ""
 
-#: build/index.js:890
+#: build/index.js:892
 msgid "Adds an address, opening hours and map location to your organization. It does not apply to a person."
 msgstr ""
 
-#: build/index.js:902
+#: build/index.js:904
 msgid "Phone number"
 msgstr ""
 
-#: build/index.js:912
+#: build/index.js:914
 msgid "Price range"
 msgstr ""
 
-#: build/index.js:913
+#: build/index.js:915
 msgid "For example $$ or “100–300 SEK”."
 msgstr ""
 
-#: build/index.js:923
+#: build/index.js:925
 msgid "Street address"
 msgstr ""
 
-#: build/index.js:936
+#: build/index.js:938
 msgid "City"
 msgstr ""
 
-#: build/index.js:949
+#: build/index.js:951
 msgid "Region or state"
 msgstr ""
 
-#: build/index.js:962
+#: build/index.js:964
 msgid "Postal code"
 msgstr ""
 
-#: build/index.js:975
+#: build/index.js:977
 msgid "Country"
 msgstr ""
 
-#: build/index.js:976
+#: build/index.js:978
 msgid "A two-letter country code, for example SE."
 msgstr ""
 
-#: build/index.js:989
+#: build/index.js:991
 msgid "Latitude"
 msgstr ""
 
-#: build/index.js:990
+#: build/index.js:992
 msgid "Between -90 and 90. Set both latitude and longitude, or neither."
 msgstr ""
 
-#: build/index.js:1003
+#: build/index.js:1005
 msgid "Longitude"
 msgstr ""
 
-#: build/index.js:1004
+#: build/index.js:1006
 msgid "Between -180 and 180."
 msgstr ""
 
-#: build/index.js:1016
+#: build/index.js:1018
 msgid "Opening hours"
 msgstr ""
 
-#: build/index.js:1031
+#: build/index.js:1033
 msgid "Opens"
 msgstr ""
 
-#: build/index.js:1042
+#: build/index.js:1044
 msgid "Closes"
 msgstr ""
 
-#: build/index.js:1058
+#: build/index.js:1060
 msgid "Remove these hours"
 msgstr ""
 
-#: build/index.js:1068
+#: build/index.js:1070
 msgid "Add opening hours"
 msgstr ""
 
-#: build/index.js:1072
+#: build/index.js:1074
 msgid "Hours without a day, or without both times, are not saved."
 msgstr ""
 
-#: build/index.js:1107
+#: build/index.js:1109
 msgid "Could not load schema takeover settings."
 msgstr ""
 
-#: build/index.js:1123
+#: build/index.js:1125
 msgid "Schema takeover setting saved."
 msgstr ""
 
-#: build/index.js:1125
+#: build/index.js:1127
 msgid "Could not save schema takeover settings."
 msgstr ""
 
-#: build/index.js:1166
+#: build/index.js:1168
 msgid "Imported"
 msgstr ""
 
-#: build/index.js:1167
+#: build/index.js:1169
 msgid "Skipped"
 msgstr ""
 
-#: build/index.js:1168
+#: build/index.js:1170
 msgid "With unsupported settings"
 msgstr ""
 
-#: build/index.js:1169
+#: build/index.js:1171
 msgid "Failed"
 msgstr ""
 
-#: build/index.js:1170
+#: build/index.js:1172
 msgid "Dry run only; nothing was saved."
 msgstr ""
 
-#: build/index.js:1170
+#: build/index.js:1172
 msgid "Review the details below. Existing choices were preserved."
 msgstr ""
 
-#: build/index.js:1173
+#: build/index.js:1175
 msgid "The import stopped. Previously completed batches were kept. You can safely retry; existing choices will be skipped."
 msgstr ""
 
-#: build/index.js:1179
+#: build/index.js:1181
 msgid "SEO plugin compatibility"
 msgstr ""
 
-#: build/index.js:1191
+#: build/index.js:1193
 msgid "Let Better Schema Markup handle schema"
 msgstr ""
 
-#: build/index.js:1192
+#: build/index.js:1194
 msgid "Replaces Yoast SEO and Rank Math schema only. When disabled with either plugin active, that plugin handles frontend schema. Previews and WPGraphQL remain available. This setting saves immediately."
 msgstr ""
 
-#: build/index.js:1200
+#: build/index.js:1202
 msgid "Import saved schema settings"
 msgstr ""
 
-#: build/index.js:1201
+#: build/index.js:1203
 msgid "Import supported per-post types and details once. Source data and existing Better Schema choices are preserved. Unsupported fields and templates are reported for manual review. Run a preview first."
 msgstr ""
 
-#: build/index.js:1203
+#: build/index.js:1205
 msgid "Import from"
 msgstr ""
 
-#: build/index.js:1207
+#: build/index.js:1209
 msgid "Yoast SEO"
 msgstr ""
 
-#: build/index.js:1210
+#: build/index.js:1212
 msgid "Rank Math"
 msgstr ""
 
-#: build/index.js:1226
+#: build/index.js:1228
 msgid "Preview import"
 msgstr ""
 
-#: build/index.js:1236
+#: build/index.js:1238
 msgid "Import settings"
 msgstr ""
 
-#: build/index.js:1241
+#: build/index.js:1243
 msgid "Import details"
 msgstr ""
 
-#: build/index.js:1242
+#: build/index.js:1244
 msgid "Post"
 msgstr ""
 
-#: build/index.js:1254
+#: build/index.js:1256
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: build/index.js:1261
+#: build/index.js:1263
 msgid "Choose a logo"
 msgstr ""
 
-#: build/index.js:1262
+#: build/index.js:1264
 msgid "Use this image"
 msgstr ""
 
-#: build/index.js:1275
+#: build/index.js:1277
 msgid "Logo"
 msgstr ""
 
-#: build/index.js:1278
+#: build/index.js:1280
 msgid "Selected logo"
 msgstr ""
 
-#: build/index.js:1289
+#: build/index.js:1291
 msgid "Change logo"
 msgstr ""
 
-#: build/index.js:1289
+#: build/index.js:1291
 msgid "Choose logo"
 msgstr ""
 
-#: build/index.js:1294
+#: build/index.js:1296
 msgid "Remove"
 msgstr ""
 
-#: build/index.js:1298
+#: build/index.js:1300
 msgid "Leave empty to use the site icon."
 msgstr ""
 
-#: build/index.js:1320
+#: build/index.js:1322
 msgid "Could not read schema settings."
 msgstr ""
 
-#: build/index.js:1338
+#: build/index.js:1340
 msgid "Social profiles must be full http or https URLs, one per line."
 msgstr ""
 
-#: build/index.js:1342
+#: build/index.js:1344
 msgid "Enter a full http or https frontend URL without credentials, a query, or a fragment."
 msgstr ""
 
-#: build/index.js:1346
+#: build/index.js:1348
 msgid "Latitude must be between -90 and 90, and longitude between -180 and 180."
 msgstr ""
 
-#: build/index.js:1368
+#: build/index.js:1370
 msgid "The saved settings could not be read."
 msgstr ""
 
-#: build/index.js:1376
+#: build/index.js:1378
 msgid "Settings saved."
 msgstr ""
 
-#: build/index.js:1407
+#: build/index.js:1409
 msgid "Answer three questions to set up your site identity. You can change these settings later."
 msgstr ""
 
-#: build/index.js:1407
+#: build/index.js:1409
 msgid "Set who publishes this site and choose the schema used for posts without an individual choice."
 msgstr ""
 
-#: build/index.js:1418
+#: build/index.js:1420
 msgid "Site identity"
 msgstr ""
 
-#: build/index.js:1420
+#: build/index.js:1422
 msgid "Who publishes this site?"
 msgstr ""
 
-#: build/index.js:1423
+#: build/index.js:1425
 msgid "Organization"
 msgstr ""
 
-#: build/index.js:1426
+#: build/index.js:1428
 msgid "Person"
 msgstr ""
 
-#: build/index.js:1439
+#: build/index.js:1441
 msgid "Name"
 msgstr ""
 
-#: build/index.js:1440
+#: build/index.js:1442
 msgid "Leave empty to use the site title."
 msgstr ""
 
-#: build/index.js:1463
+#: build/index.js:1465
 msgid "Frontend URL"
 msgstr ""
 
-#: build/index.js:1464
+#: build/index.js:1466
 msgid "For headless sites, enter the public site URL. Local schema URLs, including media, use this base. Leave empty to use WordPress URLs."
 msgstr ""
 
-#: build/index.js:1471
+#: build/index.js:1473
 msgid "Social profiles"
 msgstr ""
 
-#: build/index.js:1472
+#: build/index.js:1474
 msgid "Enter one full URL per line."
 msgstr ""
 
-#: build/index.js:1482
+#: build/index.js:1484
 msgid "Default schema by post type"
 msgstr ""
 
-#: build/index.js:1483
+#: build/index.js:1485
 msgid "An individual post’s schema choice takes precedence over its post type default."
 msgstr ""
 
-#: build/index.js:1510
+#: build/index.js:1512
 msgid "Finish setup"
 msgstr ""
 
-#: build/index.js:1510
+#: build/index.js:1512
 msgid "Save settings"
 msgstr ""
 
-#: build/index.js:1517
+#: build/index.js:1519
 msgid "Skip setup"
+msgstr ""
+
+#: build/index.js:1547
+msgid "Schema changes are saved when you update or publish this page."
 msgstr ""
