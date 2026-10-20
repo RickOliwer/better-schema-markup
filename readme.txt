@@ -4,7 +4,7 @@ Tags: schema, json-ld, seo, structured data, wpgraphql
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.9.0
+Stable tag: 0.15.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,6 +26,10 @@ Work in progress.
 Every page gets one JSON-LD `@graph`. Entities refer to each other by `@id`.
 
 * WooCommerce product (when WooCommerce is active): Product, added to the usual post graph
+* Post with the Event, Recipe or FAQ page type: the usual graph with an Event, Recipe or FAQPage entity instead of the Article (a Recipe keeps its author Person)
+* Post whose content has a YouTube or Vimeo link or embed: a VideoObject for each video, up to five
+* Organization with the local business setting on: the identity is a LocalBusiness with address, opening hours and location
+* Post with custom JSON-LD: those entities are added to the graph
 * Post: WebSite, Organization/Person, WebPage, BreadcrumbList, Article, Person (author)
 * Page: WebSite, Organization/Person, WebPage, BreadcrumbList
 * Static front page: WebSite, Organization/Person, WebPage (`about` the identity, no breadcrumbs)
@@ -35,7 +39,7 @@ Every page gets one JSON-LD `@graph`. Entities refer to each other by `@id`.
 * Search results: WebSite, Organization/Person, SearchResultsPage
 * 404: nothing
 
-In the block editor, each post, page and public REST-enabled custom post type has a schema type in the sidebar: Article, Blog post (BlogPosting), Regular page (WebPage) or No schema. Posts default to Article and everything else to WebPage until changed in Settings → Better Schema. Individual post choices take precedence over these defaults. WebPage adds no Article. No schema turns off all schema for that post, including the site-wide entities.
+In the block editor, each post, page and public REST-enabled custom post type has a schema type in the sidebar: Article, Blog post (BlogPosting), Regular page (WebPage), Event, Recipe, FAQ page or No schema. Event, Recipe and FAQ page show their own fields in the panel. Posts default to Article and everything else to WebPage until changed in Settings → Better Schema. Individual post choices take precedence over these defaults. WebPage adds no Article. No schema turns off all schema for that post, including the site-wide entities.
 
 == In the editor ==
 
@@ -56,6 +60,8 @@ The site is described as an Organization (default) or a Person. With no setup it
 
 Open Settings → Better Schema to choose the identity type, name, logo from the media library, social profiles, and a default schema type for each public REST-enabled post type. The first visit offers a three-question setup that can be completed or skipped. Existing configured sites open the full settings page.
 
+Turn on "This is a local business" for an Organization to add a phone number, price range, address, map coordinates and opening hours. Opening hours without a day or both times, and a single coordinate, are not saved.
+
 Post type defaults are stored in the `better_schema_type_defaults` option as a map from post type slug to `Article`, `BlogPosting`, `WebPage` or `none`. Missing or invalid entries use the built-in defaults. Posts with a saved `_better_schema_type` choice keep that choice when the site default changes.
 
 The identity is stored in the `better_schema_identity` option. All keys are optional:
@@ -71,7 +77,7 @@ Invalid values are ignored. The WebSite entity points to the identity as its `pu
 
 == Developer filters ==
 
-The schema is one JSON-LD `@graph` built from small pieces. Each piece returns a list of entity arrays. The pieces, in output order, are `website`, `identity`, `webpage`, `breadcrumb`, `article`, `author` and `product`.
+The schema is one JSON-LD `@graph` built from small pieces. Each piece returns a list of entity arrays. The pieces, in output order, are `website`, `identity`, `webpage`, `breadcrumb`, `article`, `author`, `product`, `event`, `recipe`, `faq`, `video` and `custom`.
 
 * `better_schema_context` (array|null $context): what the current request describes. Return a different context, or null for no schema on this request.
 * `better_schema_pieces` (array $pieces): map of piece id to callable. Add, remove or replace pieces. The callable receives the context array and returns a list of entities (an empty array omits the piece).
@@ -98,6 +104,25 @@ Build contexts with the `better_schema_*_context()` functions in `includes/conte
 Entities refer to each other by `@id`. If you remove a piece, also remove references to it from the others. For example, without `identity`, remove `publisher` from `better_schema_piece_website` and `better_schema_piece_article`. Without `breadcrumb`, remove `breadcrumb` from `better_schema_piece_webpage`. Without `author`, remove `author` from `better_schema_piece_article`.
 
 == Changelog ==
+
+= 0.15.0 =
+* Add a custom JSON-LD field per post, under Advanced in the Schema panel. It accepts one object, a list or a document with `@graph`. Invalid JSON is not saved, and the output cannot break out of the script tag.
+
+= 0.14.0 =
+* Add the FAQ page type with questions and answers. Google only shows FAQ rich results for well-known government and health sites.
+
+= 0.13.0 =
+* Add VideoObject entities for YouTube and Vimeo videos linked or embedded in a post. Vimeo details come from oEmbed and are cached.
+
+= 0.12.0 =
+* Add the Recipe type with ingredients, steps, times, servings and calories. Recipes link to their author.
+
+= 0.11.0 =
+* Add the Event type with dates, venue, online or in-person attendance, status and a ticket link.
+* Add validation hints for events, recipes, FAQ pages, local businesses and products.
+
+= 0.10.0 =
+* Add a local business option under Settings → Better Schema. For an Organization it makes the identity a LocalBusiness with address, phone number, price range, opening hours and location. It is stored in the `better_schema_business` option.
 
 = 0.9.0 =
 * Add a Product piece for WooCommerce products: name, description, image, SKU, brand, offers (AggregateOffer for variable products) and aggregate rating. Output only when WooCommerce is active.

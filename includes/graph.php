@@ -31,6 +31,11 @@ function better_schema_pieces(): array {
 			'article'    => 'better_schema_piece_article',
 			'author'     => 'better_schema_piece_author',
 			'product'    => 'better_schema_piece_product',
+			'event'      => 'better_schema_piece_event',
+			'recipe'     => 'better_schema_piece_recipe',
+			'faq'        => 'better_schema_piece_faq',
+			'video'      => 'better_schema_piece_video',
+			'custom'     => 'better_schema_piece_custom',
 		)
 	);
 

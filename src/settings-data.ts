@@ -116,3 +116,95 @@ export function isFrontendUrl(value: string): boolean {
     return false;
   }
 }
+
+export const WEEKDAYS = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+] as const;
+
+export type Weekday = (typeof WEEKDAYS)[number];
+
+export interface OpeningHours {
+  readonly days: readonly Weekday[];
+  readonly opens: string;
+  readonly closes: string;
+}
+
+export interface BusinessSettings {
+  readonly enabled: boolean;
+  readonly telephone: string;
+  readonly price_range: string;
+  readonly address: {
+    readonly street: string;
+    readonly locality: string;
+    readonly region: string;
+    readonly postal_code: string;
+    readonly country: string;
+  };
+  readonly geo: { readonly lat: string; readonly lng: string };
+  readonly hours: readonly OpeningHours[];
+}
+
+export const EMPTY_BUSINESS: BusinessSettings = {
+  enabled: false,
+  telephone: "",
+  price_range: "",
+  address: { street: "", locality: "", region: "", postal_code: "", country: "" },
+  geo: { lat: "", lng: "" },
+  hours: [],
+};
+
+function text(value: unknown): string {
+  return typeof value === "string" ? value : "";
+}
+
+function isWeekday(value: unknown): value is Weekday {
+  return WEEKDAYS.some((day) => day === value);
+}
+
+/** Reads the local business setting from the REST settings response, falling back to empty. */
+export function readBusinessSettings(value: unknown): BusinessSettings {
+  if (!isRecord(value) || !isRecord(value.better_schema_business)) return EMPTY_BUSINESS;
+
+  const business = value.better_schema_business;
+  const address = isRecord(business.address) ? business.address : {};
+  const geo = isRecord(business.geo) ? business.geo : {};
+  const hours = Array.isArray(business.hours) ? business.hours : [];
+
+  return {
+    enabled: business.enabled === true,
+    telephone: text(business.telephone),
+    price_range: text(business.price_range),
+    address: {
+      street: text(address.street),
+      locality: text(address.locality),
+      region: text(address.region),
+      postal_code: text(address.postal_code),
+      country: text(address.country),
+    },
+    geo: { lat: text(geo.lat), lng: text(geo.lng) },
+    hours: hours.flatMap((row: unknown) =>
+      isRecord(row)
+        ? [
+            {
+              days: Array.isArray(row.days) ? row.days.filter(isWeekday) : [],
+              opens: text(row.opens),
+              closes: text(row.closes),
+            },
+          ]
+        : [],
+    ),
+  };
+}
+
+/** Matches the server: a coordinate within range, or empty. */
+export function isCoordinate(value: string, limit: number): boolean {
+  if (value.trim() === "") return true;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && Math.abs(parsed) <= limit;
+}
