@@ -19,6 +19,13 @@ tests_add_filter(
 	function () {
 		$graphql_file = getenv( 'WPGRAPHQL_PLUGIN_FILE' ) ?: dirname( __DIR__, 2 ) . '/wp-graphql.latest-stable/wp-graphql.php';
 		require $graphql_file;
+
+		// WooCommerce is optional: its tests are skipped when it is not installed.
+		$woocommerce_file = getenv( 'WC_PLUGIN_FILE' ) ?: dirname( __DIR__, 2 ) . '/woocommerce.latest-stable/woocommerce.php';
+		if ( file_exists( $woocommerce_file ) ) {
+			require $woocommerce_file;
+		}
+
 		require dirname( __DIR__ ) . '/better-schema-markup.php';
 	}
 );

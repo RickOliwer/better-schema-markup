@@ -4,7 +4,7 @@ Tags: schema, json-ld, seo, structured data, wpgraphql
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.8.0
+Stable tag: 0.9.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,6 +25,7 @@ Work in progress.
 
 Every page gets one JSON-LD `@graph`. Entities refer to each other by `@id`.
 
+* WooCommerce product (when WooCommerce is active): Product, added to the usual post graph
 * Post: WebSite, Organization/Person, WebPage, BreadcrumbList, Article, Person (author)
 * Page: WebSite, Organization/Person, WebPage, BreadcrumbList
 * Static front page: WebSite, Organization/Person, WebPage (`about` the identity, no breadcrumbs)
@@ -70,7 +71,7 @@ Invalid values are ignored. The WebSite entity points to the identity as its `pu
 
 == Developer filters ==
 
-The schema is one JSON-LD `@graph` built from small pieces. Each piece returns a list of entity arrays. The pieces, in output order, are `website`, `identity`, `webpage`, `breadcrumb`, `article` and `author`.
+The schema is one JSON-LD `@graph` built from small pieces. Each piece returns a list of entity arrays. The pieces, in output order, are `website`, `identity`, `webpage`, `breadcrumb`, `article`, `author` and `product`.
 
 * `better_schema_context` (array|null $context): what the current request describes. Return a different context, or null for no schema on this request.
 * `better_schema_pieces` (array $pieces): map of piece id to callable. Add, remove or replace pieces. The callable receives the context array and returns a list of entities (an empty array omits the piece).
@@ -97,6 +98,9 @@ Build contexts with the `better_schema_*_context()` functions in `includes/conte
 Entities refer to each other by `@id`. If you remove a piece, also remove references to it from the others. For example, without `identity`, remove `publisher` from `better_schema_piece_website` and `better_schema_piece_article`. Without `breadcrumb`, remove `breadcrumb` from `better_schema_piece_webpage`. Without `author`, remove `author` from `better_schema_piece_article`.
 
 == Changelog ==
+
+= 0.9.0 =
+* Add a Product piece for WooCommerce products: name, description, image, SKU, brand, offers (AggregateOffer for variable products) and aggregate rating. Output only when WooCommerce is active.
 
 = 0.8.0 =
 * Add WPGraphQL content and site graphs, effective schema types, and frontend URL mapping for headless sites.
