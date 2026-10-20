@@ -16,6 +16,8 @@ import { BusinessFields } from "./business-fields";
 import { EMPTY_BUSINESS, isCoordinate, isFrontendUrl, invalidSocialProfiles, parseSocialProfiles, readBusinessSettings, readPluginSettings } from "./settings-data";
 import type { BusinessSettings, PluginSettings, SettingsConfig, SiteIdentity } from "./settings-data";
 
+import { SeoSettings } from "./seo-settings";
+
 interface MediaFrame {
   on(event: "select", callback: () => void): void;
   open(): void;
@@ -251,6 +253,7 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
             __nextHasNoMarginBottom
           />
           {identity.type === "Organization" ? <BusinessFields value={business} onChange={setBusiness} /> : null}
+          <SeoSettings />
           <h2>{__("Default schema by post type", "better-schema-markup")}</h2>
           <p>{__("An individual post’s schema choice takes precedence over its post type default.", "better-schema-markup")}</p>
           {config.postTypes.map((postType) => (

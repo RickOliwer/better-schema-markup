@@ -1,6 +1,6 @@
 {
   "name": "better-schema-markup",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "scripts": {
     "start": "wp-env start",
     "stop": "wp-env stop",
@@ -12,10 +12,15 @@
     "test": "vp test && vp run test:php",
     "test:js": "vp test",
     "test:php": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename \"$PWD\") vendor/bin/phpunit",
-    "composer": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename \"$PWD\") composer"
+    "composer": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename \"$PWD\") composer",
+    "package": "vp build && python3 bin/package.py",
+    "i18n": "vp run wp i18n make-pot wp-content/plugins/schema-ld wp-content/plugins/schema-ld/languages/better-schema-markup.pot --domain=better-schema-markup --slug=better-schema-markup --exclude=node_modules,vendor,tests,src,dist,release-assets"
   },
   "keywords": [],
-  "author": "Rick Oliwer",
+  "author": {
+    "name": "Rick Centerhall",
+    "url": "https://rickcenterhall.com/"
+  },
   "license": "GPL-2.0-or-later",
   "description": "Schema.org JSON-LD for better SEO and rich results. Replaces the schema output of Yoast SEO and Rank Math, with WPGraphQL support.",
   "devDependencies": {

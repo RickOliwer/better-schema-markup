@@ -1,0 +1,791 @@
+# Copyright (C) 2026 Rick Centerhall
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Better Schema Markup 0.16.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/better-schema-markup\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-20T07:53:55+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: better-schema-markup\n"
+
+#. Plugin Name of the plugin
+#: better-schema-markup.php
+msgid "Better Schema Markup"
+msgstr ""
+
+#. Description of the plugin
+#: better-schema-markup.php
+msgid "Schema.org JSON-LD for better SEO and rich results. Replaces the schema output of Yoast SEO and Rank Math, with WPGraphQL support."
+msgstr ""
+
+#. Author of the plugin
+#: better-schema-markup.php
+msgid "Rick Centerhall"
+msgstr ""
+
+#. Author URI of the plugin
+#: better-schema-markup.php
+msgid "https://rickcenterhall.com/"
+msgstr ""
+
+#: includes/compatibility.php:38
+msgid "Better Schema Markup now handles your schema. Your SEO plugin continues to handle its other SEO features."
+msgstr ""
+
+#: includes/compatibility.php:39
+msgid "Your SEO plugin handles frontend schema. Better Schema Markup previews and WPGraphQL remain available."
+msgstr ""
+
+#: includes/compatibility.php:40
+msgid "Schema settings"
+msgstr ""
+
+#. translators: %s: the search terms.
+#: includes/context.php:204
+#, php-format
+msgid "Search results for \"%s\""
+msgstr ""
+
+#: includes/graphql.php:24
+msgid "Schema.org JSON-LD from Better Schema Markup."
+msgstr ""
+
+#: includes/graphql.php:29
+msgid "The complete JSON-LD graph for this content."
+msgstr ""
+
+#: includes/graphql.php:37
+msgid "Effective schema type, including post type defaults; none disables schema."
+msgstr ""
+
+#: includes/graphql.php:45
+msgid "Site-level WebSite and publisher identity graph."
+msgstr ""
+
+#: includes/import-api.php:39
+msgid "Specify --source=yoast or --source=rank-math."
+msgstr ""
+
+#: includes/import-api.php:55
+msgid "Some posts could not be imported. Review the report before retrying."
+msgstr ""
+
+#: includes/import-api.php:57
+msgid "Dry run finished. Nothing was saved."
+msgstr ""
+
+#: includes/import-api.php:57
+msgid "Import finished. Review reported limitations."
+msgstr ""
+
+#: includes/import.php:24
+msgid "Unsupported or inherited Yoast schema choice; no choice was imported."
+msgstr ""
+
+#: includes/import.php:27
+msgid "The Yoast page subtype could not be transferred."
+msgstr ""
+
+#: includes/import.php:52
+msgid "Legacy Rank Math type imported; legacy detail fields require manual review."
+msgstr ""
+
+#: includes/import.php:53
+msgid "Unsupported legacy Rank Math type."
+msgstr ""
+
+#: includes/import.php:57
+msgid "Multiple Rank Math entities have no unique primary entity; select one manually."
+msgstr ""
+
+#: includes/import.php:61
+msgid "Unsupported or malformed Rank Math schema. Products continue to use WooCommerce data."
+msgstr ""
+
+#: includes/import.php:64
+msgid "Additional Rank Math entities were not imported."
+msgstr ""
+
+#. translators: %s: source schema property.
+#: includes/import.php:80
+#, php-format
+msgid "Unresolved template in %s was not imported."
+msgstr ""
+
+#: includes/import.php:103
+msgid "Event location and offers were reduced to the supported venue, address and URL fields; review nested properties manually."
+msgstr ""
+
+#: includes/import.php:115
+msgid "An unsupported recipe instruction was not transferred."
+msgstr ""
+
+#: includes/import.php:130
+msgid "Only calories were transferred from recipe nutrition; review other nutrition properties manually."
+msgstr ""
+
+#: includes/import.php:139
+msgid "Incomplete FAQ questions were not transferred."
+msgstr ""
+
+#. translators: %s: source schema property.
+#: includes/import.php:144
+#, php-format
+msgid "Property %s is generated from WordPress or is unsupported; its override was not transferred."
+msgstr ""
+
+#: includes/import.php:159
+msgid "Choose Yoast or Rank Math and a valid cursor."
+msgstr ""
+
+#: includes/import.php:179
+msgid "Existing Better Schema settings were preserved."
+msgstr ""
+
+#: includes/import.php:206
+msgid "Saving failed; changes for this post were rolled back."
+msgstr ""
+
+#: includes/pieces/breadcrumb.php:42
+msgid "Home"
+msgstr ""
+
+#: includes/preview.php:43
+msgid "Post not found."
+msgstr ""
+
+#: includes/settings-page.php:12
+#: includes/settings-page.php:13
+#: includes/settings-page.php:26
+msgid "Better Schema"
+msgstr ""
+
+#: includes/validation.php:24
+msgid "Add a title. Google recommends a headline for articles."
+msgstr ""
+
+#: includes/validation.php:28
+msgid "Add a featured image. Google recommends an image for articles."
+msgstr ""
+
+#: includes/validation.php:32
+msgid "Set an author. Google recommends an author for articles."
+msgstr ""
+
+#: includes/validation.php:43
+msgid "Add a title. Google requires a name for events."
+msgstr ""
+
+#: includes/validation.php:44
+msgid "Set a start date. Google requires one for events."
+msgstr ""
+
+#: includes/validation.php:45
+msgid "Add a location. Google requires one for events."
+msgstr ""
+
+#: includes/validation.php:46
+msgid "Add a featured image. Google recommends an image for events."
+msgstr ""
+
+#: includes/validation.php:49
+msgid "Add a title. Google requires a name for recipes."
+msgstr ""
+
+#: includes/validation.php:50
+msgid "Add a featured image. Google requires an image for recipes."
+msgstr ""
+
+#: includes/validation.php:51
+msgid "List the ingredients. Google recommends them for recipes."
+msgstr ""
+
+#: includes/validation.php:52
+msgid "Add the steps. Google recommends instructions for recipes."
+msgstr ""
+
+#: includes/validation.php:55
+msgid "Add at least one question with an answer. Google requires them for FAQ pages."
+msgstr ""
+
+#: includes/validation.php:58
+msgid "Add an address in Settings → Better Schema. Google recommends one for local businesses."
+msgstr ""
+
+#: includes/validation.php:61
+msgid "Add a product image. Google recommends an image for products."
+msgstr ""
+
+#: includes/validation.php:62
+msgid "Set a price. Google recommends an offer for products."
+msgstr ""
+
+#: includes/validation.php:69
+msgid "Add a site icon or logo. Google recommends a logo for organizations."
+msgstr ""
+
+#: build/index.js:174
+msgid "Custom JSON-LD"
+msgstr ""
+
+#: build/index.js:175
+msgid "For advanced use. Paste one schema.org object, a list of objects, or a document with @graph. It is added to this page’s schema."
+msgstr ""
+
+#: build/index.js:186
+msgid "This is not valid JSON, so it will not be saved."
+msgstr ""
+
+#: build/index.js:186
+msgid "Each object needs an @type, so this will not be saved."
+msgstr ""
+
+#: build/index.js:195
+msgid "Starts"
+msgstr ""
+
+#: build/index.js:196
+msgid "Google requires a start date for events."
+msgstr ""
+
+#: build/index.js:207
+msgid "Ends"
+msgstr ""
+
+#: build/index.js:217
+msgid "Where does it happen?"
+msgstr ""
+
+#: build/index.js:221
+msgid "In person"
+msgstr ""
+
+#: build/index.js:225
+msgid "Online"
+msgstr ""
+
+#: build/index.js:229
+msgid "Both"
+msgstr ""
+
+#: build/index.js:243
+msgid "Venue name"
+msgstr ""
+
+#: build/index.js:252
+msgid "Venue address"
+msgstr ""
+
+#: build/index.js:262
+msgid "Status"
+msgstr ""
+
+#: build/index.js:266
+msgid "Scheduled"
+msgstr ""
+
+#: build/index.js:270
+msgid "Cancelled"
+msgstr ""
+
+#: build/index.js:274
+msgid "Postponed"
+msgstr ""
+
+#: build/index.js:278
+msgid "Rescheduled"
+msgstr ""
+
+#: build/index.js:282
+msgid "Moved online"
+msgstr ""
+
+#: build/index.js:297
+msgid "Ticket link"
+msgstr ""
+
+#: build/index.js:298
+msgid "Optional. A full http or https URL."
+msgstr ""
+
+#: build/index.js:320
+msgid "Question"
+msgstr ""
+
+#: build/index.js:330
+msgid "Answer"
+msgstr ""
+
+#: build/index.js:342
+msgid "Remove question"
+msgstr ""
+
+#: build/index.js:352
+msgid "Add question"
+msgstr ""
+
+#: build/index.js:356
+msgid "Questions without an answer are not saved."
+msgstr ""
+
+#: build/index.js:383
+msgid "Ingredients"
+msgstr ""
+
+#: build/index.js:384
+msgid "One ingredient per line."
+msgstr ""
+
+#: build/index.js:392
+msgid "Steps"
+msgstr ""
+
+#: build/index.js:393
+msgid "One step per line."
+msgstr ""
+
+#: build/index.js:403
+msgid "Preparation time (minutes)"
+msgstr ""
+
+#: build/index.js:415
+msgid "Cooking time (minutes)"
+msgstr ""
+
+#: build/index.js:425
+msgid "Servings"
+msgstr ""
+
+#: build/index.js:426
+msgid "For example “4 servings”."
+msgstr ""
+
+#: build/index.js:438
+msgid "Calories per serving"
+msgstr ""
+
+#: build/index.js:467
+msgid "Advanced"
+msgstr ""
+
+#: build/index.js:484
+msgid "The schema preview could not be loaded."
+msgstr ""
+
+#: build/index.js:500
+msgid "Show JSON-LD"
+msgstr ""
+
+#: build/index.js:501
+msgid "What this page outputs, using the type above. Save to include your other changes."
+msgstr ""
+
+#: build/index.js:509
+msgid "This page outputs no schema."
+msgstr ""
+
+#: build/index.js:516
+msgid "Article"
+msgstr ""
+
+#: build/index.js:518
+msgid "News, guides and other editorial content."
+msgstr ""
+
+#: build/index.js:521
+msgid "Blog post"
+msgstr ""
+
+#: build/index.js:523
+msgid "A post on a blog, often more personal or informal."
+msgstr ""
+
+#: build/index.js:526
+msgid "Regular page"
+msgstr ""
+
+#: build/index.js:528
+msgid "A page that is not an article, such as About or Contact."
+msgstr ""
+
+#: build/index.js:531
+msgid "Event"
+msgstr ""
+
+#: build/index.js:533
+msgid "A concert, class, meetup or other event with a date and place."
+msgstr ""
+
+#: build/index.js:536
+msgid "Recipe"
+msgstr ""
+
+#: build/index.js:538
+msgid "A cooking recipe with ingredients and steps."
+msgstr ""
+
+#: build/index.js:541
+msgid "FAQ page"
+msgstr ""
+
+#: build/index.js:543
+msgid "A page of questions and answers. Google only shows FAQ results for well-known government and health sites."
+msgstr ""
+
+#: build/index.js:546
+msgid "No schema"
+msgstr ""
+
+#: build/index.js:548
+msgid "Turns off all schema on this page, including the site-wide information."
+msgstr ""
+
+#: build/index.js:570
+msgid "What is this page?"
+msgstr ""
+
+#: build/index.js:669
+msgid "Schema"
+msgstr ""
+
+#: build/index.js:702
+msgid "Test with Google"
+msgstr ""
+
+#: build/index.js:844
+msgid "Monday"
+msgstr ""
+
+#: build/index.js:845
+msgid "Tuesday"
+msgstr ""
+
+#: build/index.js:846
+msgid "Wednesday"
+msgstr ""
+
+#: build/index.js:847
+msgid "Thursday"
+msgstr ""
+
+#: build/index.js:848
+msgid "Friday"
+msgstr ""
+
+#: build/index.js:849
+msgid "Saturday"
+msgstr ""
+
+#: build/index.js:850
+msgid "Sunday"
+msgstr ""
+
+#: build/index.js:871
+msgid "Local business"
+msgstr ""
+
+#: build/index.js:873
+msgid "This is a local business with a physical location"
+msgstr ""
+
+#: build/index.js:874
+msgid "Adds an address, opening hours and map location to your organization. It does not apply to a person."
+msgstr ""
+
+#: build/index.js:886
+msgid "Phone number"
+msgstr ""
+
+#: build/index.js:896
+msgid "Price range"
+msgstr ""
+
+#: build/index.js:897
+msgid "For example $$ or “100–300 SEK”."
+msgstr ""
+
+#: build/index.js:907
+msgid "Street address"
+msgstr ""
+
+#: build/index.js:920
+msgid "City"
+msgstr ""
+
+#: build/index.js:933
+msgid "Region or state"
+msgstr ""
+
+#: build/index.js:946
+msgid "Postal code"
+msgstr ""
+
+#: build/index.js:959
+msgid "Country"
+msgstr ""
+
+#: build/index.js:960
+msgid "A two-letter country code, for example SE."
+msgstr ""
+
+#: build/index.js:973
+msgid "Latitude"
+msgstr ""
+
+#: build/index.js:974
+msgid "Between -90 and 90. Set both latitude and longitude, or neither."
+msgstr ""
+
+#: build/index.js:987
+msgid "Longitude"
+msgstr ""
+
+#: build/index.js:988
+msgid "Between -180 and 180."
+msgstr ""
+
+#: build/index.js:1000
+msgid "Opening hours"
+msgstr ""
+
+#: build/index.js:1015
+msgid "Opens"
+msgstr ""
+
+#: build/index.js:1026
+msgid "Closes"
+msgstr ""
+
+#: build/index.js:1042
+msgid "Remove these hours"
+msgstr ""
+
+#: build/index.js:1052
+msgid "Add opening hours"
+msgstr ""
+
+#: build/index.js:1056
+msgid "Hours without a day, or without both times, are not saved."
+msgstr ""
+
+#: build/index.js:1091
+msgid "Could not load schema takeover settings."
+msgstr ""
+
+#: build/index.js:1107
+msgid "Schema takeover setting saved."
+msgstr ""
+
+#: build/index.js:1109
+msgid "Could not save schema takeover settings."
+msgstr ""
+
+#: build/index.js:1150
+msgid "Imported"
+msgstr ""
+
+#: build/index.js:1151
+msgid "Skipped"
+msgstr ""
+
+#: build/index.js:1152
+msgid "With unsupported settings"
+msgstr ""
+
+#: build/index.js:1153
+msgid "Failed"
+msgstr ""
+
+#: build/index.js:1154
+msgid "Dry run only; nothing was saved."
+msgstr ""
+
+#: build/index.js:1154
+msgid "Review the details below. Existing choices were preserved."
+msgstr ""
+
+#: build/index.js:1157
+msgid "The import stopped. Previously completed batches were kept. You can safely retry; existing choices will be skipped."
+msgstr ""
+
+#: build/index.js:1163
+msgid "SEO plugin compatibility"
+msgstr ""
+
+#: build/index.js:1175
+msgid "Let Better Schema Markup handle schema"
+msgstr ""
+
+#: build/index.js:1176
+msgid "Replaces Yoast SEO and Rank Math schema only. When disabled with either plugin active, that plugin handles frontend schema. Previews and WPGraphQL remain available. This setting saves immediately."
+msgstr ""
+
+#: build/index.js:1184
+msgid "Import saved schema settings"
+msgstr ""
+
+#: build/index.js:1185
+msgid "Import supported per-post types and details once. Source data and existing Better Schema choices are preserved. Unsupported fields and templates are reported for manual review. Run a preview first."
+msgstr ""
+
+#: build/index.js:1187
+msgid "Import from"
+msgstr ""
+
+#: build/index.js:1191
+msgid "Yoast SEO"
+msgstr ""
+
+#: build/index.js:1194
+msgid "Rank Math"
+msgstr ""
+
+#: build/index.js:1210
+msgid "Preview import"
+msgstr ""
+
+#: build/index.js:1220
+msgid "Import settings"
+msgstr ""
+
+#: build/index.js:1225
+msgid "Import details"
+msgstr ""
+
+#: build/index.js:1226
+msgid "Post"
+msgstr ""
+
+#: build/index.js:1238
+msgid "Something went wrong. Please try again."
+msgstr ""
+
+#: build/index.js:1245
+msgid "Choose a logo"
+msgstr ""
+
+#: build/index.js:1246
+msgid "Use this image"
+msgstr ""
+
+#: build/index.js:1259
+msgid "Logo"
+msgstr ""
+
+#: build/index.js:1262
+msgid "Selected logo"
+msgstr ""
+
+#: build/index.js:1273
+msgid "Change logo"
+msgstr ""
+
+#: build/index.js:1273
+msgid "Choose logo"
+msgstr ""
+
+#: build/index.js:1278
+msgid "Remove"
+msgstr ""
+
+#: build/index.js:1282
+msgid "Leave empty to use the site icon."
+msgstr ""
+
+#: build/index.js:1304
+msgid "Could not read schema settings."
+msgstr ""
+
+#: build/index.js:1322
+msgid "Social profiles must be full http or https URLs, one per line."
+msgstr ""
+
+#: build/index.js:1326
+msgid "Enter a full http or https frontend URL without credentials, a query, or a fragment."
+msgstr ""
+
+#: build/index.js:1330
+msgid "Latitude must be between -90 and 90, and longitude between -180 and 180."
+msgstr ""
+
+#: build/index.js:1353
+msgid "The saved settings could not be read."
+msgstr ""
+
+#: build/index.js:1361
+msgid "Settings saved."
+msgstr ""
+
+#: build/index.js:1392
+msgid "Answer three questions to set up your site identity. You can change these settings later."
+msgstr ""
+
+#: build/index.js:1392
+msgid "Set who publishes this site and choose the schema used for posts without an individual choice."
+msgstr ""
+
+#: build/index.js:1403
+msgid "Site identity"
+msgstr ""
+
+#: build/index.js:1405
+msgid "Who publishes this site?"
+msgstr ""
+
+#: build/index.js:1408
+msgid "Organization"
+msgstr ""
+
+#: build/index.js:1411
+msgid "Person"
+msgstr ""
+
+#: build/index.js:1424
+msgid "Name"
+msgstr ""
+
+#: build/index.js:1425
+msgid "Leave empty to use the site title."
+msgstr ""
+
+#: build/index.js:1448
+msgid "Frontend URL"
+msgstr ""
+
+#: build/index.js:1449
+msgid "For headless sites, enter the public site URL. Local schema URLs, including media, use this base. Leave empty to use WordPress URLs."
+msgstr ""
+
+#: build/index.js:1456
+msgid "Social profiles"
+msgstr ""
+
+#: build/index.js:1457
+msgid "Enter one full URL per line."
+msgstr ""
+
+#: build/index.js:1467
+msgid "Default schema by post type"
+msgstr ""
+
+#: build/index.js:1468
+msgid "An individual post’s schema choice takes precedence over its post type default."
+msgstr ""
+
+#: build/index.js:1495
+msgid "Finish setup"
+msgstr ""
+
+#: build/index.js:1495
+msgid "Save settings"
+msgstr ""
+
+#: build/index.js:1502
+msgid "Skip setup"
+msgstr ""

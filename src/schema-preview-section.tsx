@@ -24,7 +24,7 @@ export function SchemaPreviewSection({ state }: SchemaPreviewSectionProps) {
   }
 
   return (
-    <div aria-busy={isLoading} style={{ display: "grid", gap: "8px", marginTop: "8px" }}>
+    <div aria-busy={isLoading} style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr)", gap: "8px", marginTop: "8px" }}>
       {preview.hints.map((hint) => (
         <Notice
           key={`${hint.type}-${hint.property}`}
