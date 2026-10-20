@@ -3,7 +3,7 @@ Tags: schema, json-ld, seo, structured data, wpgraphql
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.16.0
+Stable tag: 0.16.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -152,10 +152,16 @@ Entities refer to each other by `@id`. If you remove a piece, also remove refere
 
 == Upgrade Notice ==
 
+= 0.16.1 =
+Fix admin API requests on headless WordPress sites with a separate frontend domain. No site URL changes are required.
+
 = 0.16.0 =
 Release preparation adds SEO schema takeover and migration, translations and uninstall cleanup. Review migration reports before switching production sites. Deleting the plugin removes its saved settings and per-post choices.
 
 == Changelog ==
+
+= 0.16.1 =
+* Fix settings, imports and editor previews on headless sites by sending admin API requests to the WordPress backend instead of the public frontend domain. Standard WordPress sites remain supported.
 
 = 0.16.0 =
 * Replace Yoast SEO and Rank Math schema with an optional takeover setting.

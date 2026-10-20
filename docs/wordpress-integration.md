@@ -32,6 +32,10 @@ When storing plugin-owned data:
 - register `show_in_rest` when editor UI needs access; and
 - treat missing, malformed, or legacy stored values safely.
 
+## Admin API requests
+
+Better Schema's settings, import and editor preview requests use the WordPress installation URL (`site_url`) with `index.php?rest_route=...`. The public home URL can belong to a separate headless frontend. The shared admin request helper passes explicit backend URLs to WordPress `apiFetch`, preserving its authentication and locale handling without changing global routing for other plugins. This works with standard sites, separate frontend domains, subdirectory installations and either permalink configuration. The backend must allow authenticated WordPress REST requests.
+
 ## Output
 
 Frontend output functions should:

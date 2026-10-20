@@ -24,5 +24,6 @@ function better_schema_enqueue_editor_assets(): void {
 		true
 	);
 	wp_set_script_translations( 'better-schema-editor', 'better-schema-markup', BETTER_SCHEMA_PATH . 'languages' );
+	better_schema_add_admin_api_config();
 }
 add_action( 'enqueue_block_editor_assets', 'better_schema_enqueue_editor_assets' );

@@ -1,4 +1,4 @@
-import apiFetch from "@wordpress/api-fetch";
+import { schemaApiFetch } from "./admin-api";
 import {
   Button,
   Notice,
@@ -106,7 +106,7 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
 
   useEffect(() => {
     let active = true;
-    void apiFetch({ path: "/wp/v2/settings" })
+    void schemaApiFetch({ path: "/wp/v2/settings" })
       .then((response: unknown) => {
         if (!active) return;
         const parsed = readPluginSettings(response, config);
@@ -143,7 +143,7 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
     setSuccess("");
     try {
       const nextIdentity = { ...identity, same_as: setupOnly ? identity.same_as : profiles };
-      const response: unknown = await apiFetch({
+      const response: unknown = await schemaApiFetch({
         path: "/wp/v2/settings",
         method: "POST",
         data: {
@@ -176,7 +176,7 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
     setSaving(true);
     setError("");
     try {
-      await apiFetch({
+      await schemaApiFetch({
         path: "/wp/v2/settings",
         method: "POST",
         data: { better_schema_setup_complete: true },
