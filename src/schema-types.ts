@@ -17,6 +17,24 @@ export const SCHEMA_TYPES = [
     description: __("A page that is not an article, such as About or Contact.", "better-schema-markup"),
   },
   {
+    label: __("Event", "better-schema-markup"),
+    value: "Event",
+    description: __("A concert, class, meetup or other event with a date and place.", "better-schema-markup"),
+  },
+  {
+    label: __("Recipe", "better-schema-markup"),
+    value: "Recipe",
+    description: __("A cooking recipe with ingredients and steps.", "better-schema-markup"),
+  },
+  {
+    label: __("FAQ page", "better-schema-markup"),
+    value: "FAQPage",
+    description: __(
+      "A page of questions and answers. Google only shows FAQ results for well-known government and health sites.",
+      "better-schema-markup",
+    ),
+  },
+  {
     label: __("No schema", "better-schema-markup"),
     value: "none",
     description: __(

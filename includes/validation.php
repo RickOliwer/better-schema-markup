@@ -11,8 +11,9 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Properties to check per entity type.
  *
- * Google lists no required properties for Article or Organization, only
- * recommended ones, so every rule here is `recommended`.
+ * Google lists no required properties for Article, Organization, LocalBusiness
+ * or Product (without a review or offer), only recommended ones. Events,
+ * recipes and FAQ pages have required properties.
  *
  * @return array<string, array<string, array{level: string, message: string}>> Map of `@type` to property to rule.
  */
@@ -32,7 +33,34 @@ function better_schema_hint_rules(): array {
 		),
 	);
 
+	$rule = static fn ( string $level, string $message ): array => array(
+		'level'   => $level,
+		'message' => $message,
+	);
+
 	return array(
+		'Event'         => array(
+			'name'      => $rule( 'required', __( 'Add a title. Google requires a name for events.', 'better-schema-markup' ) ),
+			'startDate' => $rule( 'required', __( 'Set a start date. Google requires one for events.', 'better-schema-markup' ) ),
+			'location'  => $rule( 'required', __( 'Add a location. Google requires one for events.', 'better-schema-markup' ) ),
+			'image'     => $rule( 'recommended', __( 'Add a featured image. Google recommends an image for events.', 'better-schema-markup' ) ),
+		),
+		'Recipe'        => array(
+			'name'               => $rule( 'required', __( 'Add a title. Google requires a name for recipes.', 'better-schema-markup' ) ),
+			'image'              => $rule( 'required', __( 'Add a featured image. Google requires an image for recipes.', 'better-schema-markup' ) ),
+			'recipeIngredient'   => $rule( 'recommended', __( 'List the ingredients. Google recommends them for recipes.', 'better-schema-markup' ) ),
+			'recipeInstructions' => $rule( 'recommended', __( 'Add the steps. Google recommends instructions for recipes.', 'better-schema-markup' ) ),
+		),
+		'FAQPage'       => array(
+			'mainEntity' => $rule( 'required', __( 'Add at least one question with an answer. Google requires them for FAQ pages.', 'better-schema-markup' ) ),
+		),
+		'LocalBusiness' => array(
+			'address' => $rule( 'recommended', __( 'Add an address in Settings → Better Schema. Google recommends one for local businesses.', 'better-schema-markup' ) ),
+		),
+		'Product'       => array(
+			'image'  => $rule( 'recommended', __( 'Add a product image. Google recommends an image for products.', 'better-schema-markup' ) ),
+			'offers' => $rule( 'recommended', __( 'Set a price. Google recommends an offer for products.', 'better-schema-markup' ) ),
+		),
 		'Article'      => $article,
 		'BlogPosting'  => $article,
 		'Organization' => array(

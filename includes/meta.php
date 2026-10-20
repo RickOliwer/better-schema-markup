@@ -27,6 +27,8 @@ function better_schema_register_meta(): void {
 				'auth_callback'     => fn ( $allowed, $meta_key, $post_id ): bool => current_user_can( 'edit_post', (int) $post_id ),
 			)
 		);
+
+		better_schema_register_detail_meta( $post_type );
 	}
 }
 add_action( 'init', 'better_schema_register_meta', 100 );
@@ -53,7 +55,7 @@ function better_schema_configurable_post_types(): array {
  * @return string[]
  */
 function better_schema_types(): array {
-	return array( 'Article', 'BlogPosting', 'WebPage', 'none' );
+	return array( 'Article', 'BlogPosting', 'WebPage', 'Event', 'Recipe', 'FAQPage', 'none' );
 }
 
 /**

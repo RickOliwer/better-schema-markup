@@ -43,7 +43,7 @@ function better_schema_piece_author( array $context ): array {
 
 	if ( 'author' === $type && ( $context['user'] ?? null ) instanceof WP_User ) {
 		$user = $context['user'];
-	} elseif ( 'post' === $type && ( $context['post'] ?? null ) instanceof WP_Post && better_schema_post_is_article( $context['post'] ) ) {
+	} elseif ( 'post' === $type && ( $context['post'] ?? null ) instanceof WP_Post && ( better_schema_post_is_article( $context['post'] ) || 'Recipe' === better_schema_post_schema_type( $context['post'] ) ) ) {
 		$user = better_schema_post_author( $context['post'] );
 	}
 

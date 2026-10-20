@@ -45,6 +45,65 @@ function better_schema_register_settings(): void {
 		)
 	);
 
+	$business_text = array( 'type' => 'string' );
+	register_setting(
+		'better_schema',
+		'better_schema_business',
+		array(
+			'type'              => 'object',
+			'default'           => better_schema_business_defaults(),
+			'sanitize_callback' => 'better_schema_sanitize_business',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type'                 => 'object',
+					'properties'           => array(
+						'enabled'     => array( 'type' => 'boolean' ),
+						'telephone'   => $business_text,
+						'price_range' => $business_text,
+						'address'     => array(
+							'type'                 => 'object',
+							'properties'           => array(
+								'street'      => $business_text,
+								'locality'    => $business_text,
+								'region'      => $business_text,
+								'postal_code' => $business_text,
+								'country'     => $business_text,
+							),
+							'additionalProperties' => false,
+						),
+						'geo'         => array(
+							'type'                 => 'object',
+							'properties'           => array(
+								'lat' => $business_text,
+								'lng' => $business_text,
+							),
+							'additionalProperties' => false,
+						),
+						'hours'       => array(
+							'type'  => 'array',
+							'items' => array(
+								'type'                 => 'object',
+								'properties'           => array(
+									'days'   => array(
+										'type'  => 'array',
+										'items' => array(
+											'type' => 'string',
+											'enum' => better_schema_weekdays(),
+										),
+									),
+									'opens'  => $business_text,
+									'closes' => $business_text,
+								),
+								'additionalProperties' => false,
+							),
+						),
+					),
+					'additionalProperties' => false,
+				),
+			),
+		)
+	);
+
 	$properties = array();
 	foreach ( better_schema_configurable_post_types() as $post_type ) {
 		$properties[ $post_type ] = array(

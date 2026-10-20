@@ -12,8 +12,9 @@ import { useEffect, useState } from "react";
 
 import { SCHEMA_TYPES, isSchemaType } from "./schema-types";
 import type { SchemaType } from "./schema-types";
-import { isFrontendUrl, invalidSocialProfiles, parseSocialProfiles, readPluginSettings } from "./settings-data";
-import type { PluginSettings, SettingsConfig, SiteIdentity } from "./settings-data";
+import { BusinessFields } from "./business-fields";
+import { EMPTY_BUSINESS, isCoordinate, isFrontendUrl, invalidSocialProfiles, parseSocialProfiles, readBusinessSettings, readPluginSettings } from "./settings-data";
+import type { BusinessSettings, PluginSettings, SettingsConfig, SiteIdentity } from "./settings-data";
 
 interface MediaFrame {
   on(event: "select", callback: () => void): void;
@@ -92,6 +93,7 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
   const [settings, setSettings] = useState<PluginSettings | null>(null);
   const [identity, setIdentity] = useState<SiteIdentity | null>(null);
   const [defaults, setDefaults] = useState<Readonly<Record<string, SchemaType>>>({});
+  const [business, setBusiness] = useState<BusinessSettings>(EMPTY_BUSINESS);
   const [logoUrl, setLogoUrl] = useState(config.logoUrl);
   const [frontendUrl, setFrontendUrl] = useState("");
   const [socialText, setSocialText] = useState("");
@@ -112,6 +114,7 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
         setIdentity(parsed.identity);
         setDefaults(parsed.defaults);
         setSocialText(parsed.identity.same_as.join("\n"));
+        setBusiness(readBusinessSettings(response));
       })
       .catch((cause: unknown) => { if (active) setError(errorText(cause)); });
     return () => { active = false; };
@@ -129,6 +132,10 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
       setError(__("Enter a full http or https frontend URL without credentials, a query, or a fragment.", "better-schema-markup"));
       return;
     }
+    if (!setupOnly && (!isCoordinate(business.geo.lat, 90) || !isCoordinate(business.geo.lng, 180))) {
+      setError(__("Latitude must be between -90 and 90, and longitude between -180 and 180.", "better-schema-markup"));
+      return;
+    }
     setSaving(true);
     setError("");
     setSuccess("");
@@ -139,6 +146,8 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
         method: "POST",
         data: {
           better_schema_identity: nextIdentity,
+          // Setup only asks for identity, so it keeps the saved business settings.
+          ...(setupOnly ? {} : { better_schema_business: business }),
           better_schema_frontend_url: frontendUrl.trim(),
           better_schema_type_defaults: defaults,
           better_schema_setup_complete: true,
@@ -151,6 +160,7 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
       setIdentity(parsed.identity);
       setDefaults(parsed.defaults);
       setSocialText(parsed.identity.same_as.join("\n"));
+      setBusiness(readBusinessSettings(response));
       setShowSetup(false);
       setSuccess(__("Settings saved.", "better-schema-markup"));
     } catch (cause) {
@@ -240,6 +250,7 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
             onChange={setSocialText}
             __nextHasNoMarginBottom
           />
+          {identity.type === "Organization" ? <BusinessFields value={business} onChange={setBusiness} /> : null}
           <h2>{__("Default schema by post type", "better-schema-markup")}</h2>
           <p>{__("An individual post’s schema choice takes precedence over its post type default.", "better-schema-markup")}</p>
           {config.postTypes.map((postType) => (

@@ -5,6 +5,7 @@ import { PluginDocumentSettingPanel, store as editorStore } from "@wordpress/edi
 import { __ } from "@wordpress/i18n";
 
 import { richResultsTestUrl, testablePostUrl } from "./rich-results-test";
+import { SchemaDetails } from "./schema-details";
 import { SchemaPreviewSection } from "./schema-preview-section";
 import { isSchemaMeta } from "./schema-meta";
 import type { SchemaMeta } from "./schema-meta";
@@ -41,6 +42,7 @@ export function SchemaPanel() {
         savedAt={savedAt}
         testableUrl={testableUrl}
         onChangeType={(type) => setMeta({ ...meta, _better_schema_type: type })}
+        onChangeDetail={(key, value) => setMeta({ ...meta, [key]: value })}
       />
     </PluginDocumentSettingPanel>
   );
@@ -52,6 +54,7 @@ interface SchemaPanelContentProps {
   readonly savedAt: string;
   readonly testableUrl: string | null;
   readonly onChangeType: (type: SchemaType) => void;
+  readonly onChangeDetail: (key: string, value: unknown) => void;
 }
 
 // Separate from SchemaPanel so the preview hook only runs once the meta is known to be valid.
@@ -61,6 +64,7 @@ function SchemaPanelContent({
   savedAt,
   testableUrl,
   onChangeType,
+  onChangeDetail,
 }: SchemaPanelContentProps) {
   const schemaType = meta._better_schema_type;
   const preview = useSchemaPreview(postId, schemaType, savedAt);
@@ -68,6 +72,7 @@ function SchemaPanelContent({
   return (
     <>
       <SchemaTypePicker value={schemaType} onChange={onChangeType} />
+      <SchemaDetails meta={meta} schemaType={schemaType} onChange={onChangeDetail} />
       <SchemaPreviewSection state={preview} />
       {testableUrl && schemaType !== "none" ? (
         <p>

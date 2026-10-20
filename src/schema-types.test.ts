@@ -23,6 +23,9 @@ describe("SCHEMA_TYPES", () => {
       "Article",
       "BlogPosting",
       "WebPage",
+      "Event",
+      "Recipe",
+      "FAQPage",
       "none",
     ]);
   });

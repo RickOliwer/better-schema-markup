@@ -77,5 +77,12 @@ function better_schema_piece_identity( array $context ): array {
 		$entity['sameAs'] = $identity['same_as'];
 	}
 
+	// A person cannot be a LocalBusiness, so the business settings only apply to organizations.
+	$business = better_schema_get_business();
+	if ( 'Organization' === $identity['type'] && $business['enabled'] ) {
+		$entity['@type'] = 'LocalBusiness';
+		$entity          = array_merge( $entity, better_schema_business_properties( $business ) );
+	}
+
 	return array( $entity );
 }
