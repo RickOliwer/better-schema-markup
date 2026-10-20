@@ -30,6 +30,7 @@ function better_schema_pieces(): array {
 			'breadcrumb' => 'better_schema_piece_breadcrumb',
 			'article'    => 'better_schema_piece_article',
 			'author'     => 'better_schema_piece_author',
+			'product'    => 'better_schema_piece_product',
 		)
 	);
 

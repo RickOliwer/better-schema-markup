@@ -60,6 +60,11 @@ jobs:
         run: |
           curl --fail --location https://downloads.wordpress.org/plugin/wp-graphql.latest-stable.zip -o /tmp/wpgraphql.zip
           unzip -q /tmp/wpgraphql.zip -d /tmp
+      - name: Install WooCommerce for integration tests
+        run: |
+          curl --fail --location https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip -o /tmp/woocommerce.zip
+          unzip -q /tmp/woocommerce.zip -d /tmp
       - run: vendor/bin/phpunit
         env:
           WPGRAPHQL_PLUGIN_FILE: /tmp/wp-graphql/wp-graphql.php
+          WC_PLUGIN_FILE: /tmp/woocommerce/woocommerce.php
