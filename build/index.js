@@ -1,4 +1,4 @@
-(function(_wordpress_plugins, _wordpress_element, _wordpress_components, _wordpress_core_data, _wordpress_data, _wordpress_editor, _wordpress_i18n, react, react_jsx_runtime, _wordpress_api_fetch, _wordpress_url) {
+(function(_wordpress_plugins, _wordpress_element, _wordpress_core_data, _wordpress_data, _wordpress_editor, _wordpress_i18n, _wordpress_components, react, react_jsx_runtime, _wordpress_api_fetch, _wordpress_url) {
 	//#region \0rolldown/runtime.js
 	var __create = Object.create;
 	var __defProp = Object.defineProperty;
@@ -555,15 +555,6 @@
 		return SCHEMA_TYPES.find((schemaType) => schemaType.value === value)?.description ?? "";
 	}
 	//#endregion
-	//#region src/schema-meta.ts
-	/**
-	* Post meta comes from the REST API, so it is only trusted once the schema
-	* type is known to be valid. Post types without the meta fail this check.
-	*/
-	function isSchemaMeta(value) {
-		return typeof value === "object" && value !== null && "_better_schema_type" in value && isSchemaType(value._better_schema_type);
-	}
-	//#endregion
 	//#region src/schema-type-picker.tsx
 	function SchemaTypePicker({ value, onChange }) {
 		return /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.SelectControl, {
@@ -666,40 +657,8 @@
 		return state;
 	}
 	//#endregion
-	//#region src/schema-panel.tsx
-	function SchemaPanel() {
-		const { postType, postId, savedAt, testableUrl } = (0, _wordpress_data.useSelect)((select) => {
-			const editor = select(_wordpress_editor.store);
-			const modified = editor.getCurrentPostAttribute("modified");
-			return {
-				postType: editor.getCurrentPostType(),
-				postId: editor.getCurrentPostId(),
-				savedAt: typeof modified === "string" ? modified : "",
-				testableUrl: testablePostUrl(editor.getCurrentPostAttribute("status"), editor.getCurrentPostAttribute("link"))
-			};
-		}, []);
-		const [meta, setMeta] = (0, _wordpress_core_data.useEntityProp)("postType", postType, "meta");
-		if (!isSchemaMeta(meta) || typeof postId !== "number") return null;
-		return /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_editor.PluginDocumentSettingPanel, {
-			name: "better-schema",
-			title: (0, _wordpress_i18n.__)("Schema", "better-schema-markup"),
-			children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(SchemaPanelContent, {
-				postId,
-				meta,
-				savedAt,
-				testableUrl,
-				onChangeType: (type) => setMeta({
-					...meta,
-					_better_schema_type: type
-				}),
-				onChangeDetail: (key, value) => setMeta({
-					...meta,
-					[key]: value
-				})
-			})
-		});
-	}
-	function SchemaPanelContent({ postId, meta, savedAt, testableUrl, onChangeType, onChangeDetail }) {
+	//#region src/schema-editor-fields.tsx
+	function SchemaEditorFields({ postId, meta, savedAt, testableUrl, onChangeType, onChangeDetail }) {
 		const schemaType = meta._better_schema_type;
 		const preview = useSchemaPreview(postId, schemaType, savedAt);
 		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
@@ -718,6 +677,49 @@
 				children: (0, _wordpress_i18n.__)("Test with Google", "better-schema-markup")
 			}) }) : null
 		] });
+	}
+	//#endregion
+	//#region src/schema-meta.ts
+	/**
+	* Post meta comes from the REST API, so it is only trusted once the schema
+	* type is known to be valid. Post types without the meta fail this check.
+	*/
+	function isSchemaMeta(value) {
+		return typeof value === "object" && value !== null && "_better_schema_type" in value && isSchemaType(value._better_schema_type);
+	}
+	//#endregion
+	//#region src/schema-panel.tsx
+	function SchemaPanel() {
+		const { postType, postId, savedAt, testableUrl } = (0, _wordpress_data.useSelect)((select) => {
+			const editor = select(_wordpress_editor.store);
+			const modified = editor.getCurrentPostAttribute("modified");
+			return {
+				postType: editor.getCurrentPostType(),
+				postId: editor.getCurrentPostId(),
+				savedAt: typeof modified === "string" ? modified : "",
+				testableUrl: testablePostUrl(editor.getCurrentPostAttribute("status"), editor.getCurrentPostAttribute("link"))
+			};
+		}, []);
+		const [meta, setMeta] = (0, _wordpress_core_data.useEntityProp)("postType", postType, "meta");
+		if (!isSchemaMeta(meta) || typeof postId !== "number") return null;
+		return /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_editor.PluginDocumentSettingPanel, {
+			name: "better-schema",
+			title: (0, _wordpress_i18n.__)("Schema", "better-schema-markup"),
+			children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(SchemaEditorFields, {
+				postId,
+				meta,
+				savedAt,
+				testableUrl,
+				onChangeType: (type) => setMeta({
+					...meta,
+					_better_schema_type: type
+				}),
+				onChangeDetail: (key, value) => setMeta({
+					...meta,
+					[key]: value
+				})
+			})
+		});
 	}
 	//#endregion
 	//#region src/settings-data.ts
@@ -1521,11 +1523,71 @@
 		});
 	}
 	//#endregion
+	//#region src/classic-editor.tsx
+	function ClassicEditor({ config }) {
+		const [meta, setMeta] = (0, react.useState)(config.meta);
+		const [changes, setChanges] = (0, react.useState)({});
+		function change(key, value) {
+			setMeta((previous) => ({
+				...previous,
+				[key]: value
+			}));
+			setChanges((previous) => ({
+				...previous,
+				[key]: value
+			}));
+		}
+		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+			style: {
+				maxWidth: "760px",
+				display: "grid",
+				gap: "12px"
+			},
+			children: [
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: (0, _wordpress_i18n.__)("Schema changes are saved when you update or publish this page.", "better-schema-markup") }),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)("input", {
+					type: "hidden",
+					name: "better_schema_classic_meta",
+					value: JSON.stringify(changes)
+				}),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)(SchemaEditorFields, {
+					postId: config.postId,
+					meta,
+					savedAt: config.savedAt,
+					testableUrl: config.testableUrl,
+					onChangeType: (type) => change("_better_schema_type", type),
+					onChangeDetail: change
+				})
+			]
+		});
+	}
+	//#endregion
+	//#region src/classic-editor-data.ts
+	function readClassicEditorConfig(value) {
+		if (typeof value !== "object" || value === null || !("postId" in value) || typeof value.postId !== "number" || !Number.isSafeInteger(value.postId) || value.postId <= 0 || !("savedAt" in value) || typeof value.savedAt !== "string" || !("testableUrl" in value) || value.testableUrl !== null && typeof value.testableUrl !== "string" || !("meta" in value) || !isSchemaMeta(value.meta)) return null;
+		return {
+			postId: value.postId,
+			savedAt: value.savedAt,
+			testableUrl: value.testableUrl,
+			meta: {
+				_better_schema_type: value.meta._better_schema_type,
+				_better_schema_event: readEventDetails(value.meta),
+				_better_schema_recipe: readRecipeDetails(value.meta),
+				_better_schema_faq: readFaqItems(value.meta),
+				_better_schema_custom_jsonld: readCustomJsonLd(value.meta)
+			}
+		};
+	}
+	//#endregion
 	//#region src/index.tsx
 	var settingsRoot = document.getElementById("better-schema-settings");
+	var classicRoot = document.getElementById("better-schema-classic-editor");
 	if (settingsRoot) {
 		const config = readSettingsConfig(window.betterSchemaSettings);
 		if (config) (0, _wordpress_element.createRoot)(settingsRoot).render(/* @__PURE__ */ (0, react_jsx_runtime.jsx)(SettingsScreen, { config }));
+	} else if (classicRoot) {
+		const config = readClassicEditorConfig(window.betterSchemaClassic);
+		if (config) (0, _wordpress_element.createRoot)(classicRoot).render(/* @__PURE__ */ (0, react_jsx_runtime.jsx)(ClassicEditor, { config }));
 	} else (0, _wordpress_plugins.registerPlugin)("better-schema", { render: SchemaPanel });
 	//#endregion
-})(wp.plugins, wp.element, wp.components, wp.coreData, wp.data, wp.editor, wp.i18n, React, ReactJSXRuntime, wp.apiFetch, wp.url);
+})(wp.plugins, wp.element, wp.coreData, wp.data, wp.editor, wp.i18n, wp.components, React, ReactJSXRuntime, wp.apiFetch, wp.url);
