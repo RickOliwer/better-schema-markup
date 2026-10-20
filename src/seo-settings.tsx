@@ -1,4 +1,4 @@
-import apiFetch from "@wordpress/api-fetch";
+import { schemaApiFetch } from "./admin-api";
 import { Button, Notice, SelectControl, ToggleControl } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
 import { useEffect, useState } from "react";
@@ -16,7 +16,7 @@ export function SeoSettings() {
 
   useEffect(() => {
     let active = true;
-    void apiFetch({ path: "/wp/v2/settings" }).then((value: unknown) => {
+    void schemaApiFetch({ path: "/wp/v2/settings" }).then((value: unknown) => {
       if (!active) return;
       if (typeof value !== "object" || value === null || !("better_schema_takeover" in value) || typeof value.better_schema_takeover !== "boolean") {
         throw new Error();
@@ -30,7 +30,7 @@ export function SeoSettings() {
     setBusy(true);
     setError("");
     try {
-      await apiFetch({ path: "/wp/v2/settings", method: "POST", data: { better_schema_takeover: next } });
+      await schemaApiFetch({ path: "/wp/v2/settings", method: "POST", data: { better_schema_takeover: next } });
       setTakeover(next);
       setMessage(__("Schema takeover setting saved.", "better-schema-markup"));
     } catch {
@@ -50,7 +50,7 @@ export function SeoSettings() {
     try {
       let done = false;
       while (!done) {
-        const report: unknown = await apiFetch({ path: "/better-schema/v1/import", method: "POST", data: { source, cursor, dry_run: dryRun } });
+        const report: unknown = await schemaApiFetch({ path: "/better-schema/v1/import", method: "POST", data: { source, cursor, dry_run: dryRun } });
         if (!isImportReport(report) || (!report.done && report.cursor <= cursor)) throw new Error();
         for (const key of ["imported", "skipped", "unsupported", "failed"] as const) total[key] += report[key];
         setDetails((previous) => [...previous, ...report.details]);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import apiFetch from "@wordpress/api-fetch";
+import { schemaApiFetch } from "./admin-api";
 import { addQueryArgs } from "@wordpress/url";
 
 import { isSchemaPreview } from "./schema-preview";
@@ -37,7 +37,7 @@ export function useSchemaPreview(
 
     setState((previous) => ({ ...previous, isLoading: true }));
 
-    apiFetch({
+    schemaApiFetch({
       path: addQueryArgs(`/better-schema/v1/preview/${postId}`, { type: schemaType }),
       signal: controller.signal,
     })

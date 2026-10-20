@@ -582,6 +582,22 @@
 		});
 	}
 	//#endregion
+	//#region src/admin-api.ts
+	/** Use explicit backend URLs without changing other plugins' apiFetch routing. */
+	async function schemaApiFetch({ path, ...options }) {
+		const config = window.betterSchemaApi;
+		if (typeof config !== "object" || config === null || !("rootUrl" in config) || typeof config.rootUrl !== "string") throw new Error((0, _wordpress_i18n.__)("Could not configure the WordPress backend request. Reload this page and try again.", "better-schema-markup"));
+		const url = new URL(config.rootUrl);
+		const queryStart = path.indexOf("?");
+		const route = queryStart < 0 ? path : path.slice(0, queryStart);
+		new URLSearchParams(queryStart < 0 ? "" : path.slice(queryStart + 1)).forEach((value, key) => url.searchParams.append(key, value));
+		url.searchParams.set("rest_route", route);
+		return (0, _wordpress_api_fetch.default)({
+			...options,
+			url: url.toString()
+		});
+	}
+	//#endregion
 	//#region src/schema-preview.ts
 	var HINT_LEVELS = ["required", "recommended"];
 	function isRecord$1(value) {
@@ -621,7 +637,7 @@
 				...previous,
 				isLoading: true
 			}));
-			(0, _wordpress_api_fetch.default)({
+			schemaApiFetch({
 				path: (0, _wordpress_url.addQueryArgs)(`/better-schema/v1/preview/${postId}`, { type: schemaType }),
 				signal: controller.signal
 			}).then((response) => {
@@ -1083,7 +1099,7 @@
 		const [details, setDetails] = (0, react.useState)([]);
 		(0, react.useEffect)(() => {
 			let active = true;
-			(0, _wordpress_api_fetch.default)({ path: "/wp/v2/settings" }).then((value) => {
+			schemaApiFetch({ path: "/wp/v2/settings" }).then((value) => {
 				if (!active) return;
 				if (typeof value !== "object" || value === null || !("better_schema_takeover" in value) || typeof value.better_schema_takeover !== "boolean") throw new Error();
 				setTakeover(value.better_schema_takeover);
@@ -1098,7 +1114,7 @@
 			setBusy(true);
 			setError("");
 			try {
-				await (0, _wordpress_api_fetch.default)({
+				await schemaApiFetch({
 					path: "/wp/v2/settings",
 					method: "POST",
 					data: { better_schema_takeover: next }
@@ -1126,7 +1142,7 @@
 			try {
 				let done = false;
 				while (!done) {
-					const report = await (0, _wordpress_api_fetch.default)({
+					const report = await schemaApiFetch({
 						path: "/better-schema/v1/import",
 						method: "POST",
 						data: {
@@ -1298,7 +1314,7 @@
 		const [success, setSuccess] = (0, react.useState)("");
 		(0, react.useEffect)(() => {
 			let active = true;
-			(0, _wordpress_api_fetch.default)({ path: "/wp/v2/settings" }).then((response) => {
+			schemaApiFetch({ path: "/wp/v2/settings" }).then((response) => {
 				if (!active) return;
 				const parsed = readPluginSettings(response, config);
 				if (!parsed) throw new Error((0, _wordpress_i18n.__)("Could not read schema settings.", "better-schema-markup"));
@@ -1334,15 +1350,14 @@
 			setError("");
 			setSuccess("");
 			try {
-				const nextIdentity = {
-					...identity,
-					same_as: setupOnly ? identity.same_as : profiles
-				};
-				const response = await (0, _wordpress_api_fetch.default)({
+				const response = await schemaApiFetch({
 					path: "/wp/v2/settings",
 					method: "POST",
 					data: {
-						better_schema_identity: nextIdentity,
+						better_schema_identity: {
+							...identity,
+							same_as: setupOnly ? identity.same_as : profiles
+						},
 						...setupOnly ? {} : { better_schema_business: business },
 						better_schema_frontend_url: frontendUrl.trim(),
 						better_schema_type_defaults: defaults,
@@ -1369,7 +1384,7 @@
 			setSaving(true);
 			setError("");
 			try {
-				await (0, _wordpress_api_fetch.default)({
+				await schemaApiFetch({
 					path: "/wp/v2/settings",
 					method: "POST",
 					data: { better_schema_setup_complete: true }
