@@ -1,24 +1,17 @@
-import { schemaApiFetch } from "./admin-api";
-import {
-  Button,
-  Notice,
-  SelectControl,
-  Spinner,
-  TextareaControl,
-  TextControl,
-} from "@wordpress/components";
 import { __, _n, sprintf } from "@wordpress/i18n";
 import { useEffect, useState } from "react";
 
+import { schemaApiFetch } from "./admin-api";
+import { BusinessFields } from "./business-fields";
+import { Alert } from "./components/ui/alert";
+import { Button, Spinner } from "./components/ui/button";
+import { FieldDescription, FieldGroup, FieldRow, FieldSeparator, FieldSet, FormRoot } from "./components/ui/field";
 import { SCHEMA_TYPES, isSchemaType } from "./schema-types";
 import type { SchemaType } from "./schema-types";
-import { BusinessFields } from "./business-fields";
-import { FieldRow, Form, FormSection } from "./form-layout";
-import { LabelWithHelp } from "./help-tip";
+import { SeoSettings } from "./seo-settings";
 import { EMPTY_BUSINESS, isCoordinate, isFrontendUrl, invalidSocialProfileLines, invalidSocialProfiles, parseSocialProfiles, readBusinessSettings, readPluginSettings } from "./settings-data";
 import type { BusinessSettings, PluginSettings, SettingsConfig, SiteIdentity } from "./settings-data";
-
-import { SeoSettings } from "./seo-settings";
+import { SelectField, TextareaField, TextField } from "./settings-fields";
 
 interface MediaFrame {
   on(event: "select", callback: () => void): void;
@@ -77,14 +70,30 @@ function LogoPicker({ id, url, onChange }: LogoPickerProps) {
   }
 
   return (
-    <div role="group" aria-labelledby="bsm-logo-label">
-      <span id="bsm-logo-label" className="bsm-label">{__("Logo", "better-schema-markup")}</span>
-      {id > 0 && url ? <img src={url} alt={__("Selected logo", "better-schema-markup")} style={{ display: "block", maxWidth: "180px", maxHeight: "120px", marginBottom: "12px", borderRadius: "6px" }} /> : null}
-      <Button variant="secondary" onClick={openLibrary}>
-        {id > 0 ? __("Change logo", "better-schema-markup") : __("Choose logo", "better-schema-markup")}
-      </Button>
-      {id > 0 ? <Button variant="tertiary" onClick={() => onChange(0, "")}>{__("Remove", "better-schema-markup")}</Button> : null}
-      <p className="bsm-help">{__("Leave empty to use the site icon.", "better-schema-markup")}</p>
+    <div role="group" aria-labelledby="bsm-logo-label" className="bsm:grid bsm:gap-2">
+      <span id="bsm-logo-label" className="bsm:text-sm bsm:leading-snug bsm:font-medium bsm:text-foreground">
+        {__("Logo", "better-schema-markup")}
+      </span>
+      <div className="bsm:flex bsm:items-center bsm:gap-4">
+        {id > 0 && url ? (
+          <img src={url} alt={__("Selected logo", "better-schema-markup")} className="bsm:size-16 bsm:rounded-md bsm:border bsm:border-solid bsm:border-border bsm:object-contain" />
+        ) : (
+          <div className="bsm:flex bsm:size-16 bsm:items-center bsm:justify-center bsm:rounded-md bsm:border bsm:border-dashed bsm:border-input bsm:text-xs bsm:text-muted-foreground">
+            {__("None", "better-schema-markup")}
+          </div>
+        )}
+        <div className="bsm:flex bsm:gap-2">
+          <Button variant="outline" size="sm" onClick={openLibrary}>
+            {id > 0 ? __("Change logo", "better-schema-markup") : __("Choose logo", "better-schema-markup")}
+          </Button>
+          {id > 0 ? (
+            <Button variant="ghost" size="sm" onClick={() => onChange(0, "")}>
+              {__("Remove", "better-schema-markup")}
+            </Button>
+          ) : null}
+        </div>
+      </div>
+      <FieldDescription>{__("Leave empty to use the site icon.", "better-schema-markup")}</FieldDescription>
     </div>
   );
 }
@@ -194,135 +203,138 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
   const socialProblems = invalidSocialProfileLines(socialText);
 
   if (!settings || !identity) {
-    return error ? <Notice status="error" isDismissible={false}>{error}</Notice> : <Spinner />;
+    return error ? <Alert tone="error">{error}</Alert> : <Spinner className="bsm:text-muted-foreground" />;
   }
 
+  const postTypeOptions = SCHEMA_TYPES.map(({ label, value }) => ({ label, value }));
+
   return (
-    <div style={{ maxWidth: "680px" }}>
-      <Form>
-        <p style={{ margin: 0, color: "#646970" }}>
+    <FormRoot className="bsm:mt-4 bsm:max-w-2xl bsm:rounded-xl bsm:border bsm:border-solid bsm:border-border bsm:bg-card bsm:p-6 bsm:shadow-xs bsm:sm:p-8">
+      <div className="bsm:grid bsm:gap-8">
+        <p className="bsm:m-0 bsm:text-sm bsm:text-muted-foreground">
           {showSetup
             ? __("Answer three questions to set up your site identity. You can change these settings later.", "better-schema-markup")
             : __("Set who publishes this site and choose the schema used for posts without an individual choice.", "better-schema-markup")}
         </p>
-        {error ? <Notice status="error" isDismissible={false}>{error}</Notice> : null}
-        {success ? <Notice status="success" onRemove={() => setSuccess("")}>{success}</Notice> : null}
+        {error ? <Alert tone="error">{error}</Alert> : null}
+        {success ? <Alert tone="success" onDismiss={() => setSuccess("")}>{success}</Alert> : null}
 
-        <FormSection
+        <FieldSet
           title={__("Site identity", "better-schema-markup")}
           description={__("Who is behind this site. Search engines show this as the publisher.", "better-schema-markup")}
         >
-          <SelectControl
-            label={
-              <LabelWithHelp label={__("Who publishes this site?", "better-schema-markup")}>
-                {__("Choose Organization for a company, club or brand. Choose Person if the site belongs to you as an individual, such as a personal blog or portfolio. This sets the publisher in your schema.", "better-schema-markup")}
-              </LabelWithHelp>
-            }
-            value={identity.type}
-            options={[
-              { label: __("Organization", "better-schema-markup"), value: "Organization" },
-              { label: __("Person", "better-schema-markup"), value: "Person" },
-            ]}
-            onChange={(type) => {
-              if (type === "Organization" || type === "Person") setIdentity({ ...identity, type });
-            }}
-            __next40pxDefaultSize
-            __nextHasNoMarginBottom
-          />
-          <TextControl
-            label={__("Name", "better-schema-markup")}
-            help={__("Leave empty to use the site title.", "better-schema-markup")}
-            placeholder={config.siteName}
-            value={identity.name}
-            onChange={(name) => setIdentity({ ...identity, name })}
-            __next40pxDefaultSize
-            __nextHasNoMarginBottom
-          />
-          <LogoPicker
-            id={identity.logo}
-            url={logoUrl}
-            onChange={(logo, url) => {
-              setIdentity({ ...identity, logo });
-              setLogoUrl(url);
-            }}
-          />
-          {!showSetup ? (
-            <TextareaControl
-              label={
-                <LabelWithHelp label={__("Social profiles", "better-schema-markup")}>
-                  {__("Links to your official profiles, such as Facebook, LinkedIn, Instagram, YouTube or Wikipedia. Search engines use them to connect these accounts to your site. Optional.", "better-schema-markup")}
-                </LabelWithHelp>
-              }
-              help={
-                socialProblems.length > 0
-                  ? sprintf(
-                      /* translators: %s: comma-separated line numbers. */
-                      _n("Line %s is not a full URL. Start it with https://.", "Lines %s are not full URLs. Start them with https://.", socialProblems.length, "better-schema-markup"),
-                      socialProblems.join(", "),
-                    )
-                  : __("One full URL per line, starting with https://.", "better-schema-markup")
-              }
-              placeholder={"https://www.facebook.com/yourpage\nhttps://www.linkedin.com/company/yourcompany\nhttps://www.instagram.com/yourhandle"}
-              rows={5}
-              value={socialText}
-              onChange={setSocialText}
-              style={socialProblems.length > 0 ? { borderColor: "#cc1818" } : undefined}
-              __nextHasNoMarginBottom
+          <FieldGroup>
+            <SelectField
+              label={__("Who publishes this site?", "better-schema-markup")}
+              tip={__("Choose Organization for a company, club or brand. Choose Person if the site belongs to you as an individual, such as a personal blog or portfolio. This sets the publisher in your schema.", "better-schema-markup")}
+              value={identity.type}
+              options={[
+                { label: __("Organization", "better-schema-markup"), value: "Organization" },
+                { label: __("Person", "better-schema-markup"), value: "Person" },
+              ]}
+              onChange={(type) => setIdentity({ ...identity, type })}
             />
-          ) : null}
-        </FormSection>
+            <TextField
+              label={__("Name", "better-schema-markup")}
+              help={__("Leave empty to use the site title.", "better-schema-markup")}
+              placeholder={config.siteName}
+              value={identity.name}
+              onChange={(name) => setIdentity({ ...identity, name })}
+            />
+            <LogoPicker
+              id={identity.logo}
+              url={logoUrl}
+              onChange={(logo, url) => {
+                setIdentity({ ...identity, logo });
+                setLogoUrl(url);
+              }}
+            />
+            {!showSetup ? (
+              <TextareaField
+                label={__("Social profiles", "better-schema-markup")}
+                tip={__("Links to your official profiles, such as Facebook, LinkedIn, Instagram, YouTube or Wikipedia. Search engines use them to connect these accounts to your site. Optional.", "better-schema-markup")}
+                help={__("One full URL per line, starting with https://.", "better-schema-markup")}
+                error={
+                  socialProblems.length > 0
+                    ? sprintf(
+                        /* translators: %s: comma-separated line numbers. */
+                        _n("Line %s is not a full URL. Start it with https://.", "Lines %s are not full URLs. Start them with https://.", socialProblems.length, "better-schema-markup"),
+                        socialProblems.join(", "),
+                      )
+                    : undefined
+                }
+                placeholder={"https://www.facebook.com/yourpage\nhttps://www.linkedin.com/company/yourcompany\nhttps://www.instagram.com/yourhandle"}
+                rows={4}
+                value={socialText}
+                onChange={setSocialText}
+              />
+            ) : null}
+          </FieldGroup>
+        </FieldSet>
 
         {!showSetup ? (
           <>
-            <FormSection
+            <FieldSeparator />
+            <FieldSet
               title={__("Headless sites", "better-schema-markup")}
               description={__("Only needed if visitors see a different address than WordPress.", "better-schema-markup")}
             >
-              <TextControl
-                label={
-                  <LabelWithHelp label={__("Frontend URL", "better-schema-markup")}>
-                    {__("Enter the public address, for example https://example.com. Schema URLs, including media, then use it instead of the WordPress address.", "better-schema-markup")}
-                  </LabelWithHelp>
-                }
+              <TextField
+                label={__("Frontend URL", "better-schema-markup")}
+                tip={__("Enter the public address, for example https://example.com. Schema URLs, including media, then use it instead of the WordPress address.", "better-schema-markup")}
                 help={__("Leave empty if visitors use the WordPress address.", "better-schema-markup")}
+                error={isFrontendUrl(frontendUrl) ? undefined : __("Enter a full URL starting with https://, without a query or #fragment.", "better-schema-markup")}
+                type="url"
+                placeholder="https://example.com"
                 value={frontendUrl}
                 onChange={setFrontendUrl}
-                __next40pxDefaultSize
-                __nextHasNoMarginBottom
               />
-            </FormSection>
-            {identity.type === "Organization" ? <BusinessFields value={business} onChange={setBusiness} /> : null}
+            </FieldSet>
+
+            {identity.type === "Organization" ? (
+              <>
+                <FieldSeparator />
+                <BusinessFields value={business} onChange={setBusiness} />
+              </>
+            ) : null}
+
+            <FieldSeparator />
             <SeoSettings />
-            <FormSection
+
+            <FieldSeparator />
+            <FieldSet
               title={__("Default schema by post type", "better-schema-markup")}
               description={__("An individual post’s schema choice takes precedence over its post type default.", "better-schema-markup")}
             >
               <FieldRow>
                 {config.postTypes.map((postType) => (
-                  <SelectControl
+                  <SelectField
                     key={postType.name}
                     label={postType.label}
                     value={defaults[postType.name] ?? (postType.name === "post" ? "Article" : "WebPage")}
-                    options={SCHEMA_TYPES.map(({ label, value }) => ({ label, value }))}
+                    options={postTypeOptions}
                     onChange={(value) => {
                       if (isSchemaType(value)) setDefaults({ ...defaults, [postType.name]: value });
                     }}
-                    __next40pxDefaultSize
-                    __nextHasNoMarginBottom
                   />
                 ))}
               </FieldRow>
-            </FormSection>
+            </FieldSet>
           </>
         ) : null}
 
-        <div style={{ display: "flex", gap: "8px" }}>
-          <Button variant="primary" isBusy={saving} disabled={saving} onClick={() => { void save(showSetup); }}>
+        <FieldSeparator />
+        <div className="bsm:flex bsm:gap-2">
+          <Button isBusy={saving} onClick={() => { void save(showSetup); }}>
             {showSetup ? __("Finish setup", "better-schema-markup") : __("Save settings", "better-schema-markup")}
           </Button>
-          {showSetup ? <Button variant="tertiary" disabled={saving} onClick={() => { void skipSetup(); }}>{__("Skip setup", "better-schema-markup")}</Button> : null}
+          {showSetup ? (
+            <Button variant="ghost" disabled={saving} onClick={() => { void skipSetup(); }}>
+              {__("Skip setup", "better-schema-markup")}
+            </Button>
+          ) : null}
         </div>
-      </Form>
-    </div>
+      </div>
+    </FormRoot>
   );
 }

@@ -1,8 +1,7 @@
-import { ExternalLink } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
 
 import { readCustomJsonLd, readCustomJsonLdMode } from "./post-details";
-import { Form } from "./form-layout";
+import { FormRoot } from "./components/ui/field";
 import { richResultsTestUrl } from "./rich-results-test";
 import { SchemaDetails } from "./schema-details";
 import { SchemaPreviewSection } from "./schema-preview-section";
@@ -36,19 +35,19 @@ export function SchemaEditorFields({
   });
 
   return (
-    <Form compact>
-      <div className="bsm-fields">
-        <SchemaTypePicker value={schemaType} onChange={onChangeType} />
-        <SchemaDetails meta={meta} schemaType={schemaType} onChange={onChangeDetail} />
-      </div>
+    <FormRoot className="bsm:grid bsm:gap-6">
+      <SchemaTypePicker value={schemaType} onChange={onChangeType} />
+      <SchemaDetails meta={meta} schemaType={schemaType} onChange={onChangeDetail} />
       <SchemaPreviewSection state={preview} />
       {testableUrl && schemaType !== "none" ? (
-        <p style={{ margin: 0 }}>
-          <ExternalLink href={richResultsTestUrl(testableUrl)}>
+        <p className="bsm:m-0 bsm:text-sm">
+          <a href={richResultsTestUrl(testableUrl)} target="_blank" rel="noopener noreferrer" className="bsm:font-medium bsm:text-foreground bsm:underline bsm:underline-offset-4">
             {__("Test with Google", "better-schema-markup")}
-          </ExternalLink>
+            <span className="bsm:sr-only">{__("(opens in a new tab)", "better-schema-markup")}</span>
+            <span aria-hidden="true"> ↗</span>
+          </a>
         </p>
       ) : null}
-    </Form>
+    </FormRoot>
   );
 }

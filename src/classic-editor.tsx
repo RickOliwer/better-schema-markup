@@ -19,8 +19,10 @@ export function ClassicEditor({ config }: ClassicEditorProps) {
   }
 
   return (
-    <div style={{ maxWidth: "760px", display: "grid", gap: "12px" }}>
-      <p>{__("Schema changes are saved when you update or publish this page.", "better-schema-markup")}</p>
+    <div className="bsm:grid bsm:max-w-3xl bsm:gap-6 bsm:py-2">
+      <p className="bsm:m-0 bsm:text-sm bsm:text-muted-foreground">
+        {__("Schema changes are saved when you update or publish this page.", "better-schema-markup")}
+      </p>
       <input type="hidden" name="better_schema_classic_meta" value={JSON.stringify(changes)} />
       <SchemaEditorFields
         postId={config.postId}

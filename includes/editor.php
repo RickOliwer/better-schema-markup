@@ -16,6 +16,13 @@ function better_schema_enqueue_editor_assets(): void {
 
 	$asset = require $asset_file;
 
+	// Loaded in the editor's outer document, where the schema panel is, not in the content iframe.
+	wp_enqueue_style(
+		'better-schema-editor',
+		BETTER_SCHEMA_URL . 'build/index.css',
+		array(),
+		filemtime( BETTER_SCHEMA_PATH . 'build/index.css' )
+	);
 	wp_enqueue_script(
 		'better-schema-editor',
 		BETTER_SCHEMA_URL . 'build/index.js',

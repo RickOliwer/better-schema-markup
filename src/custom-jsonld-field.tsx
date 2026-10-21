@@ -1,11 +1,11 @@
-import { Notice, RadioControl, TextareaControl } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
-import { useState } from "react";
+import { useId, useState } from "react";
 
-import { Fields } from "./form-layout";
-import { LabelWithHelp } from "./help-tip";
-import { checkCustomJsonLd, isCustomJsonLdMode } from "./post-details";
+import { HelpPopover } from "./components/ui/help-popover";
+import { RadioGroup } from "./components/ui/radio-group";
+import { checkCustomJsonLd } from "./post-details";
 import type { CustomJsonLdMode } from "./post-details";
+import { TextareaField } from "./settings-fields";
 
 interface CustomJsonLdFieldProps {
   readonly value: string;
@@ -22,75 +22,62 @@ interface CustomJsonLdFieldProps {
 export function CustomJsonLdField({ value, mode, onChange, onChangeMode }: CustomJsonLdFieldProps) {
   const [draft, setDraft] = useState(value);
   const check = checkCustomJsonLd(draft);
+  const modeLabelId = useId();
 
   return (
-    <Fields>
-      <TextareaControl
-        label={
-          <LabelWithHelp label={__("Custom JSON-LD", "better-schema-markup")}>
-            {__("Your own schema.org code for this page, for example from an SEO specialist. Paste one object, a list of objects, or a document with @graph. Each object needs an @type. Use the options below to choose how it combines with the schema this plugin generates.", "better-schema-markup")}
-          </LabelWithHelp>
+    <div className="bsm:grid bsm:gap-6">
+      <TextareaField
+        label={__("Custom JSON-LD", "better-schema-markup")}
+        tip={__("Your own schema.org code for this page, for example from an SEO specialist. Paste one object, a list of objects, or a document with @graph. Each object needs an @type. Use the options below to choose how it combines with the schema this plugin generates.", "better-schema-markup")}
+        help={__("For advanced use. Paste one schema.org object, a list of objects, or a document with @graph.", "better-schema-markup")}
+        error={
+          check.status !== "invalid"
+            ? undefined
+            : check.reason === "syntax"
+              ? __("This is not valid JSON, so it will not be saved.", "better-schema-markup")
+              : __("Each object needs an @type, so this will not be saved.", "better-schema-markup")
         }
-        help={__(
-          "For advanced use. Paste one schema.org object, a list of objects, or a document with @graph.",
-          "better-schema-markup",
-        )}
         rows={8}
+        spellCheck={false}
+        className="bsm:font-mono bsm:text-xs"
         value={draft}
         onChange={(next) => {
           setDraft(next);
-          const result = checkCustomJsonLd(next);
-          if (result.status !== "invalid") onChange(next);
+          if (checkCustomJsonLd(next).status !== "invalid") onChange(next);
         }}
-        __nextHasNoMarginBottom
       />
-      {check.status === "invalid" ? (
-        <Notice status="error" isDismissible={false}>
-          {check.reason === "syntax"
-            ? __("This is not valid JSON, so it will not be saved.", "better-schema-markup")
-            : __(
-                "Each object needs an @type, so this will not be saved.",
-                "better-schema-markup",
-              )}
-        </Notice>
-      ) : null}
-      <RadioControl
-        label={
-          <LabelWithHelp label={__("How to use it", "better-schema-markup")}>
+      <div className="bsm:grid bsm:gap-2">
+        <div className="bsm:flex bsm:items-center bsm:gap-1">
+          <span id={modeLabelId} className="bsm:text-sm bsm:leading-snug bsm:font-medium bsm:text-foreground">
+            {__("How to use it", "better-schema-markup")}
+          </span>
+          <HelpPopover topic={__("How to use it", "better-schema-markup")}>
             {__("Add keeps everything the plugin generates and adds yours next to it, which can create duplicates such as two WebSites. Override replaces generated entities of the same kind, such as the WebSite or organization, with yours. Replace outputs only your JSON-LD on this page.", "better-schema-markup")}
-          </LabelWithHelp>
-        }
-        selected={mode}
-        options={[
-          {
-            label: __("Add to generated schema", "better-schema-markup"),
-            value: "add",
-            description: __(
-              "Output it alongside the schema this plugin generates.",
-              "better-schema-markup",
-            ),
-          },
-          {
-            label: __("Override matching schema", "better-schema-markup"),
-            value: "override",
-            description: __(
-              "Replace generated entities with the same @id or kind, such as WebSite, the organization or WebPage. Links between entities are kept.",
-              "better-schema-markup",
-            ),
-          },
-          {
-            label: __("Replace generated schema", "better-schema-markup"),
-            value: "replace",
-            description: __(
-              "Output only this JSON-LD on this page.",
-              "better-schema-markup",
-            ),
-          },
-        ]}
-        onChange={(next) => {
-          if (isCustomJsonLdMode(next)) onChangeMode(next);
-        }}
-      />
-    </Fields>
+          </HelpPopover>
+        </div>
+        <RadioGroup
+          labelledBy={modeLabelId}
+          value={mode}
+          onChange={onChangeMode}
+          choices={[
+            {
+              value: "add",
+              label: __("Add to generated schema", "better-schema-markup"),
+              description: __("Output it alongside the schema this plugin generates.", "better-schema-markup"),
+            },
+            {
+              value: "override",
+              label: __("Override matching schema", "better-schema-markup"),
+              description: __("Replace generated entities with the same @id or kind, such as WebSite, the organization or WebPage. Links between entities are kept.", "better-schema-markup"),
+            },
+            {
+              value: "replace",
+              label: __("Replace generated schema", "better-schema-markup"),
+              description: __("Output only this JSON-LD on this page.", "better-schema-markup"),
+            },
+          ]}
+        />
+      </div>
+    </div>
   );
 }

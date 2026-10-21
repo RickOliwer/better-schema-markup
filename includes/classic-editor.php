@@ -30,7 +30,6 @@ function better_schema_enqueue_classic_assets( string $hook_suffix ): void {
 	}
 
 	better_schema_enqueue_editor_assets();
-	wp_enqueue_style( 'wp-components' );
 	wp_add_inline_script(
 		'better-schema-editor',
 		'window.betterSchemaClassic = ' . wp_json_encode(

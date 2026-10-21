@@ -1,9 +1,10 @@
-import { TextareaControl, TextControl } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
 import { useState } from "react";
 
+import { FieldRow } from "./components/ui/field";
 import { parseLines } from "./post-details";
 import type { RecipeDetails } from "./post-details";
+import { TextareaField, TextField } from "./settings-fields";
 
 interface LineListFieldProps {
   readonly label: string;
@@ -17,7 +18,7 @@ function LineListField({ label, help, value, onChange }: LineListFieldProps) {
   const [draft, setDraft] = useState(value.join("\n"));
 
   return (
-    <TextareaControl
+    <TextareaField
       label={label}
       help={help}
       rows={5}
@@ -26,7 +27,6 @@ function LineListField({ label, help, value, onChange }: LineListFieldProps) {
         setDraft(next);
         onChange(parseLines(next));
       }}
-      __nextHasNoMarginBottom
     />
   );
 }
@@ -56,41 +56,37 @@ export function RecipeFields({ value, onChange }: RecipeFieldsProps) {
         value={value.instructions}
         onChange={(instructions) => onChange({ ...value, instructions })}
       />
-      <TextControl
-        type="number"
-        min={0}
-        label={__("Preparation time (minutes)", "better-schema-markup")}
-        value={value.prep_minutes ? String(value.prep_minutes) : ""}
-        onChange={(next) => onChange({ ...value, prep_minutes: minutes(next) })}
-        __next40pxDefaultSize
-        __nextHasNoMarginBottom
-      />
-      <TextControl
-        type="number"
-        min={0}
-        label={__("Cooking time (minutes)", "better-schema-markup")}
-        value={value.cook_minutes ? String(value.cook_minutes) : ""}
-        onChange={(next) => onChange({ ...value, cook_minutes: minutes(next) })}
-        __next40pxDefaultSize
-        __nextHasNoMarginBottom
-      />
-      <TextControl
-        label={__("Servings", "better-schema-markup")}
-        help={__("For example “4 servings”.", "better-schema-markup")}
-        value={value.yield}
-        onChange={(next) => onChange({ ...value, yield: next })}
-        __next40pxDefaultSize
-        __nextHasNoMarginBottom
-      />
-      <TextControl
-        type="number"
-        min={0}
-        label={__("Calories per serving", "better-schema-markup")}
-        value={value.calories ? String(value.calories) : ""}
-        onChange={(next) => onChange({ ...value, calories: minutes(next) })}
-        __next40pxDefaultSize
-        __nextHasNoMarginBottom
-      />
+      <FieldRow>
+        <TextField
+          type="number"
+          min={0}
+          label={__("Preparation time (minutes)", "better-schema-markup")}
+          value={value.prep_minutes ? String(value.prep_minutes) : ""}
+          onChange={(next) => onChange({ ...value, prep_minutes: minutes(next) })}
+        />
+        <TextField
+          type="number"
+          min={0}
+          label={__("Cooking time (minutes)", "better-schema-markup")}
+          value={value.cook_minutes ? String(value.cook_minutes) : ""}
+          onChange={(next) => onChange({ ...value, cook_minutes: minutes(next) })}
+        />
+      </FieldRow>
+      <FieldRow>
+        <TextField
+          label={__("Servings", "better-schema-markup")}
+          help={__("For example “4 servings”.", "better-schema-markup")}
+          value={value.yield}
+          onChange={(next) => onChange({ ...value, yield: next })}
+        />
+        <TextField
+          type="number"
+          min={0}
+          label={__("Calories per serving", "better-schema-markup")}
+          value={value.calories ? String(value.calories) : ""}
+          onChange={(next) => onChange({ ...value, calories: minutes(next) })}
+        />
+      </FieldRow>
     </>
   );
 }

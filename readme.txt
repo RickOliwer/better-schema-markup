@@ -3,7 +3,7 @@ Tags: schema, json-ld, seo, structured data, wpgraphql
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.18.1
+Stable tag: 0.19.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -155,6 +155,9 @@ Entities refer to each other by `@id`. If you remove a piece, also remove refere
 
 == Upgrade Notice ==
 
+= 0.19.0 =
+A redesigned Settings → Better Schema page and editor schema fields. Your settings are unchanged.
+
 = 0.18.1 =
 Clearer settings, editor fields and import results, with help buttons and examples. No settings change.
 
@@ -171,6 +174,11 @@ Fix admin API requests on headless WordPress sites with a separate frontend doma
 Release preparation adds SEO schema takeover and migration, translations and uninstall cleanup. Review migration reports before switching production sites. Deleting the plugin removes its saved settings and per-post choices.
 
 == Changelog ==
+
+= 0.19.0 =
+* Redesign the Settings → Better Schema page with clearer fields, dropdowns, switches and help popovers.
+* Use the same design for the schema fields in the block editor and the classic editor, with two-column rows where there is room and choice cards for the custom JSON-LD mode.
+* Load the settings page's code only on that page, and minify the admin scripts.
 
 = 0.18.1 =
 * Add "?" help buttons that explain the site identity, frontend URL, social profiles, local business and custom JSON-LD fields.

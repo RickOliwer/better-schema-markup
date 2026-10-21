@@ -13,11 +13,13 @@ readme = (root / 'readme.txt').read_text()
 assert re.search(r'Version:\s+' + re.escape(version) + r'\s', header), 'Plugin version differs'
 assert 'Stable tag: ' + version in readme, 'Readme version differs'
 required = ['better-schema-markup.php', 'uninstall.php', 'readme.txt', 'LICENSE',
-            'build/index.js', 'build/index.asset.php', 'languages/better-schema-markup.pot']
+            'build/index.js', 'build/index.asset.php', 'build/index.css',
+            'build/settings.js', 'build/settings.asset.php', 'build/settings.css',
+            'languages/better-schema-markup.pot']
 files = [root / name for name in required]
 files += sorted((root / 'includes').rglob('*.php'))
 # Include original JavaScript/TypeScript sources and build inputs for GPL reproducibility.
-files += [path for path in sorted((root / 'src').glob('*')) if path.suffix in ('.ts', '.tsx') and '.test.' not in path.name]
+files += [path for path in sorted((root / 'src').rglob('*')) if path.suffix in ('.ts', '.tsx', '.css') and '.test.' not in path.name]
 files += [root / name for name in ['package.json', 'bun.lock', 'vite.config.ts', 'tsconfig.json', 'composer.json']]
 assert all(path.is_file() for path in files), 'Build and generate the translation template first'
 out = root / 'dist'

@@ -12,6 +12,22 @@ Both editors share the schema type picker, detail fields, validation hints and J
 
 The preview uses the selected type, the custom JSON-LD and its mode from the editor, and the post's saved content and other detail fields. Custom JSON-LD is debounced before it is previewed. It does not persist changes. The backend API routing applies in both editors, including headless sites. Classic controls require JavaScript; if mounting fails, saving the post must preserve all existing schema values.
 
+## Components and styling
+
+The settings page and the schema fields in both editors share one set of components. There are two scripts: `src/index.tsx` for the block and classic editors, and `src/settings.tsx` for the settings page. Both import `src/admin.css`. They use:
+
+- Base UI (`@base-ui/react`) for interactive controls: Select, Switch, Checkbox, RadioGroup and Popover;
+- Tailwind CSS v4, with every class prefixed `bsm:`, utilities marked `!important` so they beat wp-admin's form styles, and no Preflight reset; and
+- shadcn/ui-style components in `src/components/ui/`, combined into labelled fields in `src/settings-fields.tsx`.
+
+Rules that follow from this setup:
+
+- Wrap each form in `FormRoot`. `FieldRow` places fields side by side based on the form's width, not the screen's, so rows stack in the narrow block editor sidebar.
+- Classes are not merged. Do not pass a `className` that conflicts with a component's own classes, and do not combine a utility with a conflicting one, such as `border-0` with `border`.
+- Without Preflight, borders need an explicit style (`border-solid`), and a border on one side leaves the others at the browser default width. Use a 1px element as a divider instead.
+- Base UI popups render at the end of the page, so styles must not depend on an ancestor of the form. Theme colors are CSS variables on `:root` (`--bsm-color-*`).
+- The block editor panel itself is Gutenberg's `PluginDocumentSettingPanel`; only its contents use these components.
+
 ## Entry points
 
 Keep editor entry files focused on:
@@ -34,7 +50,7 @@ Extract a component when it:
 
 Avoid extracting trivial wrappers that do not improve clarity.
 
-Keep shared UI utilities separate from feature-specific UI. Prefer existing WordPress components before introducing a new dependency.
+Keep shared UI utilities separate from feature-specific UI. Use the components in `src/components/ui/` before adding new ones.
 
 ## Data handling
 

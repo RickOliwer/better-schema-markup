@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Better Schema Markup 0.17.0\n"
+"Project-Id-Version: Better Schema Markup 0.19.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/better-schema-markup\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-20T13:38:45+00:00\n"
+"POT-Creation-Date: 2026-10-21T08:14:34+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: better-schema-markup\n"
@@ -35,7 +35,7 @@ msgid "https://rickcenterhall.com/"
 msgstr ""
 
 #: includes/classic-editor.php:15
-#: build/index.js:707
+#: build/index.js:37
 msgid "Schema"
 msgstr ""
 
@@ -169,7 +169,7 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: includes/preview.php:43
+#: includes/preview.php:52
 msgid "Post not found."
 msgstr ""
 
@@ -243,566 +243,732 @@ msgstr ""
 msgid "Add a site icon or logo. Google recommends a logo for organizations."
 msgstr ""
 
-#: build/index.js:174
+#. translators: %s: schema.org type, such as WebSite.
+#: includes/validation.php:153
+#, php-format
+msgid "Your custom JSON-LD adds a second %s. Choose “Override matching schema” to replace the generated one."
+msgstr ""
+
+#. translators: 1: domain in the custom JSON-LD, 2: the site's domain.
+#: includes/validation.php:170
+#, php-format
+msgid "Your custom JSON-LD uses %1$s, but this site is %2$s. Use the site’s own URLs for @id and url."
+msgstr ""
+
+#: build/index.js:36
+#: build/settings.js:4
+#, js-format
+msgid "Help: %s"
+msgstr ""
+
+#: build/index.js:36
 msgid "Custom JSON-LD"
 msgstr ""
 
-#: build/index.js:175
-msgid "For advanced use. Paste one schema.org object, a list of objects, or a document with @graph. It is added to this page’s schema."
+#: build/index.js:36
+msgid "Your own schema.org code for this page, for example from an SEO specialist. Paste one object, a list of objects, or a document with @graph. Each object needs an @type. Use the options below to choose how it combines with the schema this plugin generates."
 msgstr ""
 
-#: build/index.js:186
+#: build/index.js:36
+msgid "For advanced use. Paste one schema.org object, a list of objects, or a document with @graph."
+msgstr ""
+
+#: build/index.js:36
 msgid "This is not valid JSON, so it will not be saved."
 msgstr ""
 
-#: build/index.js:186
+#: build/index.js:36
 msgid "Each object needs an @type, so this will not be saved."
 msgstr ""
 
-#: build/index.js:195
+#: build/index.js:36
+msgid "How to use it"
+msgstr ""
+
+#: build/index.js:36
+msgid "Add keeps everything the plugin generates and adds yours next to it, which can create duplicates such as two WebSites. Override replaces generated entities of the same kind, such as the WebSite or organization, with yours. Replace outputs only your JSON-LD on this page."
+msgstr ""
+
+#: build/index.js:36
+msgid "Add to generated schema"
+msgstr ""
+
+#: build/index.js:36
+msgid "Output it alongside the schema this plugin generates."
+msgstr ""
+
+#: build/index.js:36
+msgid "Override matching schema"
+msgstr ""
+
+#: build/index.js:36
+msgid "Replace generated entities with the same @id or kind, such as WebSite, the organization or WebPage. Links between entities are kept."
+msgstr ""
+
+#: build/index.js:36
+msgid "Replace generated schema"
+msgstr ""
+
+#: build/index.js:36
+msgid "Output only this JSON-LD on this page."
+msgstr ""
+
+#: build/index.js:36
 msgid "Starts"
 msgstr ""
 
-#: build/index.js:196
+#: build/index.js:36
 msgid "Google requires a start date for events."
 msgstr ""
 
-#: build/index.js:207
+#: build/index.js:36
 msgid "Ends"
 msgstr ""
 
-#: build/index.js:217
+#: build/index.js:36
 msgid "Where does it happen?"
 msgstr ""
 
-#: build/index.js:221
+#: build/index.js:36
 msgid "In person"
 msgstr ""
 
-#: build/index.js:225
+#: build/index.js:36
 msgid "Online"
 msgstr ""
 
-#: build/index.js:229
+#: build/index.js:36
 msgid "Both"
 msgstr ""
 
-#: build/index.js:243
+#: build/index.js:36
 msgid "Venue name"
 msgstr ""
 
-#: build/index.js:252
+#: build/index.js:36
 msgid "Venue address"
 msgstr ""
 
-#: build/index.js:262
+#: build/index.js:36
 msgid "Status"
 msgstr ""
 
-#: build/index.js:266
+#: build/index.js:36
 msgid "Scheduled"
 msgstr ""
 
-#: build/index.js:270
+#: build/index.js:36
 msgid "Cancelled"
 msgstr ""
 
-#: build/index.js:274
+#: build/index.js:36
 msgid "Postponed"
 msgstr ""
 
-#: build/index.js:278
+#: build/index.js:36
 msgid "Rescheduled"
 msgstr ""
 
-#: build/index.js:282
+#: build/index.js:36
 msgid "Moved online"
 msgstr ""
 
-#: build/index.js:297
+#: build/index.js:36
 msgid "Ticket link"
 msgstr ""
 
-#: build/index.js:298
+#: build/index.js:36
 msgid "Optional. A full http or https URL."
 msgstr ""
 
-#: build/index.js:320
+#: build/index.js:36
 msgid "Question"
 msgstr ""
 
-#: build/index.js:330
+#: build/index.js:36
 msgid "Answer"
 msgstr ""
 
-#: build/index.js:342
+#: build/index.js:36
 msgid "Remove question"
 msgstr ""
 
-#: build/index.js:352
+#: build/index.js:36
 msgid "Add question"
 msgstr ""
 
-#: build/index.js:356
+#: build/index.js:36
 msgid "Questions without an answer are not saved."
 msgstr ""
 
-#: build/index.js:383
+#: build/index.js:37
 msgid "Ingredients"
 msgstr ""
 
-#: build/index.js:384
+#: build/index.js:37
 msgid "One ingredient per line."
 msgstr ""
 
-#: build/index.js:392
+#: build/index.js:37
 msgid "Steps"
 msgstr ""
 
-#: build/index.js:393
+#: build/index.js:37
 msgid "One step per line."
 msgstr ""
 
-#: build/index.js:403
+#: build/index.js:37
 msgid "Preparation time (minutes)"
 msgstr ""
 
-#: build/index.js:415
+#: build/index.js:37
 msgid "Cooking time (minutes)"
 msgstr ""
 
-#: build/index.js:425
+#: build/index.js:37
 msgid "Servings"
 msgstr ""
 
-#: build/index.js:426
+#: build/index.js:37
 msgid "For example “4 servings”."
 msgstr ""
 
-#: build/index.js:438
+#: build/index.js:37
 msgid "Calories per serving"
 msgstr ""
 
-#: build/index.js:467
+#: build/index.js:37
 msgid "Advanced"
 msgstr ""
 
-#: build/index.js:484
+#: build/index.js:37
 msgid "The schema preview could not be loaded."
 msgstr ""
 
-#: build/index.js:500
+#: build/index.js:37
 msgid "Show JSON-LD"
 msgstr ""
 
-#: build/index.js:501
-msgid "What this page outputs, using the type above. Save to include your other changes."
+#: build/index.js:37
+msgid "What this page outputs, using the type and custom JSON-LD above. Save to include your other changes."
 msgstr ""
 
-#: build/index.js:509
+#: build/index.js:37
 msgid "This page outputs no schema."
 msgstr ""
 
-#: build/index.js:516
+#: build/index.js:37
+#: build/settings.js:1
 msgid "Article"
 msgstr ""
 
-#: build/index.js:518
+#: build/index.js:37
+#: build/settings.js:1
 msgid "News, guides and other editorial content."
 msgstr ""
 
-#: build/index.js:521
+#: build/index.js:37
+#: build/settings.js:1
 msgid "Blog post"
 msgstr ""
 
-#: build/index.js:523
+#: build/index.js:37
+#: build/settings.js:1
 msgid "A post on a blog, often more personal or informal."
 msgstr ""
 
-#: build/index.js:526
+#: build/index.js:37
+#: build/settings.js:1
 msgid "Regular page"
 msgstr ""
 
-#: build/index.js:528
+#: build/index.js:37
+#: build/settings.js:1
 msgid "A page that is not an article, such as About or Contact."
 msgstr ""
 
-#: build/index.js:531
+#: build/index.js:37
+#: build/settings.js:1
 msgid "Event"
 msgstr ""
 
-#: build/index.js:533
+#: build/index.js:37
+#: build/settings.js:1
 msgid "A concert, class, meetup or other event with a date and place."
 msgstr ""
 
-#: build/index.js:536
+#: build/index.js:37
+#: build/settings.js:1
 msgid "Recipe"
 msgstr ""
 
-#: build/index.js:538
+#: build/index.js:37
+#: build/settings.js:1
 msgid "A cooking recipe with ingredients and steps."
 msgstr ""
 
-#: build/index.js:541
+#: build/index.js:37
+#: build/settings.js:1
 msgid "FAQ page"
 msgstr ""
 
-#: build/index.js:543
+#: build/index.js:37
+#: build/settings.js:1
 msgid "A page of questions and answers. Google only shows FAQ results for well-known government and health sites."
 msgstr ""
 
-#: build/index.js:546
+#: build/index.js:37
+#: build/settings.js:1
 msgid "No schema"
 msgstr ""
 
-#: build/index.js:548
+#: build/index.js:37
+#: build/settings.js:1
 msgid "Turns off all schema on this page, including the site-wide information."
 msgstr ""
 
-#: build/index.js:561
+#: build/index.js:37
 msgid "What is this page?"
 msgstr ""
 
-#: build/index.js:580
+#: build/index.js:37
+#: build/settings.js:1
 msgid "Could not configure the WordPress backend request. Reload this page and try again."
 msgstr ""
 
-#: build/index.js:677
+#: build/index.js:37
 msgid "Test with Google"
 msgstr ""
 
-#: build/index.js:862
+#: build/index.js:37
+msgid "Schema changes are saved when you update or publish this page."
+msgstr ""
+
+#: build/settings.js:4
 msgid "Monday"
 msgstr ""
 
-#: build/index.js:863
+#: build/settings.js:4
 msgid "Tuesday"
 msgstr ""
 
-#: build/index.js:864
+#: build/settings.js:4
 msgid "Wednesday"
 msgstr ""
 
-#: build/index.js:865
+#: build/settings.js:4
 msgid "Thursday"
 msgstr ""
 
-#: build/index.js:866
+#: build/settings.js:4
 msgid "Friday"
 msgstr ""
 
-#: build/index.js:867
+#: build/settings.js:4
 msgid "Saturday"
 msgstr ""
 
-#: build/index.js:868
+#: build/settings.js:4
 msgid "Sunday"
 msgstr ""
 
-#: build/index.js:889
+#: build/settings.js:4
 msgid "Local business"
 msgstr ""
 
-#: build/index.js:891
+#: build/settings.js:4
+msgid "Turn this on if customers can visit you, such as a shop, clinic or restaurant. It adds an address, opening hours and map location to your organization so Google can show them. It does not apply to a person."
+msgstr ""
+
+#: build/settings.js:4
+msgid "For businesses with a physical location that customers can visit."
+msgstr ""
+
+#: build/settings.js:4
 msgid "This is a local business with a physical location"
 msgstr ""
 
-#: build/index.js:892
-msgid "Adds an address, opening hours and map location to your organization. It does not apply to a person."
+#: build/settings.js:4
+msgid "Adds an address, opening hours and map location to your organization."
 msgstr ""
 
-#: build/index.js:904
+#: build/settings.js:4
 msgid "Phone number"
 msgstr ""
 
-#: build/index.js:914
+#: build/settings.js:4
 msgid "Price range"
 msgstr ""
 
-#: build/index.js:915
+#: build/settings.js:4
 msgid "For example $$ or “100–300 SEK”."
 msgstr ""
 
-#: build/index.js:925
+#: build/settings.js:4
 msgid "Street address"
 msgstr ""
 
-#: build/index.js:938
+#: build/settings.js:4
 msgid "City"
 msgstr ""
 
-#: build/index.js:951
+#: build/settings.js:4
 msgid "Region or state"
 msgstr ""
 
-#: build/index.js:964
+#: build/settings.js:4
 msgid "Postal code"
 msgstr ""
 
-#: build/index.js:977
+#: build/settings.js:4
 msgid "Country"
 msgstr ""
 
-#: build/index.js:978
+#: build/settings.js:4
 msgid "A two-letter country code, for example SE."
 msgstr ""
 
-#: build/index.js:991
+#: build/settings.js:4
 msgid "Latitude"
 msgstr ""
 
-#: build/index.js:992
+#: build/settings.js:4
 msgid "Between -90 and 90. Set both latitude and longitude, or neither."
 msgstr ""
 
-#: build/index.js:1005
+#: build/settings.js:4
 msgid "Longitude"
 msgstr ""
 
-#: build/index.js:1006
+#: build/settings.js:4
 msgid "Between -180 and 180."
 msgstr ""
 
-#: build/index.js:1018
+#: build/settings.js:4
 msgid "Opening hours"
 msgstr ""
 
-#: build/index.js:1033
-msgid "Opens"
-msgstr ""
-
-#: build/index.js:1044
-msgid "Closes"
-msgstr ""
-
-#: build/index.js:1060
-msgid "Remove these hours"
-msgstr ""
-
-#: build/index.js:1070
-msgid "Add opening hours"
-msgstr ""
-
-#: build/index.js:1074
+#: build/settings.js:4
 msgid "Hours without a day, or without both times, are not saved."
 msgstr ""
 
-#: build/index.js:1109
+#: build/settings.js:4
+msgid "Opens"
+msgstr ""
+
+#: build/settings.js:4
+msgid "Closes"
+msgstr ""
+
+#: build/settings.js:4
+msgid "Remove these hours"
+msgstr ""
+
+#: build/settings.js:4
+msgid "Add opening hours"
+msgstr ""
+
+#: build/settings.js:4
+msgid "Dismiss"
+msgstr ""
+
+#: build/settings.js:4
+msgid "There are no posts to check."
+msgstr ""
+
+#: build/settings.js:4
+#, js-format
+msgid "Preview: %1$d of %2$d post would be imported."
+msgid_plural "Preview: %1$d of %2$d posts would be imported."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/settings.js:4
+#, js-format
+msgid "Imported %1$d of %2$d post."
+msgid_plural "Imported %1$d of %2$d posts."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/settings.js:4
+#, js-format
+msgid "%1$s Your post has no %3$s schema choice to import."
+msgid_plural "%1$s None of your %2$d posts have a %3$s schema choice to import."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/settings.js:4
+msgid "Preview: nothing to import."
+msgstr ""
+
+#: build/settings.js:4
+msgid "Nothing was imported."
+msgstr ""
+
+#: build/settings.js:4
+#, js-format
+msgid "%d was skipped because it has no schema choice to import, or already has Better Schema settings."
+msgid_plural "%d were skipped because they have no schema choice to import, or already have Better Schema settings."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/settings.js:4
+#, js-format
+msgid "%d has settings that cannot be transferred. See the details below."
+msgid_plural "%d have settings that cannot be transferred. See the details below."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/settings.js:4
+#, js-format
+msgid "%d post failed. See the details below."
+msgid_plural "%d posts failed. See the details below."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/settings.js:4
+msgid "Nothing was saved."
+msgstr ""
+
+#: build/settings.js:4
+msgid "Your Yoast and Rank Math data was not changed."
+msgstr ""
+
+#: build/settings.js:4
 msgid "Could not load schema takeover settings."
 msgstr ""
 
-#: build/index.js:1125
+#: build/settings.js:4
 msgid "Schema takeover setting saved."
 msgstr ""
 
-#: build/index.js:1127
+#: build/settings.js:4
 msgid "Could not save schema takeover settings."
 msgstr ""
 
-#: build/index.js:1168
-msgid "Imported"
-msgstr ""
-
-#: build/index.js:1169
-msgid "Skipped"
-msgstr ""
-
-#: build/index.js:1170
-msgid "With unsupported settings"
-msgstr ""
-
-#: build/index.js:1171
-msgid "Failed"
-msgstr ""
-
-#: build/index.js:1172
-msgid "Dry run only; nothing was saved."
-msgstr ""
-
-#: build/index.js:1172
-msgid "Review the details below. Existing choices were preserved."
-msgstr ""
-
-#: build/index.js:1175
+#: build/settings.js:4
 msgid "The import stopped. Previously completed batches were kept. You can safely retry; existing choices will be skipped."
 msgstr ""
 
-#: build/index.js:1181
+#: build/settings.js:4
 msgid "SEO plugin compatibility"
 msgstr ""
 
-#: build/index.js:1193
+#: build/settings.js:4
+msgid "Choose whether Better Schema Markup replaces the schema of Yoast SEO and Rank Math."
+msgstr ""
+
+#: build/settings.js:4
 msgid "Let Better Schema Markup handle schema"
 msgstr ""
 
-#: build/index.js:1194
+#: build/settings.js:4
 msgid "Replaces Yoast SEO and Rank Math schema only. When disabled with either plugin active, that plugin handles frontend schema. Previews and WPGraphQL remain available. This setting saves immediately."
 msgstr ""
 
-#: build/index.js:1202
-msgid "Import saved schema settings"
+#: build/settings.js:4
+msgid "Import from Yoast SEO or Rank Math"
 msgstr ""
 
-#: build/index.js:1203
-msgid "Import supported per-post types and details once. Source data and existing Better Schema choices are preserved. Unsupported fields and templates are reported for manual review. Run a preview first."
+#: build/settings.js:4
+msgid "If you chose a schema type for individual posts in Yoast SEO or Rank Math, this copies those choices into Better Schema, so you do not have to set them again. Preview shows what would happen without saving anything. Your Yoast and Rank Math data is never changed, and posts that already have Better Schema settings are skipped. If you never set schema per post, there is nothing to import."
 msgstr ""
 
-#: build/index.js:1205
+#: build/settings.js:4
+msgid "Copy the schema types you set on individual posts in another SEO plugin. Start with Preview."
+msgstr ""
+
+#: build/settings.js:4
 msgid "Import from"
 msgstr ""
 
-#: build/index.js:1209
+#: build/settings.js:4
 msgid "Yoast SEO"
 msgstr ""
 
-#: build/index.js:1212
+#: build/settings.js:4
 msgid "Rank Math"
 msgstr ""
 
-#: build/index.js:1228
+#: build/settings.js:4
 msgid "Preview import"
 msgstr ""
 
-#: build/index.js:1238
+#: build/settings.js:4
 msgid "Import settings"
 msgstr ""
 
-#: build/index.js:1243
+#: build/settings.js:4
 msgid "Import details"
 msgstr ""
 
-#: build/index.js:1244
+#: build/settings.js:4
 msgid "Post"
 msgstr ""
 
-#: build/index.js:1256
+#: build/settings.js:4
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: build/index.js:1263
+#: build/settings.js:4
 msgid "Choose a logo"
 msgstr ""
 
-#: build/index.js:1264
+#: build/settings.js:4
 msgid "Use this image"
 msgstr ""
 
-#: build/index.js:1277
+#: build/settings.js:4
 msgid "Logo"
 msgstr ""
 
-#: build/index.js:1280
+#: build/settings.js:4
 msgid "Selected logo"
 msgstr ""
 
-#: build/index.js:1291
+#: build/settings.js:4
+msgid "None"
+msgstr ""
+
+#: build/settings.js:4
 msgid "Change logo"
 msgstr ""
 
-#: build/index.js:1291
+#: build/settings.js:4
 msgid "Choose logo"
 msgstr ""
 
-#: build/index.js:1296
+#: build/settings.js:4
 msgid "Remove"
 msgstr ""
 
-#: build/index.js:1300
+#: build/settings.js:4
 msgid "Leave empty to use the site icon."
 msgstr ""
 
-#: build/index.js:1322
+#: build/settings.js:4
 msgid "Could not read schema settings."
 msgstr ""
 
-#: build/index.js:1340
-msgid "Social profiles must be full http or https URLs, one per line."
+#: build/settings.js:5
+msgid "Fix the highlighted social profile lines. Each must be a full URL starting with https://."
 msgstr ""
 
-#: build/index.js:1344
+#: build/settings.js:5
 msgid "Enter a full http or https frontend URL without credentials, a query, or a fragment."
 msgstr ""
 
-#: build/index.js:1348
+#: build/settings.js:5
 msgid "Latitude must be between -90 and 90, and longitude between -180 and 180."
 msgstr ""
 
-#: build/index.js:1370
+#: build/settings.js:5
 msgid "The saved settings could not be read."
 msgstr ""
 
-#: build/index.js:1378
+#: build/settings.js:6
 msgid "Settings saved."
 msgstr ""
 
-#: build/index.js:1409
+#: build/settings.js:6
 msgid "Answer three questions to set up your site identity. You can change these settings later."
 msgstr ""
 
-#: build/index.js:1409
+#: build/settings.js:6
 msgid "Set who publishes this site and choose the schema used for posts without an individual choice."
 msgstr ""
 
-#: build/index.js:1420
+#: build/settings.js:6
 msgid "Site identity"
 msgstr ""
 
-#: build/index.js:1422
+#: build/settings.js:6
+msgid "Who is behind this site. Search engines show this as the publisher."
+msgstr ""
+
+#: build/settings.js:6
 msgid "Who publishes this site?"
 msgstr ""
 
-#: build/index.js:1425
+#: build/settings.js:6
+msgid "Choose Organization for a company, club or brand. Choose Person if the site belongs to you as an individual, such as a personal blog or portfolio. This sets the publisher in your schema."
+msgstr ""
+
+#: build/settings.js:6
 msgid "Organization"
 msgstr ""
 
-#: build/index.js:1428
+#: build/settings.js:6
 msgid "Person"
 msgstr ""
 
-#: build/index.js:1441
+#: build/settings.js:6
 msgid "Name"
 msgstr ""
 
-#: build/index.js:1442
+#: build/settings.js:6
 msgid "Leave empty to use the site title."
 msgstr ""
 
-#: build/index.js:1465
-msgid "Frontend URL"
-msgstr ""
-
-#: build/index.js:1466
-msgid "For headless sites, enter the public site URL. Local schema URLs, including media, use this base. Leave empty to use WordPress URLs."
-msgstr ""
-
-#: build/index.js:1473
+#: build/settings.js:6
 msgid "Social profiles"
 msgstr ""
 
-#: build/index.js:1474
-msgid "Enter one full URL per line."
+#: build/settings.js:6
+msgid "Links to your official profiles, such as Facebook, LinkedIn, Instagram, YouTube or Wikipedia. Search engines use them to connect these accounts to your site. Optional."
 msgstr ""
 
-#: build/index.js:1484
+#: build/settings.js:6
+msgid "One full URL per line, starting with https://."
+msgstr ""
+
+#: build/settings.js:6
+#, js-format
+msgid "Line %s is not a full URL. Start it with https://."
+msgid_plural "Lines %s are not full URLs. Start them with https://."
+msgstr[0] ""
+msgstr[1] ""
+
+#: build/settings.js:8
+msgid "Headless sites"
+msgstr ""
+
+#: build/settings.js:8
+msgid "Only needed if visitors see a different address than WordPress."
+msgstr ""
+
+#: build/settings.js:8
+msgid "Frontend URL"
+msgstr ""
+
+#: build/settings.js:8
+msgid "Enter the public address, for example https://example.com. Schema URLs, including media, then use it instead of the WordPress address."
+msgstr ""
+
+#: build/settings.js:8
+msgid "Leave empty if visitors use the WordPress address."
+msgstr ""
+
+#: build/settings.js:8
+msgid "Enter a full URL starting with https://, without a query or #fragment."
+msgstr ""
+
+#: build/settings.js:8
 msgid "Default schema by post type"
 msgstr ""
 
-#: build/index.js:1485
+#: build/settings.js:8
 msgid "An individual post’s schema choice takes precedence over its post type default."
 msgstr ""
 
-#: build/index.js:1512
+#: build/settings.js:8
 msgid "Finish setup"
 msgstr ""
 
-#: build/index.js:1512
+#: build/settings.js:8
 msgid "Save settings"
 msgstr ""
 
-#: build/index.js:1519
+#: build/settings.js:8
 msgid "Skip setup"
-msgstr ""
-
-#: build/index.js:1547
-msgid "Schema changes are saved when you update or publish this page."
 msgstr ""

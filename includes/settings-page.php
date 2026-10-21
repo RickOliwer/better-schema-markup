@@ -32,19 +32,27 @@ function better_schema_enqueue_settings_assets( string $hook_suffix ): void {
 		return;
 	}
 
-	$asset_file = BETTER_SCHEMA_PATH . 'build/index.asset.php';
+	// The settings page has its own script and stylesheet (Base UI and Tailwind), so the
+	// block editor never loads them. The handle is shared with the editor script because
+	// both receive the same admin API configuration.
+	$asset_file = BETTER_SCHEMA_PATH . 'build/settings.asset.php';
 	if ( ! file_exists( $asset_file ) ) {
 		return;
 	}
 
 	$asset = require $asset_file;
 	wp_enqueue_media();
-	wp_enqueue_style( 'wp-components' );
+	wp_enqueue_style(
+		'better-schema-settings',
+		BETTER_SCHEMA_URL . 'build/settings.css',
+		array(),
+		filemtime( BETTER_SCHEMA_PATH . 'build/settings.css' )
+	);
 	wp_enqueue_script(
 		'better-schema-editor',
-		BETTER_SCHEMA_URL . 'build/index.js',
+		BETTER_SCHEMA_URL . 'build/settings.js',
 		$asset['dependencies'],
-		filemtime( BETTER_SCHEMA_PATH . 'build/index.js' ),
+		filemtime( BETTER_SCHEMA_PATH . 'build/settings.js' ),
 		true
 	);
 	wp_set_script_translations( 'better-schema-editor', 'better-schema-markup', BETTER_SCHEMA_PATH . 'languages' );
