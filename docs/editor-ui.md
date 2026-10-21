@@ -28,6 +28,8 @@ Rules that follow from this setup:
 - Base UI popups render at the end of the page, so styles must not depend on an ancestor of the form. Theme colors are CSS variables on `:root` (`--bsm-color-*`).
 - The block editor panel itself is Gutenberg's `PluginDocumentSettingPanel`; only its contents use these components.
 
+The settings screen uses the available admin content width. At a form width of 56rem, site identity and business settings sit beside schema defaults and integration settings; narrower forms stack these sections. Each column is its own container so nested field rows respond to the column width.
+
 ## Entry points
 
 Keep editor entry files focused on:
