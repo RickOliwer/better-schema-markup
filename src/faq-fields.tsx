@@ -17,7 +17,7 @@ export function FaqFields({ value, onChange }: FaqFieldsProps) {
     <>
       {value.map((item, index) => (
         // Items have no id, so the position is the identity; removing one re-keys the rest.
-        <div key={index} style={{ marginBottom: "16px" }}>
+        <div key={index} className="bsm-fields" style={{ paddingBottom: "16px", borderBottom: "1px solid #dcdcde" }}>
           <TextControl
             label={__("Question", "better-schema-markup")}
             value={item.question}
@@ -31,21 +31,23 @@ export function FaqFields({ value, onChange }: FaqFieldsProps) {
             onChange={(answer) => update(index, { ...item, answer })}
             __nextHasNoMarginBottom
           />
-          <Button
-            variant="link"
-            isDestructive
-            onClick={() => onChange(value.filter((_, position) => position !== index))}
-          >
-            {__("Remove question", "better-schema-markup")}
-          </Button>
+          <div>
+            <Button
+              variant="link"
+              isDestructive
+              onClick={() => onChange(value.filter((_, position) => position !== index))}
+            >
+              {__("Remove question", "better-schema-markup")}
+            </Button>
+          </div>
         </div>
       ))}
-      <Button variant="secondary" onClick={() => onChange([...value, { question: "", answer: "" }])}>
-        {__("Add question", "better-schema-markup")}
-      </Button>
-      <p className="description">
-        {__("Questions without an answer are not saved.", "better-schema-markup")}
-      </p>
+      <div>
+        <Button variant="secondary" onClick={() => onChange([...value, { question: "", answer: "" }])}>
+          {__("Add question", "better-schema-markup")}
+        </Button>
+        <p className="bsm-help">{__("Questions without an answer are not saved.", "better-schema-markup")}</p>
+      </div>
     </>
   );
 }

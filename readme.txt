@@ -3,7 +3,7 @@ Tags: schema, json-ld, seo, structured data, wpgraphql
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.18.0
+Stable tag: 0.18.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -155,6 +155,9 @@ Entities refer to each other by `@id`. If you remove a piece, also remove refere
 
 == Upgrade Notice ==
 
+= 0.18.1 =
+Clearer settings, editor fields and import results, with help buttons and examples. No settings change.
+
 = 0.18.0 =
 Custom JSON-LD can now override or replace the generated schema per post. Existing posts keep adding it, as before.
 
@@ -168,6 +171,12 @@ Fix admin API requests on headless WordPress sites with a separate frontend doma
 Release preparation adds SEO schema takeover and migration, translations and uninstall cleanup. Review migration reports before switching production sites. Deleting the plugin removes its saved settings and per-post choices.
 
 == Changelog ==
+
+= 0.18.1 =
+* Add "?" help buttons that explain the site identity, frontend URL, social profiles, local business and custom JSON-LD fields.
+* Show example URLs in the social profiles field and point out which lines are not full URLs while typing.
+* Redesign the settings and editor forms with clearer spacing: sentence-case labels above each field, help text directly below it, titled sections with descriptions, and related fields side by side.
+* Explain the Yoast SEO and Rank Math import in plain words, with a help button, and show its result under the Preview and Import buttons instead of above the section.
 
 = 0.18.0 =
 * Add a mode to custom JSON-LD: add to the generated schema (the default), override matching entities, or replace the generated schema on that post. Override keeps WebPage, article and other links pointing at your entities.

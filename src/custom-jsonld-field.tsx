@@ -2,6 +2,8 @@ import { Notice, RadioControl, TextareaControl } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
 import { useState } from "react";
 
+import { Fields } from "./form-layout";
+import { LabelWithHelp } from "./help-tip";
 import { checkCustomJsonLd, isCustomJsonLdMode } from "./post-details";
 import type { CustomJsonLdMode } from "./post-details";
 
@@ -22,9 +24,13 @@ export function CustomJsonLdField({ value, mode, onChange, onChangeMode }: Custo
   const check = checkCustomJsonLd(draft);
 
   return (
-    <>
+    <Fields>
       <TextareaControl
-        label={__("Custom JSON-LD", "better-schema-markup")}
+        label={
+          <LabelWithHelp label={__("Custom JSON-LD", "better-schema-markup")}>
+            {__("Your own schema.org code for this page, for example from an SEO specialist. Paste one object, a list of objects, or a document with @graph. Each object needs an @type. Use the options below to choose how it combines with the schema this plugin generates.", "better-schema-markup")}
+          </LabelWithHelp>
+        }
         help={__(
           "For advanced use. Paste one schema.org object, a list of objects, or a document with @graph.",
           "better-schema-markup",
@@ -49,7 +55,11 @@ export function CustomJsonLdField({ value, mode, onChange, onChangeMode }: Custo
         </Notice>
       ) : null}
       <RadioControl
-        label={__("How to use it", "better-schema-markup")}
+        label={
+          <LabelWithHelp label={__("How to use it", "better-schema-markup")}>
+            {__("Add keeps everything the plugin generates and adds yours next to it, which can create duplicates such as two WebSites. Override replaces generated entities of the same kind, such as the WebSite or organization, with yours. Replace outputs only your JSON-LD on this page.", "better-schema-markup")}
+          </LabelWithHelp>
+        }
         selected={mode}
         options={[
           {
@@ -81,6 +91,6 @@ export function CustomJsonLdField({ value, mode, onChange, onChangeMode }: Custo
           if (isCustomJsonLdMode(next)) onChangeMode(next);
         }}
       />
-    </>
+    </Fields>
   );
 }
