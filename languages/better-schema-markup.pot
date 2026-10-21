@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-21T09:30:28+00:00\n"
+"POT-Creation-Date: 2026-10-21T11:42:15+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: better-schema-markup\n"
@@ -34,223 +34,223 @@ msgstr ""
 msgid "https://rickcenterhall.com/"
 msgstr ""
 
-#: includes/classic-editor.php:15
+#: includes/admin/classic-editor.php:15
 #: build/index.js:2
 msgid "Schema"
 msgstr ""
 
-#: includes/classic-editor.php:21
+#: includes/admin/classic-editor.php:21
 msgid "Loading schema controls…"
 msgstr ""
 
-#: includes/classic-editor.php:22
+#: includes/admin/classic-editor.php:22
 msgid "Enable JavaScript to edit schema settings. Existing settings are preserved when you save."
 msgstr ""
 
-#: includes/compatibility.php:42
+#: includes/admin/preview.php:52
+msgid "Post not found."
+msgstr ""
+
+#: includes/admin/settings-page.php:12
+#: includes/admin/settings-page.php:13
+#: includes/admin/settings-page.php:26
+msgid "Better Schema"
+msgstr ""
+
+#: includes/integrations/compatibility.php:42
 msgid "Better Schema Markup now handles your schema. Your SEO plugin continues to handle its other SEO features."
 msgstr ""
 
-#: includes/compatibility.php:43
+#: includes/integrations/compatibility.php:43
 msgid "Your SEO plugin handles frontend schema. Better Schema Markup previews and WPGraphQL remain available."
 msgstr ""
 
-#: includes/compatibility.php:44
+#: includes/integrations/compatibility.php:44
 msgid "Schema settings"
 msgstr ""
 
-#. translators: %s: the search terms.
-#: includes/context.php:204
-#, php-format
-msgid "Search results for \"%s\""
-msgstr ""
-
-#: includes/graphql.php:24
+#: includes/integrations/graphql.php:24
 msgid "Schema.org JSON-LD from Better Schema Markup."
 msgstr ""
 
-#: includes/graphql.php:29
+#: includes/integrations/graphql.php:29
 msgid "The complete JSON-LD graph for this content."
 msgstr ""
 
-#: includes/graphql.php:37
+#: includes/integrations/graphql.php:37
 msgid "Effective schema type, including post type defaults; none disables schema."
 msgstr ""
 
-#: includes/graphql.php:45
+#: includes/integrations/graphql.php:45
 msgid "Site-level WebSite and publisher identity graph."
 msgstr ""
 
-#: includes/import-api.php:39
+#: includes/integrations/import-api.php:39
 msgid "Specify --source=yoast or --source=rank-math."
 msgstr ""
 
-#: includes/import-api.php:55
+#: includes/integrations/import-api.php:55
 msgid "Some posts could not be imported. Review the report before retrying."
 msgstr ""
 
-#: includes/import-api.php:57
+#: includes/integrations/import-api.php:57
 msgid "Dry run finished. Nothing was saved."
 msgstr ""
 
-#: includes/import-api.php:57
+#: includes/integrations/import-api.php:57
 msgid "Import finished. Review reported limitations."
 msgstr ""
 
-#: includes/import.php:24
+#: includes/integrations/import.php:24
 msgid "Unsupported or inherited Yoast schema choice; no choice was imported."
 msgstr ""
 
-#: includes/import.php:27
+#: includes/integrations/import.php:27
 msgid "The Yoast page subtype could not be transferred."
 msgstr ""
 
-#: includes/import.php:52
+#: includes/integrations/import.php:52
 msgid "Legacy Rank Math type imported; legacy detail fields require manual review."
 msgstr ""
 
-#: includes/import.php:53
+#: includes/integrations/import.php:53
 msgid "Unsupported legacy Rank Math type."
 msgstr ""
 
-#: includes/import.php:57
+#: includes/integrations/import.php:57
 msgid "Multiple Rank Math entities have no unique primary entity; select one manually."
 msgstr ""
 
-#: includes/import.php:61
+#: includes/integrations/import.php:61
 msgid "Unsupported or malformed Rank Math schema. Products continue to use WooCommerce data."
 msgstr ""
 
-#: includes/import.php:64
+#: includes/integrations/import.php:64
 msgid "Additional Rank Math entities were not imported."
 msgstr ""
 
 #. translators: %s: source schema property.
-#: includes/import.php:80
+#: includes/integrations/import.php:80
 #, php-format
 msgid "Unresolved template in %s was not imported."
 msgstr ""
 
-#: includes/import.php:103
+#: includes/integrations/import.php:103
 msgid "Event location and offers were reduced to the supported venue, address and URL fields; review nested properties manually."
 msgstr ""
 
-#: includes/import.php:115
+#: includes/integrations/import.php:115
 msgid "An unsupported recipe instruction was not transferred."
 msgstr ""
 
-#: includes/import.php:130
+#: includes/integrations/import.php:130
 msgid "Only calories were transferred from recipe nutrition; review other nutrition properties manually."
 msgstr ""
 
-#: includes/import.php:139
+#: includes/integrations/import.php:139
 msgid "Incomplete FAQ questions were not transferred."
 msgstr ""
 
 #. translators: %s: source schema property.
-#: includes/import.php:144
+#: includes/integrations/import.php:144
 #, php-format
 msgid "Property %s is generated from WordPress or is unsupported; its override was not transferred."
 msgstr ""
 
-#: includes/import.php:159
+#: includes/integrations/import.php:159
 msgid "Choose Yoast or Rank Math and a valid cursor."
 msgstr ""
 
-#: includes/import.php:179
+#: includes/integrations/import.php:179
 msgid "Existing Better Schema settings were preserved."
 msgstr ""
 
-#: includes/import.php:206
+#: includes/integrations/import.php:206
 msgid "Saving failed; changes for this post were rolled back."
 msgstr ""
 
-#: includes/pieces/breadcrumb.php:42
+#. translators: %s: the search terms.
+#: includes/schema/context.php:204
+#, php-format
+msgid "Search results for \"%s\""
+msgstr ""
+
+#: includes/schema/pieces/breadcrumb.php:42
 msgid "Home"
 msgstr ""
 
-#: includes/preview.php:52
-msgid "Post not found."
-msgstr ""
-
-#: includes/settings-page.php:12
-#: includes/settings-page.php:13
-#: includes/settings-page.php:26
-msgid "Better Schema"
-msgstr ""
-
-#: includes/validation.php:24
+#: includes/schema/validation.php:24
 msgid "Add a title. Google recommends a headline for articles."
 msgstr ""
 
-#: includes/validation.php:28
+#: includes/schema/validation.php:28
 msgid "Add a featured image. Google recommends an image for articles."
 msgstr ""
 
-#: includes/validation.php:32
+#: includes/schema/validation.php:32
 msgid "Set an author. Google recommends an author for articles."
 msgstr ""
 
-#: includes/validation.php:43
+#: includes/schema/validation.php:43
 msgid "Add a title. Google requires a name for events."
 msgstr ""
 
-#: includes/validation.php:44
+#: includes/schema/validation.php:44
 msgid "Set a start date. Google requires one for events."
 msgstr ""
 
-#: includes/validation.php:45
+#: includes/schema/validation.php:45
 msgid "Add a location. Google requires one for events."
 msgstr ""
 
-#: includes/validation.php:46
+#: includes/schema/validation.php:46
 msgid "Add a featured image. Google recommends an image for events."
 msgstr ""
 
-#: includes/validation.php:49
+#: includes/schema/validation.php:49
 msgid "Add a title. Google requires a name for recipes."
 msgstr ""
 
-#: includes/validation.php:50
+#: includes/schema/validation.php:50
 msgid "Add a featured image. Google requires an image for recipes."
 msgstr ""
 
-#: includes/validation.php:51
+#: includes/schema/validation.php:51
 msgid "List the ingredients. Google recommends them for recipes."
 msgstr ""
 
-#: includes/validation.php:52
+#: includes/schema/validation.php:52
 msgid "Add the steps. Google recommends instructions for recipes."
 msgstr ""
 
-#: includes/validation.php:55
+#: includes/schema/validation.php:55
 msgid "Add at least one question with an answer. Google requires them for FAQ pages."
 msgstr ""
 
-#: includes/validation.php:58
+#: includes/schema/validation.php:58
 msgid "Add an address in Settings → Better Schema. Google recommends one for local businesses."
 msgstr ""
 
-#: includes/validation.php:61
+#: includes/schema/validation.php:61
 msgid "Add a product image. Google recommends an image for products."
 msgstr ""
 
-#: includes/validation.php:62
+#: includes/schema/validation.php:62
 msgid "Set a price. Google recommends an offer for products."
 msgstr ""
 
-#: includes/validation.php:69
+#: includes/schema/validation.php:69
 msgid "Add a site icon or logo. Google recommends a logo for organizations."
 msgstr ""
 
 #. translators: %s: schema.org type, such as WebSite.
-#: includes/validation.php:153
+#: includes/schema/validation.php:153
 #, php-format
 msgid "Your custom JSON-LD adds a second %s. Choose “Override matching schema” to replace the generated one."
 msgstr ""
 
 #. translators: 1: domain in the custom JSON-LD, 2: the site's domain.
-#: includes/validation.php:170
+#: includes/schema/validation.php:170
 #, php-format
 msgid "Your custom JSON-LD uses %1$s, but this site is %2$s. Use the site’s own URLs for @id and url."
 msgstr ""

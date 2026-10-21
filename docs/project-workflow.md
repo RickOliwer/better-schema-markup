@@ -1,5 +1,7 @@
 # Project Workflow
 
+See [Project structure](project-structure.md) for folder ownership, entry points, and data flow.
+
 ## Toolchain
 
 Use the project toolchain only:

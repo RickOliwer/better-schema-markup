@@ -168,8 +168,11 @@ export default defineConfig({
     },
   },
   environments: {
-    client: { build: adminScript("src/index.tsx", "index", true) },
-    settings: { consumer: "client", build: adminScript("src/settings.tsx", "settings", false) },
+    client: { build: adminScript("src/editor/index.tsx", "index", true) },
+    settings: {
+      consumer: "client",
+      build: adminScript("src/settings/index.tsx", "settings", false),
+    },
   },
   builder: {
     async buildApp(builder) {
