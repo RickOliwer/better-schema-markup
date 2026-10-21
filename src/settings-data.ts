@@ -95,6 +95,13 @@ export function parseSocialProfiles(value: string): string[] {
   return value.split(/\r?\n/).map((url) => url.trim()).filter(Boolean);
 }
 
+/** The 1-based numbers of the lines that are filled in but are not full http or https URLs. */
+export function invalidSocialProfileLines(value: string): number[] {
+  return value
+    .split(/\r?\n/)
+    .flatMap((line, index) => (line.trim() !== "" && invalidSocialProfiles([line.trim()]).length > 0 ? [index + 1] : []));
+}
+
 export function invalidSocialProfiles(urls: readonly string[]): string[] {
   return urls.filter((url) => {
     try {

@@ -3,6 +3,7 @@ import {
   EMPTY_BUSINESS,
   isCoordinate,
   isFrontendUrl,
+  invalidSocialProfileLines,
   invalidSocialProfiles,
   parseSocialProfiles,
   readBusinessSettings,
@@ -52,6 +53,15 @@ describe("social profiles", () => {
     const urls = parseSocialProfiles(" https://example.com/a \n\n javascript:alert(1)\nhttp://example.org/x");
     expect(urls).toEqual(["https://example.com/a", "javascript:alert(1)", "http://example.org/x"]);
     expect(invalidSocialProfiles(urls)).toEqual(["javascript:alert(1)"]);
+  });
+});
+
+describe("invalidSocialProfileLines", () => {
+  it("numbers the filled-in lines that are not full http or https URLs", () => {
+    const text = "https://example.com/a\n\nlinkedin.com/company/acme\r\n  @acme  \nhttp://example.org/x\njavascript:alert(1)";
+    expect(invalidSocialProfileLines(text)).toEqual([3, 4, 6]);
+    expect(invalidSocialProfileLines("")).toEqual([]);
+    expect(invalidSocialProfileLines("https://example.com\n\n")).toEqual([]);
   });
 });
 

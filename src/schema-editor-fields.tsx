@@ -2,6 +2,7 @@ import { ExternalLink } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
 
 import { readCustomJsonLd, readCustomJsonLdMode } from "./post-details";
+import { Form } from "./form-layout";
 import { richResultsTestUrl } from "./rich-results-test";
 import { SchemaDetails } from "./schema-details";
 import { SchemaPreviewSection } from "./schema-preview-section";
@@ -35,17 +36,19 @@ export function SchemaEditorFields({
   });
 
   return (
-    <>
-      <SchemaTypePicker value={schemaType} onChange={onChangeType} />
-      <SchemaDetails meta={meta} schemaType={schemaType} onChange={onChangeDetail} />
+    <Form compact>
+      <div className="bsm-fields">
+        <SchemaTypePicker value={schemaType} onChange={onChangeType} />
+        <SchemaDetails meta={meta} schemaType={schemaType} onChange={onChangeDetail} />
+      </div>
       <SchemaPreviewSection state={preview} />
       {testableUrl && schemaType !== "none" ? (
-        <p>
+        <p style={{ margin: 0 }}>
           <ExternalLink href={richResultsTestUrl(testableUrl)}>
             {__("Test with Google", "better-schema-markup")}
           </ExternalLink>
         </p>
       ) : null}
-    </>
+    </Form>
   );
 }

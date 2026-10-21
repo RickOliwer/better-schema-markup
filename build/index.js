@@ -1,4 +1,4 @@
-(function(_wordpress_plugins, _wordpress_element, _wordpress_core_data, _wordpress_data, _wordpress_editor, _wordpress_i18n, _wordpress_components, react, react_jsx_runtime, _wordpress_api_fetch) {
+(function(_wordpress_plugins, _wordpress_element, _wordpress_core_data, _wordpress_data, _wordpress_editor, _wordpress_i18n, _wordpress_components, react_jsx_runtime, react, _wordpress_api_fetch) {
 	//#region \0rolldown/runtime.js
 	var __create = Object.create;
 	var __defProp = Object.defineProperty;
@@ -179,6 +179,160 @@
 		return value.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
 	}
 	//#endregion
+	//#region src/form-layout.tsx
+	var FORM_CSS = `
+.bsm-form { display: grid; gap: 32px; color: #1d2327; }
+.bsm-section { display: grid; gap: 20px; align-content: start; min-width: 0; }
+.bsm-section + .bsm-section { border-top: 1px solid #dcdcde; padding-top: 32px; }
+.bsm-section__title { margin: 0; font-size: 16px; font-weight: 600; line-height: 1.4; color: #1d2327; }
+.bsm-section__description { margin: 4px 0 0; font-size: 13px; line-height: 1.5; color: #646970; }
+.bsm-fields { display: grid; gap: 20px; min-width: 0; }
+.bsm-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.bsm-form--compact .bsm-fields, .bsm-fields--compact { gap: 16px; }
+.bsm-form--compact .bsm-row, .bsm-row--stack { grid-template-columns: minmax(0, 1fr); }
+.bsm-form label:not(.components-checkbox-control__label):not(.components-toggle-control__label),
+.bsm-form .bsm-label {
+  display: block !important;
+  margin: 0 0 8px !important;
+  padding: 0 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: #1d2327 !important;
+}
+.bsm-form .components-base-control__help,
+.bsm-form .components-toggle-control__help,
+.bsm-form .components-checkbox-control__help,
+.bsm-form .bsm-help {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  font-style: normal;
+  color: #646970;
+}
+.bsm-form p.bsm-help { margin: 6px 0 0; }
+.bsm-form fieldset { margin: 0; padding: 0; border: 0; display: grid; gap: 12px; }
+.bsm-form h3 { margin: 0; font-size: 14px; font-weight: 600; }
+`;
+	/** Loads the form styles. Render once at the top of each form. */
+	function FormStyles() {
+		return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("style", { children: FORM_CSS });
+	}
+	/** The outer wrapper that scopes the form styles. `compact` is for the narrow editor sidebar. */
+	function Form({ compact = false, children }) {
+		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+			className: compact ? "bsm-form bsm-form--compact" : "bsm-form",
+			children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(FormStyles, {}), children]
+		});
+	}
+	/** A titled group of fields with an optional one-line description. */
+	function FormSection({ title, description, children }) {
+		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("section", {
+			className: "bsm-section",
+			children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h2", {
+				className: "bsm-section__title",
+				children: title
+			}), description ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+				className: "bsm-section__description",
+				children: description
+			}) : null] }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+				className: "bsm-fields",
+				children
+			})]
+		});
+	}
+	/** Stacks fields with an even gap. Use where there is no section, such as inside a panel. */
+	function Fields({ children }) {
+		return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+			className: "bsm-fields",
+			children
+		});
+	}
+	/** Puts two short related fields, such as city and postal code, side by side. */
+	function FieldRow({ children }) {
+		return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+			className: "bsm-row",
+			children
+		});
+	}
+	//#endregion
+	//#region src/help-tip.tsx
+	/** A "?" button that opens a short explanation next to a field. */
+	function HelpTip({ topic, children }) {
+		const [isOpen, setIsOpen] = (0, react.useState)(false);
+		const buttonArea = (0, react.useRef)(null);
+		const content = (0, react.useRef)(null);
+		(0, react.useEffect)(() => {
+			if (!isOpen) return;
+			function closeOnOutsidePress(event) {
+				const target = event.target;
+				if (!(target instanceof Node)) return;
+				if (buttonArea.current?.contains(target) || content.current?.contains(target)) return;
+				setIsOpen(false);
+			}
+			document.addEventListener("pointerdown", closeOnOutsidePress, true);
+			return () => document.removeEventListener("pointerdown", closeOnOutsidePress, true);
+		}, [isOpen]);
+		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
+			ref: buttonArea,
+			onClick: (event) => event.preventDefault(),
+			style: {
+				display: "inline-block",
+				paddingLeft: "4px",
+				verticalAlign: "middle"
+			},
+			children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Button, {
+				size: "small",
+				label: (0, _wordpress_i18n.sprintf)((0, _wordpress_i18n.__)("Help: %s", "better-schema-markup"), topic),
+				"aria-expanded": isOpen,
+				onClick: (event) => {
+					event.preventDefault();
+					setIsOpen((open) => !open);
+				},
+				icon: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("svg", {
+					width: "18",
+					height: "18",
+					viewBox: "0 0 24 24",
+					"aria-hidden": "true",
+					focusable: "false",
+					children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", {
+						fill: "currentColor",
+						d: "M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17ZM2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10S2 17.52 2 12Zm9.25 4.25h1.5V17.5h-1.5v-1.25Zm1.4-8.4c-1.35-.4-2.9.3-3.15 1.9l1.48.24c.1-.62.67-.95 1.24-.78.5.15.78.6.7 1.06-.1.52-.5.8-1 1.1-.55.34-1.12.77-1.12 1.63v.5h1.5v-.4c0-.27.2-.4.6-.64.67-.4 1.5-.92 1.7-2.1.2-1.2-.6-2.2-1.95-2.51Z"
+					})
+				})
+			}), isOpen ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Popover, {
+				placement: "bottom-start",
+				onClose: () => setIsOpen(false),
+				focusOnMount: false,
+				offset: 8,
+				children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+					ref: content,
+					style: {
+						boxSizing: "border-box",
+						width: "300px",
+						maxWidth: "calc(100vw - 48px)",
+						padding: "12px 16px",
+						fontSize: "13px",
+						lineHeight: 1.5,
+						whiteSpace: "normal",
+						textTransform: "none",
+						fontWeight: 400
+					},
+					children
+				})
+			}) : null]
+		});
+	}
+	/** A field label followed by a help button, for the `label` prop of WordPress form controls. */
+	function LabelWithHelp({ label, children }) {
+		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [label, /* @__PURE__ */ (0, react_jsx_runtime.jsx)(HelpTip, {
+			topic: label,
+			children
+		})] });
+	}
+	//#endregion
 	//#region src/custom-jsonld-field.tsx
 	/**
 	* Edits custom JSON-LD for the post and how it combines with the generated
@@ -188,9 +342,12 @@
 	function CustomJsonLdField({ value, mode, onChange, onChangeMode }) {
 		const [draft, setDraft] = (0, react.useState)(value);
 		const check = checkCustomJsonLd(draft);
-		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
+		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(Fields, { children: [
 			/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextareaControl, {
-				label: (0, _wordpress_i18n.__)("Custom JSON-LD", "better-schema-markup"),
+				label: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(LabelWithHelp, {
+					label: (0, _wordpress_i18n.__)("Custom JSON-LD", "better-schema-markup"),
+					children: (0, _wordpress_i18n.__)("Your own schema.org code for this page, for example from an SEO specialist. Paste one object, a list of objects, or a document with @graph. Each object needs an @type. Use the options below to choose how it combines with the schema this plugin generates.", "better-schema-markup")
+				}),
 				help: (0, _wordpress_i18n.__)("For advanced use. Paste one schema.org object, a list of objects, or a document with @graph.", "better-schema-markup"),
 				rows: 8,
 				value: draft,
@@ -206,7 +363,10 @@
 				children: check.reason === "syntax" ? (0, _wordpress_i18n.__)("This is not valid JSON, so it will not be saved.", "better-schema-markup") : (0, _wordpress_i18n.__)("Each object needs an @type, so this will not be saved.", "better-schema-markup")
 			}) : null,
 			/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.RadioControl, {
-				label: (0, _wordpress_i18n.__)("How to use it", "better-schema-markup"),
+				label: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(LabelWithHelp, {
+					label: (0, _wordpress_i18n.__)("How to use it", "better-schema-markup"),
+					children: (0, _wordpress_i18n.__)("Add keeps everything the plugin generates and adds yours next to it, which can create duplicates such as two WebSites. Override replaces generated entities of the same kind, such as the WebSite or organization, with yours. Replace outputs only your JSON-LD on this page.", "better-schema-markup")
+				}),
 				selected: mode,
 				options: [
 					{
@@ -357,50 +517,50 @@
 		function update(index, item) {
 			onChange(value.map((existing, position) => position === index ? item : existing));
 		}
-		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
-			value.map((item, index) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-				style: { marginBottom: "16px" },
-				children: [
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
-						label: (0, _wordpress_i18n.__)("Question", "better-schema-markup"),
-						value: item.question,
-						onChange: (question) => update(index, {
-							...item,
-							question
-						}),
-						__next40pxDefaultSize: true,
-						__nextHasNoMarginBottom: true
+		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [value.map((item, index) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+			className: "bsm-fields",
+			style: {
+				paddingBottom: "16px",
+				borderBottom: "1px solid #dcdcde"
+			},
+			children: [
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
+					label: (0, _wordpress_i18n.__)("Question", "better-schema-markup"),
+					value: item.question,
+					onChange: (question) => update(index, {
+						...item,
+						question
 					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextareaControl, {
-						label: (0, _wordpress_i18n.__)("Answer", "better-schema-markup"),
-						value: item.answer,
-						onChange: (answer) => update(index, {
-							...item,
-							answer
-						}),
-						__nextHasNoMarginBottom: true
+					__next40pxDefaultSize: true,
+					__nextHasNoMarginBottom: true
+				}),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextareaControl, {
+					label: (0, _wordpress_i18n.__)("Answer", "better-schema-markup"),
+					value: item.answer,
+					onChange: (answer) => update(index, {
+						...item,
+						answer
 					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Button, {
-						variant: "link",
-						isDestructive: true,
-						onClick: () => onChange(value.filter((_, position) => position !== index)),
-						children: (0, _wordpress_i18n.__)("Remove question", "better-schema-markup")
-					})
-				]
-			}, index)),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Button, {
-				variant: "secondary",
-				onClick: () => onChange([...value, {
-					question: "",
-					answer: ""
-				}]),
-				children: (0, _wordpress_i18n.__)("Add question", "better-schema-markup")
-			}),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
-				className: "description",
-				children: (0, _wordpress_i18n.__)("Questions without an answer are not saved.", "better-schema-markup")
-			})
-		] });
+					__nextHasNoMarginBottom: true
+				}),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", { children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Button, {
+					variant: "link",
+					isDestructive: true,
+					onClick: () => onChange(value.filter((_, position) => position !== index)),
+					children: (0, _wordpress_i18n.__)("Remove question", "better-schema-markup")
+				}) })
+			]
+		}, index)), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Button, {
+			variant: "secondary",
+			onClick: () => onChange([...value, {
+				question: "",
+				answer: ""
+			}]),
+			children: (0, _wordpress_i18n.__)("Add question", "better-schema-markup")
+		}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+			className: "bsm-help",
+			children: (0, _wordpress_i18n.__)("Questions without an answer are not saved.", "better-schema-markup")
+		})] })] });
 	}
 	//#endregion
 	//#region src/recipe-fields.tsx
@@ -736,22 +896,30 @@
 			jsonLd: readCustomJsonLd(meta),
 			mode: readCustomJsonLdMode(meta)
 		});
-		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
-			/* @__PURE__ */ (0, react_jsx_runtime.jsx)(SchemaTypePicker, {
-				value: schemaType,
-				onChange: onChangeType
-			}),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsx)(SchemaDetails, {
-				meta,
-				schemaType,
-				onChange: onChangeDetail
-			}),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsx)(SchemaPreviewSection, { state: preview }),
-			testableUrl && schemaType !== "none" ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.ExternalLink, {
-				href: richResultsTestUrl(testableUrl),
-				children: (0, _wordpress_i18n.__)("Test with Google", "better-schema-markup")
-			}) }) : null
-		] });
+		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(Form, {
+			compact: true,
+			children: [
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+					className: "bsm-fields",
+					children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(SchemaTypePicker, {
+						value: schemaType,
+						onChange: onChangeType
+					}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(SchemaDetails, {
+						meta,
+						schemaType,
+						onChange: onChangeDetail
+					})]
+				}),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)(SchemaPreviewSection, { state: preview }),
+				testableUrl && schemaType !== "none" ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+					style: { margin: 0 },
+					children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.ExternalLink, {
+						href: richResultsTestUrl(testableUrl),
+						children: (0, _wordpress_i18n.__)("Test with Google", "better-schema-markup")
+					})
+				}) : null
+			]
+		});
 	}
 	//#endregion
 	//#region src/schema-meta.ts
@@ -844,6 +1012,10 @@
 	}
 	function parseSocialProfiles(value) {
 		return value.split(/\r?\n/).map((url) => url.trim()).filter(Boolean);
+	}
+	/** The 1-based numbers of the lines that are filled in but are not full http or https URLs. */
+	function invalidSocialProfileLines(value) {
+		return value.split(/\r?\n/).flatMap((line, index) => line.trim() !== "" && invalidSocialProfiles([line.trim()]).length > 0 ? [index + 1] : []);
 	}
 	function invalidSocialProfiles(urls) {
 		return urls.filter((url) => {
@@ -960,141 +1132,146 @@
 				hours: value.hours.map((existing, position) => position === index ? row : existing)
 			});
 		}
-		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
-			/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h2", { children: (0, _wordpress_i18n.__)("Local business", "better-schema-markup") }),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.ToggleControl, {
+		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(FormSection, {
+			title: /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [(0, _wordpress_i18n.__)("Local business", "better-schema-markup"), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(HelpTip, {
+				topic: (0, _wordpress_i18n.__)("Local business", "better-schema-markup"),
+				children: (0, _wordpress_i18n.__)("Turn this on if customers can visit you, such as a shop, clinic or restaurant. It adds an address, opening hours and map location to your organization so Google can show them. It does not apply to a person.", "better-schema-markup")
+			})] }),
+			description: (0, _wordpress_i18n.__)("For businesses with a physical location that customers can visit.", "better-schema-markup"),
+			children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.ToggleControl, {
 				label: (0, _wordpress_i18n.__)("This is a local business with a physical location", "better-schema-markup"),
-				help: (0, _wordpress_i18n.__)("Adds an address, opening hours and map location to your organization. It does not apply to a person.", "better-schema-markup"),
 				checked: value.enabled,
 				onChange: (enabled) => onChange({
 					...value,
 					enabled
 				}),
 				__nextHasNoMarginBottom: true
-			}),
-			value.enabled ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-				style: { marginTop: "16px" },
-				children: [
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
-						label: (0, _wordpress_i18n.__)("Phone number", "better-schema-markup"),
-						value: value.telephone,
-						onChange: (telephone) => onChange({
-							...value,
-							telephone
-						}),
-						__next40pxDefaultSize: true,
-						__nextHasNoMarginBottom: true
+			}), value.enabled ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)(FieldRow, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
+					label: (0, _wordpress_i18n.__)("Phone number", "better-schema-markup"),
+					value: value.telephone,
+					onChange: (telephone) => onChange({
+						...value,
+						telephone
 					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
-						label: (0, _wordpress_i18n.__)("Price range", "better-schema-markup"),
-						help: (0, _wordpress_i18n.__)("For example $$ or “100–300 SEK”.", "better-schema-markup"),
-						value: value.price_range,
-						onChange: (price_range) => onChange({
-							...value,
-							price_range
-						}),
-						__next40pxDefaultSize: true,
-						__nextHasNoMarginBottom: true
+					__next40pxDefaultSize: true,
+					__nextHasNoMarginBottom: true
+				}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
+					label: (0, _wordpress_i18n.__)("Price range", "better-schema-markup"),
+					help: (0, _wordpress_i18n.__)("For example $$ or “100–300 SEK”.", "better-schema-markup"),
+					value: value.price_range,
+					onChange: (price_range) => onChange({
+						...value,
+						price_range
 					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
-						label: (0, _wordpress_i18n.__)("Street address", "better-schema-markup"),
-						value: value.address.street,
-						onChange: (street) => onChange({
-							...value,
-							address: {
-								...value.address,
-								street
-							}
-						}),
-						__next40pxDefaultSize: true,
-						__nextHasNoMarginBottom: true
+					__next40pxDefaultSize: true,
+					__nextHasNoMarginBottom: true
+				})] }),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
+					label: (0, _wordpress_i18n.__)("Street address", "better-schema-markup"),
+					value: value.address.street,
+					onChange: (street) => onChange({
+						...value,
+						address: {
+							...value.address,
+							street
+						}
 					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
-						label: (0, _wordpress_i18n.__)("City", "better-schema-markup"),
-						value: value.address.locality,
-						onChange: (locality) => onChange({
-							...value,
-							address: {
-								...value.address,
-								locality
-							}
-						}),
-						__next40pxDefaultSize: true,
-						__nextHasNoMarginBottom: true
+					__next40pxDefaultSize: true,
+					__nextHasNoMarginBottom: true
+				}),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)(FieldRow, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
+					label: (0, _wordpress_i18n.__)("City", "better-schema-markup"),
+					value: value.address.locality,
+					onChange: (locality) => onChange({
+						...value,
+						address: {
+							...value.address,
+							locality
+						}
 					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
-						label: (0, _wordpress_i18n.__)("Region or state", "better-schema-markup"),
-						value: value.address.region,
-						onChange: (region) => onChange({
-							...value,
-							address: {
-								...value.address,
-								region
-							}
-						}),
-						__next40pxDefaultSize: true,
-						__nextHasNoMarginBottom: true
+					__next40pxDefaultSize: true,
+					__nextHasNoMarginBottom: true
+				}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
+					label: (0, _wordpress_i18n.__)("Region or state", "better-schema-markup"),
+					value: value.address.region,
+					onChange: (region) => onChange({
+						...value,
+						address: {
+							...value.address,
+							region
+						}
 					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
-						label: (0, _wordpress_i18n.__)("Postal code", "better-schema-markup"),
-						value: value.address.postal_code,
-						onChange: (postal_code) => onChange({
-							...value,
-							address: {
-								...value.address,
-								postal_code
-							}
-						}),
-						__next40pxDefaultSize: true,
-						__nextHasNoMarginBottom: true
+					__next40pxDefaultSize: true,
+					__nextHasNoMarginBottom: true
+				})] }),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)(FieldRow, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
+					label: (0, _wordpress_i18n.__)("Postal code", "better-schema-markup"),
+					value: value.address.postal_code,
+					onChange: (postal_code) => onChange({
+						...value,
+						address: {
+							...value.address,
+							postal_code
+						}
 					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
-						label: (0, _wordpress_i18n.__)("Country", "better-schema-markup"),
-						help: (0, _wordpress_i18n.__)("A two-letter country code, for example SE.", "better-schema-markup"),
-						value: value.address.country,
-						onChange: (country) => onChange({
-							...value,
-							address: {
-								...value.address,
-								country
-							}
-						}),
-						__next40pxDefaultSize: true,
-						__nextHasNoMarginBottom: true
+					__next40pxDefaultSize: true,
+					__nextHasNoMarginBottom: true
+				}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
+					label: (0, _wordpress_i18n.__)("Country", "better-schema-markup"),
+					help: (0, _wordpress_i18n.__)("A two-letter country code, for example SE.", "better-schema-markup"),
+					value: value.address.country,
+					onChange: (country) => onChange({
+						...value,
+						address: {
+							...value.address,
+							country
+						}
 					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
-						label: (0, _wordpress_i18n.__)("Latitude", "better-schema-markup"),
-						help: (0, _wordpress_i18n.__)("Between -90 and 90. Set both latitude and longitude, or neither.", "better-schema-markup"),
-						value: value.geo.lat,
-						onChange: (lat) => onChange({
-							...value,
-							geo: {
-								...value.geo,
-								lat
-							}
-						}),
-						__next40pxDefaultSize: true,
-						__nextHasNoMarginBottom: true
+					__next40pxDefaultSize: true,
+					__nextHasNoMarginBottom: true
+				})] }),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)(FieldRow, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
+					label: (0, _wordpress_i18n.__)("Latitude", "better-schema-markup"),
+					help: (0, _wordpress_i18n.__)("Between -90 and 90. Set both latitude and longitude, or neither.", "better-schema-markup"),
+					value: value.geo.lat,
+					onChange: (lat) => onChange({
+						...value,
+						geo: {
+							...value.geo,
+							lat
+						}
 					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
-						label: (0, _wordpress_i18n.__)("Longitude", "better-schema-markup"),
-						help: (0, _wordpress_i18n.__)("Between -180 and 180.", "better-schema-markup"),
-						value: value.geo.lng,
-						onChange: (lng) => onChange({
-							...value,
-							geo: {
-								...value.geo,
-								lng
-							}
-						}),
-						__next40pxDefaultSize: true,
-						__nextHasNoMarginBottom: true
+					__next40pxDefaultSize: true,
+					__nextHasNoMarginBottom: true
+				}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
+					label: (0, _wordpress_i18n.__)("Longitude", "better-schema-markup"),
+					help: (0, _wordpress_i18n.__)("Between -180 and 180.", "better-schema-markup"),
+					value: value.geo.lng,
+					onChange: (lng) => onChange({
+						...value,
+						geo: {
+							...value.geo,
+							lng
+						}
 					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: (0, _wordpress_i18n.__)("Opening hours", "better-schema-markup") }),
-					value.hours.map((row, index) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("fieldset", {
-						style: { marginBottom: "16px" },
-						children: [
-							WEEKDAYS.map((day) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.CheckboxControl, {
+					__next40pxDefaultSize: true,
+					__nextHasNoMarginBottom: true
+				})] }),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: (0, _wordpress_i18n.__)("Opening hours", "better-schema-markup") }),
+				value.hours.map((row, index) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("fieldset", {
+					style: {
+						paddingBottom: "20px",
+						borderBottom: "1px solid #dcdcde"
+					},
+					children: [
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+							style: {
+								display: "flex",
+								flexWrap: "wrap",
+								gap: "8px 16px"
+							},
+							children: WEEKDAYS.map((day) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.CheckboxControl, {
 								label: WEEKDAY_LABELS[day],
 								checked: row.days.includes(day),
 								onChange: (checked) => updateHours(index, {
@@ -1102,55 +1279,53 @@
 									days: WEEKDAYS.filter((weekday) => weekday === day ? checked : row.days.includes(weekday))
 								}),
 								__nextHasNoMarginBottom: true
-							}, day)),
-							/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
-								type: "time",
-								label: (0, _wordpress_i18n.__)("Opens", "better-schema-markup"),
-								value: row.opens,
-								onChange: (opens) => updateHours(index, {
-									...row,
-									opens
-								}),
-								__next40pxDefaultSize: true,
-								__nextHasNoMarginBottom: true
-							}),
-							/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
-								type: "time",
-								label: (0, _wordpress_i18n.__)("Closes", "better-schema-markup"),
-								value: row.closes,
-								onChange: (closes) => updateHours(index, {
-									...row,
-									closes
-								}),
-								__next40pxDefaultSize: true,
-								__nextHasNoMarginBottom: true
-							}),
-							/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Button, {
-								variant: "link",
-								isDestructive: true,
-								onClick: () => onChange({
-									...value,
-									hours: value.hours.filter((_, position) => position !== index)
-								}),
-								children: (0, _wordpress_i18n.__)("Remove these hours", "better-schema-markup")
-							})
-						]
-					}, index)),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Button, {
-						variant: "secondary",
-						onClick: () => onChange({
-							...value,
-							hours: [...value.hours, NEW_HOURS]
+							}, day))
 						}),
-						children: (0, _wordpress_i18n.__)("Add opening hours", "better-schema-markup")
+						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)(FieldRow, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
+							type: "time",
+							label: (0, _wordpress_i18n.__)("Opens", "better-schema-markup"),
+							value: row.opens,
+							onChange: (opens) => updateHours(index, {
+								...row,
+								opens
+							}),
+							__next40pxDefaultSize: true,
+							__nextHasNoMarginBottom: true
+						}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
+							type: "time",
+							label: (0, _wordpress_i18n.__)("Closes", "better-schema-markup"),
+							value: row.closes,
+							onChange: (closes) => updateHours(index, {
+								...row,
+								closes
+							}),
+							__next40pxDefaultSize: true,
+							__nextHasNoMarginBottom: true
+						})] }),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", { children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Button, {
+							variant: "link",
+							isDestructive: true,
+							onClick: () => onChange({
+								...value,
+								hours: value.hours.filter((_, position) => position !== index)
+							}),
+							children: (0, _wordpress_i18n.__)("Remove these hours", "better-schema-markup")
+						}) })
+					]
+				}, index)),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Button, {
+					variant: "secondary",
+					onClick: () => onChange({
+						...value,
+						hours: [...value.hours, NEW_HOURS]
 					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
-						className: "description",
-						children: (0, _wordpress_i18n.__)("Hours without a day, or without both times, are not saved.", "better-schema-markup")
-					})
-				]
-			}) : null
-		] });
+					children: (0, _wordpress_i18n.__)("Add opening hours", "better-schema-markup")
+				}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+					className: "bsm-help",
+					children: (0, _wordpress_i18n.__)("Hours without a day, or without both times, are not saved.", "better-schema-markup")
+				})] })
+			] }) : null]
+		});
 	}
 	//#endregion
 	//#region src/import-report.ts
@@ -1166,13 +1341,38 @@
 		].every((key) => typeof data[key] === "number" && Number.isSafeInteger(data[key]) && data[key] >= 0) && typeof data.done === "boolean" && Array.isArray(data.details) && data.details.every((item) => typeof item === "object" && item !== null && "post" in item && typeof item.post === "number" && "message" in item && typeof item.message === "string");
 	}
 	//#endregion
+	//#region src/import-summary.ts
+	/**
+	* Explains an import or preview in plain words. Every checked post is either
+	* imported, skipped or failed; `unsupported` counts posts with settings that
+	* could not be transferred, on top of those.
+	*
+	* @param totals Counts from all import batches.
+	* @param dryRun Whether this was a preview, which saves nothing.
+	* @param source Name of the plugin imported from, for example "Yoast SEO".
+	*/
+	function summarizeImport(totals, dryRun, source) {
+		const checked = totals.imported + totals.skipped + totals.failed;
+		if (checked === 0) return (0, _wordpress_i18n.__)("There are no posts to check.", "better-schema-markup");
+		const parts = [];
+		if (totals.imported > 0) parts.push(dryRun ? (0, _wordpress_i18n.sprintf)((0, _wordpress_i18n._n)("Preview: %1$d of %2$d post would be imported.", "Preview: %1$d of %2$d posts would be imported.", checked, "better-schema-markup"), totals.imported, checked) : (0, _wordpress_i18n.sprintf)((0, _wordpress_i18n._n)("Imported %1$d of %2$d post.", "Imported %1$d of %2$d posts.", checked, "better-schema-markup"), totals.imported, checked));
+		else parts.push((0, _wordpress_i18n.sprintf)((0, _wordpress_i18n._n)("%1$s Your post has no %3$s schema choice to import.", "%1$s None of your %2$d posts have a %3$s schema choice to import.", checked, "better-schema-markup"), dryRun ? (0, _wordpress_i18n.__)("Preview: nothing to import.", "better-schema-markup") : (0, _wordpress_i18n.__)("Nothing was imported.", "better-schema-markup"), checked, source));
+		if (totals.imported > 0 && totals.skipped > 0) parts.push((0, _wordpress_i18n.sprintf)((0, _wordpress_i18n._n)("%d was skipped because it has no schema choice to import, or already has Better Schema settings.", "%d were skipped because they have no schema choice to import, or already have Better Schema settings.", totals.skipped, "better-schema-markup"), totals.skipped));
+		if (totals.unsupported > 0) parts.push((0, _wordpress_i18n.sprintf)((0, _wordpress_i18n._n)("%d has settings that cannot be transferred. See the details below.", "%d have settings that cannot be transferred. See the details below.", totals.unsupported, "better-schema-markup"), totals.unsupported));
+		if (totals.failed > 0) parts.push((0, _wordpress_i18n.sprintf)((0, _wordpress_i18n._n)("%d post failed. See the details below.", "%d posts failed. See the details below.", totals.failed, "better-schema-markup"), totals.failed));
+		parts.push(dryRun ? (0, _wordpress_i18n.__)("Nothing was saved.", "better-schema-markup") : (0, _wordpress_i18n.__)("Your Yoast and Rank Math data was not changed.", "better-schema-markup"));
+		return parts.join(" ");
+	}
+	//#endregion
 	//#region src/seo-settings.tsx
 	function SeoSettings() {
 		const [takeover, setTakeover] = (0, react.useState)(null);
 		const [source, setSource] = (0, react.useState)("yoast");
 		const [busy, setBusy] = (0, react.useState)(false);
-		const [message, setMessage] = (0, react.useState)("");
-		const [error, setError] = (0, react.useState)("");
+		const [takeoverMessage, setTakeoverMessage] = (0, react.useState)("");
+		const [takeoverError, setTakeoverError] = (0, react.useState)("");
+		const [importMessage, setImportMessage] = (0, react.useState)("");
+		const [importError, setImportError] = (0, react.useState)("");
 		const [details, setDetails] = (0, react.useState)([]);
 		(0, react.useEffect)(() => {
 			let active = true;
@@ -1181,7 +1381,7 @@
 				if (typeof value !== "object" || value === null || !("better_schema_takeover" in value) || typeof value.better_schema_takeover !== "boolean") throw new Error();
 				setTakeover(value.better_schema_takeover);
 			}).catch(() => {
-				if (active) setError((0, _wordpress_i18n.__)("Could not load schema takeover settings.", "better-schema-markup"));
+				if (active) setTakeoverError((0, _wordpress_i18n.__)("Could not load schema takeover settings.", "better-schema-markup"));
 			});
 			return () => {
 				active = false;
@@ -1189,7 +1389,8 @@
 		}, []);
 		async function saveTakeover(next) {
 			setBusy(true);
-			setError("");
+			setTakeoverError("");
+			setTakeoverMessage("");
 			try {
 				await schemaApiFetch({
 					path: "/wp/v2/settings",
@@ -1197,17 +1398,17 @@
 					data: { better_schema_takeover: next }
 				});
 				setTakeover(next);
-				setMessage((0, _wordpress_i18n.__)("Schema takeover setting saved.", "better-schema-markup"));
+				setTakeoverMessage((0, _wordpress_i18n.__)("Schema takeover setting saved.", "better-schema-markup"));
 			} catch {
-				setError((0, _wordpress_i18n.__)("Could not save schema takeover settings.", "better-schema-markup"));
+				setTakeoverError((0, _wordpress_i18n.__)("Could not save schema takeover settings.", "better-schema-markup"));
 			} finally {
 				setBusy(false);
 			}
 		}
 		async function runImport(dryRun) {
 			setBusy(true);
-			setMessage("");
-			setError("");
+			setImportMessage("");
+			setImportError("");
 			setDetails([]);
 			const total = {
 				imported: 0,
@@ -1239,90 +1440,105 @@
 					cursor = report.cursor;
 					done = report.done;
 				}
-				setMessage([
-					`${(0, _wordpress_i18n.__)("Imported", "better-schema-markup")}: ${total.imported}`,
-					`${(0, _wordpress_i18n.__)("Skipped", "better-schema-markup")}: ${total.skipped}`,
-					`${(0, _wordpress_i18n.__)("With unsupported settings", "better-schema-markup")}: ${total.unsupported}`,
-					`${(0, _wordpress_i18n.__)("Failed", "better-schema-markup")}: ${total.failed}`,
-					dryRun ? (0, _wordpress_i18n.__)("Dry run only; nothing was saved.", "better-schema-markup") : (0, _wordpress_i18n.__)("Review the details below. Existing choices were preserved.", "better-schema-markup")
-				].join(". "));
+				setImportMessage(summarizeImport(total, dryRun, source === "yoast" ? "Yoast SEO" : "Rank Math"));
 			} catch {
-				setError((0, _wordpress_i18n.__)("The import stopped. Previously completed batches were kept. You can safely retry; existing choices will be skipped.", "better-schema-markup"));
+				setImportError((0, _wordpress_i18n.__)("The import stopped. Previously completed batches were kept. You can safely retry; existing choices will be skipped.", "better-schema-markup"));
 			} finally {
 				setBusy(false);
 			}
 		}
-		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("section", { children: [
-			/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h2", { children: (0, _wordpress_i18n.__)("SEO plugin compatibility", "better-schema-markup") }),
-			error ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Notice, {
-				status: "error",
-				isDismissible: false,
-				children: error
-			}) : null,
-			message ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Notice, {
-				status: "info",
-				isDismissible: false,
-				children: message
-			}) : null,
-			/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.ToggleControl, {
-				label: (0, _wordpress_i18n.__)("Let Better Schema Markup handle schema", "better-schema-markup"),
-				help: (0, _wordpress_i18n.__)("Replaces Yoast SEO and Rank Math schema only. When disabled with either plugin active, that plugin handles frontend schema. Previews and WPGraphQL remain available. This setting saves immediately.", "better-schema-markup"),
-				checked: takeover === true,
-				disabled: busy || takeover === null,
-				onChange: (next) => {
-					saveTakeover(next);
-				},
-				__nextHasNoMarginBottom: true
-			}),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: (0, _wordpress_i18n.__)("Import saved schema settings", "better-schema-markup") }),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: (0, _wordpress_i18n.__)("Import supported per-post types and details once. Source data and existing Better Schema choices are preserved. Unsupported fields and templates are reported for manual review. Run a preview first.", "better-schema-markup") }),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.SelectControl, {
-				label: (0, _wordpress_i18n.__)("Import from", "better-schema-markup"),
-				value: source,
-				disabled: busy,
-				options: [{
-					label: (0, _wordpress_i18n.__)("Yoast SEO", "better-schema-markup"),
-					value: "yoast"
-				}, {
-					label: (0, _wordpress_i18n.__)("Rank Math", "better-schema-markup"),
-					value: "rank-math"
-				}],
-				onChange: (value) => {
-					if (value === "yoast" || value === "rank-math") setSource(value);
-				},
-				__next40pxDefaultSize: true,
-				__nextHasNoMarginBottom: true
-			}),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: [
-				/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Button, {
-					variant: "secondary",
-					disabled: busy,
-					onClick: () => {
-						runImport(true);
+		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)(FormSection, {
+			title: (0, _wordpress_i18n.__)("SEO plugin compatibility", "better-schema-markup"),
+			description: (0, _wordpress_i18n.__)("Choose whether Better Schema Markup replaces the schema of Yoast SEO and Rank Math.", "better-schema-markup"),
+			children: [
+				takeoverError ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Notice, {
+					status: "error",
+					isDismissible: false,
+					children: takeoverError
+				}) : null,
+				takeoverMessage ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Notice, {
+					status: "info",
+					isDismissible: false,
+					children: takeoverMessage
+				}) : null,
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.ToggleControl, {
+					label: (0, _wordpress_i18n.__)("Let Better Schema Markup handle schema", "better-schema-markup"),
+					help: (0, _wordpress_i18n.__)("Replaces Yoast SEO and Rank Math schema only. When disabled with either plugin active, that plugin handles frontend schema. Previews and WPGraphQL remain available. This setting saves immediately.", "better-schema-markup"),
+					checked: takeover === true,
+					disabled: busy || takeover === null,
+					onChange: (next) => {
+						saveTakeover(next);
 					},
-					children: (0, _wordpress_i18n.__)("Preview import", "better-schema-markup")
-				}),
-				" ",
-				/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Button, {
-					variant: "secondary",
-					disabled: busy,
-					isBusy: busy,
-					onClick: () => {
-						runImport(false);
-					},
-					children: (0, _wordpress_i18n.__)("Import settings", "better-schema-markup")
+					__nextHasNoMarginBottom: true
 				})
-			] }),
-			details.length ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("details", {
-				open: true,
-				children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("summary", { children: (0, _wordpress_i18n.__)("Import details", "better-schema-markup") }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("ul", { children: details.map((detail, index) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("strong", { children: [
-					(0, _wordpress_i18n.__)("Post", "better-schema-markup"),
-					" ",
-					detail.post,
-					": "
-				] }), detail.message] }, index)) })]
-			}) : null
-		] });
+			]
+		}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(FormSection, {
+			title: /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [(0, _wordpress_i18n.__)("Import from Yoast SEO or Rank Math", "better-schema-markup"), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(HelpTip, {
+				topic: (0, _wordpress_i18n.__)("Import from Yoast SEO or Rank Math", "better-schema-markup"),
+				children: (0, _wordpress_i18n.__)("If you chose a schema type for individual posts in Yoast SEO or Rank Math, this copies those choices into Better Schema, so you do not have to set them again. Preview shows what would happen without saving anything. Your Yoast and Rank Math data is never changed, and posts that already have Better Schema settings are skipped. If you never set schema per post, there is nothing to import.", "better-schema-markup")
+			})] }),
+			description: (0, _wordpress_i18n.__)("Copy the schema types you set on individual posts in another SEO plugin. Start with Preview.", "better-schema-markup"),
+			children: [
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.SelectControl, {
+					label: (0, _wordpress_i18n.__)("Import from", "better-schema-markup"),
+					value: source,
+					disabled: busy,
+					options: [{
+						label: (0, _wordpress_i18n.__)("Yoast SEO", "better-schema-markup"),
+						value: "yoast"
+					}, {
+						label: (0, _wordpress_i18n.__)("Rank Math", "better-schema-markup"),
+						value: "rank-math"
+					}],
+					onChange: (value) => {
+						if (value === "yoast" || value === "rank-math") setSource(value);
+					},
+					__next40pxDefaultSize: true,
+					__nextHasNoMarginBottom: true
+				}),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+					style: {
+						display: "flex",
+						gap: "8px"
+					},
+					children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Button, {
+						variant: "secondary",
+						disabled: busy,
+						onClick: () => {
+							runImport(true);
+						},
+						children: (0, _wordpress_i18n.__)("Preview import", "better-schema-markup")
+					}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Button, {
+						variant: "secondary",
+						disabled: busy,
+						isBusy: busy,
+						onClick: () => {
+							runImport(false);
+						},
+						children: (0, _wordpress_i18n.__)("Import settings", "better-schema-markup")
+					})]
+				}),
+				importError ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Notice, {
+					status: "error",
+					isDismissible: false,
+					children: importError
+				}) : null,
+				importMessage ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Notice, {
+					status: "info",
+					isDismissible: false,
+					children: importMessage
+				}) : null,
+				details.length ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("details", {
+					open: true,
+					children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("summary", { children: (0, _wordpress_i18n.__)("Import details", "better-schema-markup") }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("ul", { children: details.map((detail, index) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("li", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("strong", { children: [
+						(0, _wordpress_i18n.__)("Post", "better-schema-markup"),
+						" ",
+						detail.post,
+						": "
+					] }), detail.message] }, index)) })]
+				}) : null
+			]
+		})] });
 	}
 	//#endregion
 	//#region src/settings-screen.tsx
@@ -1347,9 +1563,14 @@
 			frame.open();
 		}
 		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-			style: { marginBottom: "24px" },
+			role: "group",
+			"aria-labelledby": "bsm-logo-label",
 			children: [
-				/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("strong", { children: (0, _wordpress_i18n.__)("Logo", "better-schema-markup") }) }),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+					id: "bsm-logo-label",
+					className: "bsm-label",
+					children: (0, _wordpress_i18n.__)("Logo", "better-schema-markup")
+				}),
 				id > 0 && url ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("img", {
 					src: url,
 					alt: (0, _wordpress_i18n.__)("Selected logo", "better-schema-markup"),
@@ -1357,7 +1578,8 @@
 						display: "block",
 						maxWidth: "180px",
 						maxHeight: "120px",
-						marginBottom: "12px"
+						marginBottom: "12px",
+						borderRadius: "6px"
 					}
 				}) : null,
 				/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Button, {
@@ -1371,7 +1593,7 @@
 					children: (0, _wordpress_i18n.__)("Remove", "better-schema-markup")
 				}) : null,
 				/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
-					className: "description",
+					className: "bsm-help",
 					children: (0, _wordpress_i18n.__)("Leave empty to use the site icon.", "better-schema-markup")
 				})
 			]
@@ -1412,7 +1634,7 @@
 			if (!identity) return;
 			const profiles = parseSocialProfiles(socialText);
 			if (!setupOnly && invalidSocialProfiles(profiles).length > 0) {
-				setError((0, _wordpress_i18n.__)("Social profiles must be full http or https URLs, one per line.", "better-schema-markup"));
+				setError((0, _wordpress_i18n.__)("Fix the highlighted social profile lines. Each must be a full URL starting with https://.", "better-schema-markup"));
 				return;
 			}
 			if (!setupOnly && !isFrontendUrl(frontendUrl)) {
@@ -1473,15 +1695,22 @@
 				setSaving(false);
 			}
 		}
+		const socialProblems = invalidSocialProfileLines(socialText);
 		if (!settings || !identity) return error ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Notice, {
 			status: "error",
 			isDismissible: false,
 			children: error
 		}) : /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Spinner, {});
-		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+		return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
 			style: { maxWidth: "680px" },
-			children: [
-				showSetup ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: (0, _wordpress_i18n.__)("Answer three questions to set up your site identity. You can change these settings later.", "better-schema-markup") }) : /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: (0, _wordpress_i18n.__)("Set who publishes this site and choose the schema used for posts without an individual choice.", "better-schema-markup") }),
+			children: /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(Form, { children: [
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+					style: {
+						margin: 0,
+						color: "#646970"
+					},
+					children: showSetup ? (0, _wordpress_i18n.__)("Answer three questions to set up your site identity. You can change these settings later.", "better-schema-markup") : (0, _wordpress_i18n.__)("Set who publishes this site and choose the schema used for posts without an individual choice.", "better-schema-markup")
+				}),
 				error ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Notice, {
 					status: "error",
 					isDismissible: false,
@@ -1492,91 +1721,117 @@
 					onRemove: () => setSuccess(""),
 					children: success
 				}) : null,
-				/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h2", { children: (0, _wordpress_i18n.__)("Site identity", "better-schema-markup") }),
-				/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.SelectControl, {
-					label: (0, _wordpress_i18n.__)("Who publishes this site?", "better-schema-markup"),
-					value: identity.type,
-					options: [{
-						label: (0, _wordpress_i18n.__)("Organization", "better-schema-markup"),
-						value: "Organization"
-					}, {
-						label: (0, _wordpress_i18n.__)("Person", "better-schema-markup"),
-						value: "Person"
-					}],
-					onChange: (type) => {
-						if (type === "Organization" || type === "Person") setIdentity({
-							...identity,
-							type
-						});
-					},
-					__next40pxDefaultSize: true,
-					__nextHasNoMarginBottom: true
-				}),
-				/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
-					label: (0, _wordpress_i18n.__)("Name", "better-schema-markup"),
-					help: (0, _wordpress_i18n.__)("Leave empty to use the site title.", "better-schema-markup"),
-					placeholder: config.siteName,
-					value: identity.name,
-					onChange: (name) => setIdentity({
-						...identity,
-						name
-					}),
-					__next40pxDefaultSize: true,
-					__nextHasNoMarginBottom: true
-				}),
-				/* @__PURE__ */ (0, react_jsx_runtime.jsx)(LogoPicker, {
-					id: identity.logo,
-					url: logoUrl,
-					onChange: (logo, url) => {
-						setIdentity({
-							...identity,
-							logo
-						});
-						setLogoUrl(url);
-					}
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)(FormSection, {
+					title: (0, _wordpress_i18n.__)("Site identity", "better-schema-markup"),
+					description: (0, _wordpress_i18n.__)("Who is behind this site. Search engines show this as the publisher.", "better-schema-markup"),
+					children: [
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.SelectControl, {
+							label: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(LabelWithHelp, {
+								label: (0, _wordpress_i18n.__)("Who publishes this site?", "better-schema-markup"),
+								children: (0, _wordpress_i18n.__)("Choose Organization for a company, club or brand. Choose Person if the site belongs to you as an individual, such as a personal blog or portfolio. This sets the publisher in your schema.", "better-schema-markup")
+							}),
+							value: identity.type,
+							options: [{
+								label: (0, _wordpress_i18n.__)("Organization", "better-schema-markup"),
+								value: "Organization"
+							}, {
+								label: (0, _wordpress_i18n.__)("Person", "better-schema-markup"),
+								value: "Person"
+							}],
+							onChange: (type) => {
+								if (type === "Organization" || type === "Person") setIdentity({
+									...identity,
+									type
+								});
+							},
+							__next40pxDefaultSize: true,
+							__nextHasNoMarginBottom: true
+						}),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
+							label: (0, _wordpress_i18n.__)("Name", "better-schema-markup"),
+							help: (0, _wordpress_i18n.__)("Leave empty to use the site title.", "better-schema-markup"),
+							placeholder: config.siteName,
+							value: identity.name,
+							onChange: (name) => setIdentity({
+								...identity,
+								name
+							}),
+							__next40pxDefaultSize: true,
+							__nextHasNoMarginBottom: true
+						}),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)(LogoPicker, {
+							id: identity.logo,
+							url: logoUrl,
+							onChange: (logo, url) => {
+								setIdentity({
+									...identity,
+									logo
+								});
+								setLogoUrl(url);
+							}
+						}),
+						!showSetup ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextareaControl, {
+							label: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(LabelWithHelp, {
+								label: (0, _wordpress_i18n.__)("Social profiles", "better-schema-markup"),
+								children: (0, _wordpress_i18n.__)("Links to your official profiles, such as Facebook, LinkedIn, Instagram, YouTube or Wikipedia. Search engines use them to connect these accounts to your site. Optional.", "better-schema-markup")
+							}),
+							help: socialProblems.length > 0 ? (0, _wordpress_i18n.sprintf)((0, _wordpress_i18n._n)("Line %s is not a full URL. Start it with https://.", "Lines %s are not full URLs. Start them with https://.", socialProblems.length, "better-schema-markup"), socialProblems.join(", ")) : (0, _wordpress_i18n.__)("One full URL per line, starting with https://.", "better-schema-markup"),
+							placeholder: "https://www.facebook.com/yourpage\nhttps://www.linkedin.com/company/yourcompany\nhttps://www.instagram.com/yourhandle",
+							rows: 5,
+							value: socialText,
+							onChange: setSocialText,
+							style: socialProblems.length > 0 ? { borderColor: "#cc1818" } : void 0,
+							__nextHasNoMarginBottom: true
+						}) : null
+					]
 				}),
 				!showSetup ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
-						label: (0, _wordpress_i18n.__)("Frontend URL", "better-schema-markup"),
-						help: (0, _wordpress_i18n.__)("For headless sites, enter the public site URL. Local schema URLs, including media, use this base. Leave empty to use WordPress URLs.", "better-schema-markup"),
-						value: frontendUrl,
-						onChange: setFrontendUrl,
-						__next40pxDefaultSize: true,
-						__nextHasNoMarginBottom: true
-					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextareaControl, {
-						label: (0, _wordpress_i18n.__)("Social profiles", "better-schema-markup"),
-						help: (0, _wordpress_i18n.__)("Enter one full URL per line.", "better-schema-markup"),
-						value: socialText,
-						onChange: setSocialText,
-						__nextHasNoMarginBottom: true
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(FormSection, {
+						title: (0, _wordpress_i18n.__)("Headless sites", "better-schema-markup"),
+						description: (0, _wordpress_i18n.__)("Only needed if visitors see a different address than WordPress.", "better-schema-markup"),
+						children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextControl, {
+							label: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(LabelWithHelp, {
+								label: (0, _wordpress_i18n.__)("Frontend URL", "better-schema-markup"),
+								children: (0, _wordpress_i18n.__)("Enter the public address, for example https://example.com. Schema URLs, including media, then use it instead of the WordPress address.", "better-schema-markup")
+							}),
+							help: (0, _wordpress_i18n.__)("Leave empty if visitors use the WordPress address.", "better-schema-markup"),
+							value: frontendUrl,
+							onChange: setFrontendUrl,
+							__next40pxDefaultSize: true,
+							__nextHasNoMarginBottom: true
+						})
 					}),
 					identity.type === "Organization" ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(BusinessFields, {
 						value: business,
 						onChange: setBusiness
 					}) : null,
 					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(SeoSettings, {}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h2", { children: (0, _wordpress_i18n.__)("Default schema by post type", "better-schema-markup") }),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: (0, _wordpress_i18n.__)("An individual post’s schema choice takes precedence over its post type default.", "better-schema-markup") }),
-					config.postTypes.map((postType) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.SelectControl, {
-						label: postType.label,
-						value: defaults[postType.name] ?? (postType.name === "post" ? "Article" : "WebPage"),
-						options: SCHEMA_TYPES.map(({ label, value }) => ({
-							label,
-							value
-						})),
-						onChange: (value) => {
-							if (isSchemaType(value)) setDefaults({
-								...defaults,
-								[postType.name]: value
-							});
-						},
-						__next40pxDefaultSize: true,
-						__nextHasNoMarginBottom: true
-					}, postType.name))
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(FormSection, {
+						title: (0, _wordpress_i18n.__)("Default schema by post type", "better-schema-markup"),
+						description: (0, _wordpress_i18n.__)("An individual post’s schema choice takes precedence over its post type default.", "better-schema-markup"),
+						children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(FieldRow, { children: config.postTypes.map((postType) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.SelectControl, {
+							label: postType.label,
+							value: defaults[postType.name] ?? (postType.name === "post" ? "Article" : "WebPage"),
+							options: SCHEMA_TYPES.map(({ label, value }) => ({
+								label,
+								value
+							})),
+							onChange: (value) => {
+								if (isSchemaType(value)) setDefaults({
+									...defaults,
+									[postType.name]: value
+								});
+							},
+							__next40pxDefaultSize: true,
+							__nextHasNoMarginBottom: true
+						}, postType.name)) })
+					})
 				] }) : null,
-				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", {
-					style: { marginTop: "24px" },
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+					style: {
+						display: "flex",
+						gap: "8px"
+					},
 					children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Button, {
 						variant: "primary",
 						isBusy: saving,
@@ -1594,7 +1849,7 @@
 						children: (0, _wordpress_i18n.__)("Skip setup", "better-schema-markup")
 					}) : null]
 				})
-			]
+			] })
 		});
 	}
 	//#endregion
@@ -1666,4 +1921,4 @@
 		if (config) (0, _wordpress_element.createRoot)(classicRoot).render(/* @__PURE__ */ (0, react_jsx_runtime.jsx)(ClassicEditor, { config }));
 	} else (0, _wordpress_plugins.registerPlugin)("better-schema", { render: SchemaPanel });
 	//#endregion
-})(wp.plugins, wp.element, wp.coreData, wp.data, wp.editor, wp.i18n, wp.components, React, ReactJSXRuntime, wp.apiFetch);
+})(wp.plugins, wp.element, wp.coreData, wp.data, wp.editor, wp.i18n, wp.components, ReactJSXRuntime, React, wp.apiFetch);
