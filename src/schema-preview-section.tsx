@@ -39,7 +39,7 @@ export function SchemaPreviewSection({ state }: SchemaPreviewSectionProps) {
           <summary>{__("Show JSON-LD", "better-schema-markup")}</summary>
           <p>
             {__(
-              "What this page outputs, using the type above. Save to include your other changes.",
+              "What this page outputs, using the type and custom JSON-LD above. Save to include your other changes.",
               "better-schema-markup",
             )}
           </p>

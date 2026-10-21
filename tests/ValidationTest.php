@@ -93,4 +93,49 @@ class ValidationTest extends WP_UnitTestCase {
 		add_filter( 'better_schema_validation_hints', fn () => 'not a list', 20 );
 		$this->assertSame( array(), better_schema_validation_hints( $this->document( array( '@type' => 'Article' ) ) ) );
 	}
+
+	private function custom_hints( string $custom, string $mode = 'add' ) {
+		better_schema_register_meta();
+		$post_id = self::factory()->post->create();
+		update_post_meta( $post_id, '_better_schema_custom_jsonld', $custom );
+		update_post_meta( $post_id, '_better_schema_custom_mode', $mode );
+		$context = better_schema_post_context( get_post( $post_id ) );
+
+		return better_schema_validation_hints( better_schema_build_graph( $context ), $context );
+	}
+
+	public function test_custom_jsonld_that_duplicates_generated_schema_is_hinted_in_add_mode() {
+		$custom = '[{"@type":"WebSite","name":"Second"},{"@type":"MedicalClinic","name":"Clinic"},{"@type":"Course"}]';
+
+		$hints = $this->custom_hints( $custom );
+		$this->assertSame( array( 'WebSite', 'MedicalClinic' ), array_values( wp_list_pluck( wp_list_filter( $hints, array( 'property' => '@type' ) ), 'type' ) ) );
+		$this->assertSame( 'recommended', $hints[ array_search( 'WebSite', wp_list_pluck( $hints, 'type' ), true ) ]['level'] );
+
+		$this->assertSame( array(), wp_list_filter( $this->custom_hints( $custom, 'override' ), array( 'property' => '@type' ) ) );
+	}
+
+	public function test_custom_jsonld_on_another_domain_is_hinted_once() {
+		$hints = wp_list_filter( $this->custom_hints( '[{"@type":"Course","@id":"https://other.example/#a"},{"@type":"Course","url":"https://other.example/b"}]' ), array( 'type' => 'custom' ) );
+		$this->assertCount( 1, $hints );
+		$this->assertStringContainsString( 'other.example', reset( $hints )['message'] );
+
+		$this->assertSame( array(), wp_list_filter( $this->custom_hints( '{"@type":"Course","@id":"' . home_url( '/#course' ) . '"}' ), array( 'type' => 'custom' ) ) );
+	}
+
+	public function test_the_hint_filter_receives_the_context() {
+		$seen = null;
+		add_filter(
+			'better_schema_validation_hints',
+			function ( $hints, $document, $context ) use ( &$seen ) {
+				$seen = $context;
+				return $hints;
+			},
+			10,
+			3
+		);
+
+		better_schema_validation_hints( $this->document( array( '@type' => 'Article' ) ), array( 'type' => 'home' ) );
+
+		$this->assertSame( array( 'type' => 'home' ), $seen );
+	}
 }

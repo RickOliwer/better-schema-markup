@@ -1,6 +1,12 @@
 import { isSchemaMeta } from "./schema-meta";
 import type { SchemaMeta } from "./schema-meta";
-import { readCustomJsonLd, readEventDetails, readFaqItems, readRecipeDetails } from "./post-details";
+import {
+  readCustomJsonLd,
+  readCustomJsonLdMode,
+  readEventDetails,
+  readFaqItems,
+  readRecipeDetails,
+} from "./post-details";
 
 export interface ClassicEditorConfig {
   readonly postId: number;
@@ -24,6 +30,7 @@ export function readClassicEditorConfig(value: unknown): ClassicEditorConfig | n
       _better_schema_recipe: readRecipeDetails(value.meta),
       _better_schema_faq: readFaqItems(value.meta),
       _better_schema_custom_jsonld: readCustomJsonLd(value.meta),
+      _better_schema_custom_mode: readCustomJsonLdMode(value.meta),
     },
   };
 }

@@ -53,4 +53,13 @@ class GraphqlTest extends WP_UnitTestCase {
 		wp_set_current_user( 0 );
 		$this->assertNull( $this->query_post( $id )['contentNode']['betterSchema'] );
 	}
+
+	public function test_custom_jsonld_modes_match_the_shared_builder() {
+		$id = self::factory()->post->create( array( 'post_status' => 'publish' ) );
+		update_post_meta( $id, '_better_schema_custom_jsonld', '[{"@type":"WebSite","@id":"https://example.org/#website"}]' );
+		update_post_meta( $id, '_better_schema_custom_mode', 'override' );
+		$raw = json_decode( $this->query_post( $id )['contentNode']['betterSchema']['raw'], true );
+		$this->assertSame( better_schema_build_graph( better_schema_context_for_post( get_post( $id ) ) ), $raw );
+		$this->assertSame( 'https://example.org/#website', $raw['@graph'][0]['@id'] );
+	}
 }

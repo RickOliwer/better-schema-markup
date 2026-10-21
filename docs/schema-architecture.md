@@ -33,6 +33,14 @@ It must:
 
 Keep JSON encoding and `<script type="application/ld+json">` rendering separate from graph construction.
 
+## Custom JSON-LD modes
+
+A post's custom JSON-LD combines with the generated graph in one of three modes (`includes/custom-merge.php`), applied inside the graph builder so every output matches:
+
+- `add` (default) appends custom entities.
+- `override` lets a custom entity replace the generated entity with the same `@id`, or else the first one with the same role. Roles come from the piece that generated an entity, not from its `@type`; custom entities get a role from their `@type`, including schema.org subtypes. References to a replaced `@id` are rewritten, so the graph stays connected.
+- `replace` runs only the `custom` piece, and falls back to the full graph when it has no entities.
+
 ## Data flow
 
 Use this direction of dependency:

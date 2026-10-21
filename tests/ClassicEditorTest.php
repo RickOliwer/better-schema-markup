@@ -125,4 +125,13 @@ class ClassicEditorTest extends WP_UnitTestCase {
 			$this->assertSame( 'FAQPage', better_schema_post_schema_type( get_post( $id ) ) );
 		}
 	}
+
+	public function test_custom_mode_is_saved_and_invalid_modes_are_ignored() {
+		$id = self::factory()->post->create();
+		$this->submit( $id, array( '_better_schema_custom_mode' => 'override' ) );
+		$this->assertSame( 'override', get_post_meta( $id, '_better_schema_custom_mode', true ) );
+
+		$this->submit( $id, array( '_better_schema_custom_mode' => 'merge' ) );
+		$this->assertSame( 'override', get_post_meta( $id, '_better_schema_custom_mode', true ) );
+	}
 }

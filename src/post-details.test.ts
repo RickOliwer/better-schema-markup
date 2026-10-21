@@ -4,9 +4,11 @@ import {
   EMPTY_RECIPE,
   checkCustomJsonLd,
   isAttendanceMode,
+  isCustomJsonLdMode,
   isEventStatus,
   parseLines,
   readCustomJsonLd,
+  readCustomJsonLdMode,
   readEventDetails,
   readFaqItems,
   readRecipeDetails,
@@ -81,6 +83,22 @@ describe("readCustomJsonLd", () => {
   it("returns the stored string or an empty string", () => {
     expect(readCustomJsonLd({ _better_schema_custom_jsonld: '[{"@type":"A"}]' })).toBe('[{"@type":"A"}]');
     expect(readCustomJsonLd({ _better_schema_custom_jsonld: 5 })).toBe("");
+  });
+});
+
+describe("readCustomJsonLdMode", () => {
+  it("reads a valid mode and defaults to add", () => {
+    expect(readCustomJsonLdMode({ _better_schema_custom_mode: "override" })).toBe("override");
+    expect(readCustomJsonLdMode({ _better_schema_custom_mode: "replace" })).toBe("replace");
+    for (const meta of [{}, null, { _better_schema_custom_mode: "merge" }, { _better_schema_custom_mode: 1 }]) {
+      expect(readCustomJsonLdMode(meta)).toBe("add");
+    }
+  });
+
+  it("only accepts known modes", () => {
+    expect(isCustomJsonLdMode("add")).toBe(true);
+    expect(isCustomJsonLdMode("Override")).toBe(false);
+    expect(isCustomJsonLdMode(undefined)).toBe(false);
   });
 });
 

@@ -10,7 +10,7 @@ function better_schema_delete_site_data(): void {
 	foreach ( array( 'better_schema_identity', 'better_schema_business', 'better_schema_frontend_url', 'better_schema_type_defaults', 'better_schema_setup_complete', 'better_schema_takeover' ) as $option ) {
 		delete_option( $option );
 	}
-	foreach ( array( '_better_schema_type', '_better_schema_event', '_better_schema_recipe', '_better_schema_faq', '_better_schema_custom_jsonld' ) as $key ) {
+	foreach ( array( '_better_schema_type', '_better_schema_event', '_better_schema_recipe', '_better_schema_faq', '_better_schema_custom_jsonld', '_better_schema_custom_mode' ) as $key ) {
 		delete_post_meta_by_key( $key );
 	}
 	// Transient names are dynamic. Read bounded batches, then use the API to invalidate caches too.

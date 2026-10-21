@@ -171,7 +171,7 @@ function better_schema_import_batch( string $source, int $cursor = 0, bool $dry_
 			continue;
 		}
 		$existing = false;
-		foreach ( array( '_better_schema_type', '_better_schema_event', '_better_schema_recipe', '_better_schema_faq', '_better_schema_custom_jsonld' ) as $key ) {
+		foreach ( array( '_better_schema_type', '_better_schema_event', '_better_schema_recipe', '_better_schema_faq', '_better_schema_custom_jsonld', '_better_schema_custom_mode' ) as $key ) {
 			$existing = $existing || metadata_exists( 'post', $post->ID, $key );
 		}
 		if ( $existing ) {

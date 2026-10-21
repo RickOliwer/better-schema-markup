@@ -3,7 +3,7 @@ Tags: schema, json-ld, seo, structured data, wpgraphql
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.17.0
+Stable tag: 0.18.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -76,7 +76,7 @@ Every page gets one JSON-LD `@graph`. Entities refer to each other by `@id`.
 * Post with the Event, Recipe or FAQ page type: the usual graph with an Event, Recipe or FAQPage entity instead of the Article (a Recipe keeps its author Person)
 * Post whose content has a YouTube or Vimeo link or embed: a VideoObject for each video, up to five
 * Organization with the local business setting on: the identity is a LocalBusiness with address, opening hours and location
-* Post with custom JSON-LD: those entities are added to the graph
+* Post with custom JSON-LD: by default those entities are added to the graph. Choose "Override matching schema" to let them replace the generated WebSite, organization, WebPage, article and similar entities (matched by `@id` or type, keeping the links between entities), or "Replace generated schema" to output only your JSON-LD on that post
 * Post: WebSite, Organization/Person, WebPage, BreadcrumbList, Article, Person (author)
 * Page: WebSite, Organization/Person, WebPage, BreadcrumbList
 * Static front page: WebSite, Organization/Person, WebPage (`about` the identity, no breadcrumbs)
@@ -126,16 +126,17 @@ Invalid values are ignored. The WebSite entity points to the identity as its `pu
 
 == Developer filters ==
 
-The schema is one JSON-LD `@graph` built from small pieces. Each piece returns a list of entity arrays. The pieces, in output order, are `website`, `identity`, `webpage`, `breadcrumb`, `article`, `author`, `product`, `event`, `recipe`, `faq`, `video` and `custom`.
+The schema is one JSON-LD `@graph` built from small pieces. Each piece returns a list of entity arrays. The pieces, in output order, are `website`, `identity`, `webpage`, `breadcrumb`, `article`, `author`, `product`, `event`, `recipe`, `faq`, `video` and `custom`. In a post's Replace mode, only `custom` runs. In Override mode, custom entities replace generated ones after every `better_schema_piece_{id}` filter and before `better_schema_graph`.
 
 * `better_schema_context` (array|null $context): what the current request describes. Return a different context, or null for no schema on this request.
 * `better_schema_pieces` (array $pieces): map of piece id to callable. Add, remove or replace pieces. The callable receives the context array and returns a list of entities (an empty array omits the piece).
 * `better_schema_piece_{id}` (array $entities, array $context): change the entities one piece returned, for example `better_schema_piece_article`. Return a list of entities.
 * `better_schema_graph` (array $graph, array $context): change the full list of entities before it is output. Return a list of entities.
 * `better_schema_breadcrumb_category` (WP_Term|null $category, WP_Post $post): the category used in a post's breadcrumbs. Return a WP_Term or null.
-* `better_schema_validation_hints` (array $hints, array $document): the hints shown in the editor. Each hint is an array with `type` (the entity `@type`), `property`, `level` (`required` or `recommended`) and `message`. Return a list of hints.
+* `better_schema_custom_role_types` (array $types): map of role (`website`, `identity`, `webpage`, `breadcrumb`, `article`, `product`, `event`, `recipe`, `faq`, `video`) to the schema.org types a custom entity needs to replace the generated entity of that role in Override mode. Return a map.
+* `better_schema_validation_hints` (array $hints, array $document, array $context): the hints shown in the editor. Each hint is an array with `type` (the entity `@type`), `property`, `level` (`required` or `recommended`) and `message`. Return a list of hints.
 
-The editor preview comes from `GET /wp-json/better-schema/v1/preview/{id}`, which needs permission to edit the post. The optional `type` parameter previews another schema type without saving it. The response has `document` (the JSON-LD document, or null when there is no schema) and `hints`. The preview uses the post's context directly, so the `better_schema_context` filter, which applies to frontend requests, is not run.
+The editor preview comes from `GET` or `POST /wp-json/better-schema/v1/preview/{id}`, which needs permission to edit the post. The optional `type`, `custom` (custom JSON-LD) and `custom_mode` (`add`, `override` or `replace`) parameters preview unsaved values without saving them. The response has `document` (the JSON-LD document, or null when there is no schema) and `hints`. The preview uses the post's context directly, so the `better_schema_context` filter, which applies to frontend requests, is not run.
 
 The context is an array with a `type` key:
 
@@ -154,6 +155,9 @@ Entities refer to each other by `@id`. If you remove a piece, also remove refere
 
 == Upgrade Notice ==
 
+= 0.18.0 =
+Custom JSON-LD can now override or replace the generated schema per post. Existing posts keep adding it, as before.
+
 = 0.17.0 =
 Adds a Schema meta box when using the classic editor, including Disable Gutenberg. Save schema changes with Update or Publish.
 
@@ -164,6 +168,12 @@ Fix admin API requests on headless WordPress sites with a separate frontend doma
 Release preparation adds SEO schema takeover and migration, translations and uninstall cleanup. Review migration reports before switching production sites. Deleting the plugin removes its saved settings and per-post choices.
 
 == Changelog ==
+
+= 0.18.0 =
+* Add a mode to custom JSON-LD: add to the generated schema (the default), override matching entities, or replace the generated schema on that post. Override keeps WebPage, article and other links pointing at your entities.
+* Preview unsaved custom JSON-LD and its mode in the editor.
+* Hint when custom JSON-LD duplicates the generated WebSite, organization or other entities, or uses another domain than the site.
+* Add the `better_schema_custom_role_types` filter, and pass the context to `better_schema_validation_hints`.
 
 = 0.17.0 =
 * Add classic editor support with the schema type selector, Event/Recipe/FAQ fields, custom JSON-LD, validation hints and preview.
