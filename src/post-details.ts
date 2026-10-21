@@ -40,6 +40,15 @@ export const EVENT_META_KEY = "_better_schema_event";
 export const RECIPE_META_KEY = "_better_schema_recipe";
 export const FAQ_META_KEY = "_better_schema_faq";
 export const CUSTOM_JSONLD_META_KEY = "_better_schema_custom_jsonld";
+export const CUSTOM_JSONLD_MODE_META_KEY = "_better_schema_custom_mode";
+
+/**
+ * How custom JSON-LD combines with the generated schema: added to it, replacing
+ * generated entities with the same `@id` or role, or replacing it entirely.
+ */
+export const CUSTOM_JSONLD_MODES = ["add", "override", "replace"] as const;
+
+export type CustomJsonLdMode = (typeof CUSTOM_JSONLD_MODES)[number];
 
 export const EMPTY_EVENT: EventDetails = {
   start: "",
@@ -125,6 +134,15 @@ export function readFaqItems(meta: unknown): FaqItem[] {
 
 export function readCustomJsonLd(meta: unknown): string {
   return text(metaValue(meta, CUSTOM_JSONLD_META_KEY));
+}
+
+export function isCustomJsonLdMode(value: unknown): value is CustomJsonLdMode {
+  return CUSTOM_JSONLD_MODES.some((mode) => mode === value);
+}
+
+export function readCustomJsonLdMode(meta: unknown): CustomJsonLdMode {
+  const value = metaValue(meta, CUSTOM_JSONLD_MODE_META_KEY);
+  return isCustomJsonLdMode(value) ? value : "add";
 }
 
 export type CustomJsonLdCheck =

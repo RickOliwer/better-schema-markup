@@ -27,6 +27,13 @@ class PreviewTest extends WP_UnitTestCase {
 		return rest_get_server()->dispatch( $request );
 	}
 
+	private function post_request( $post_id, array $params ) {
+		$request = new WP_REST_Request( 'POST', "/better-schema/v1/preview/{$post_id}" );
+		$request->set_body_params( $params );
+
+		return rest_get_server()->dispatch( $request );
+	}
+
 	public function test_returns_the_same_document_as_the_frontend() {
 		wp_set_current_user( self::$editor_id );
 		$post_id = self::factory()->post->create( array( 'post_title' => 'Hello' ) );
@@ -136,5 +143,70 @@ class PreviewTest extends WP_UnitTestCase {
 		wp_set_current_user( self::$editor_id );
 
 		$this->assertContains( $this->request( 999999 )->get_status(), array( 403, 404 ) );
+	}
+
+	public function test_previews_unsaved_custom_jsonld_and_mode_without_saving_them() {
+		wp_set_current_user( self::$editor_id );
+		$other_id = self::factory()->post->create();
+		$post_id  = self::factory()->post->create();
+		$seen     = null;
+
+		add_filter(
+			'better_schema_graph',
+			function ( $graph ) use ( $other_id, &$seen ) {
+				$seen = better_schema_get_custom_mode( get_post( $other_id ) );
+				return $graph;
+			}
+		);
+
+		$response = $this->post_request(
+			$post_id,
+			array(
+				'custom'      => '{"@type":"WebSite","@id":"https://example.org/#website","name":"Custom"}',
+				'custom_mode' => 'override',
+			)
+		);
+		$document = $response->get_data()['document'];
+
+		$this->assertSame( 200, $response->get_status() );
+		$this->assertSame( 'Custom', $this->entity( $document, 'WebSite' )['name'] );
+		$this->assertCount( 1, array_keys( $this->types( $document ), 'WebSite', true ) );
+		$this->assertGraphIsConnected( $document );
+		$this->assertSame( 'add', $seen, 'Unsaved values must only apply to the previewed post.' );
+		$this->assertSame( '', get_post_meta( $post_id, '_better_schema_custom_jsonld', true ), 'The preview must not save custom JSON-LD.' );
+		$this->assertSame( 'add', better_schema_get_custom_mode( get_post( $post_id ) ), 'The override must not outlive the request.' );
+	}
+
+	public function test_hints_use_the_unsaved_custom_jsonld() {
+		wp_set_current_user( self::$editor_id );
+		$post_id = self::factory()->post->create();
+
+		$hints = $this->post_request( $post_id, array( 'custom' => '{"@type":"WebSite","name":"Second"}' ) )->get_data()['hints'];
+
+		$this->assertContains( 'WebSite', wp_list_pluck( $hints, 'type' ) );
+	}
+
+	public function test_previews_invalid_custom_jsonld_as_empty() {
+		wp_set_current_user( self::$editor_id );
+		$post_id = self::factory()->post->create();
+		update_post_meta( $post_id, '_better_schema_custom_jsonld', '{"@type":"Course"}' );
+
+		$document = $this->post_request(
+			$post_id,
+			array(
+				'custom'      => '{broken',
+				'custom_mode' => 'replace',
+			)
+		)->get_data()['document'];
+
+		$this->assertNotContains( 'Course', $this->types( $document ) );
+		$this->assertContains( 'Article', $this->types( $document ) );
+	}
+
+	public function test_rejects_an_invalid_custom_mode() {
+		wp_set_current_user( self::$editor_id );
+		$post_id = self::factory()->post->create();
+
+		$this->assertSame( 400, $this->post_request( $post_id, array( 'custom_mode' => 'merge' ) )->get_status() );
 	}
 }

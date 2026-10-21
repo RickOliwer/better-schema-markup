@@ -44,6 +44,7 @@ function better_schema_enqueue_classic_assets( string $hook_suffix ): void {
 					'_better_schema_recipe'        => better_schema_get_recipe( $post ),
 					'_better_schema_faq'           => better_schema_get_faq( $post ),
 					'_better_schema_custom_jsonld' => better_schema_sanitize_custom_jsonld( get_post_meta( $post->ID, '_better_schema_custom_jsonld', true ) ),
+					'_better_schema_custom_mode'   => better_schema_get_custom_mode( $post ),
 				),
 			),
 			JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
@@ -98,6 +99,12 @@ function better_schema_sanitize_classic_changes( mixed $payload ): array {
 	foreach ( $changes as $key => $value ) {
 		if ( '_better_schema_type' === $key ) {
 			if ( in_array( $value, better_schema_types(), true ) ) {
+				$clean[ $key ] = $value;
+			}
+			continue;
+		}
+		if ( '_better_schema_custom_mode' === $key ) {
+			if ( in_array( $value, better_schema_custom_modes(), true ) ) {
 				$clean[ $key ] = $value;
 			}
 			continue;

@@ -6,10 +6,12 @@ import { EventFields } from "./event-fields";
 import { FaqFields } from "./faq-fields";
 import {
   CUSTOM_JSONLD_META_KEY,
+  CUSTOM_JSONLD_MODE_META_KEY,
   EVENT_META_KEY,
   FAQ_META_KEY,
   RECIPE_META_KEY,
   readCustomJsonLd,
+  readCustomJsonLdMode,
   readEventDetails,
   readFaqItems,
   readRecipeDetails,
@@ -41,7 +43,9 @@ export function SchemaDetails({ meta, schemaType, onChange }: SchemaDetailsProps
         <PanelBody title={__("Advanced", "better-schema-markup")} initialOpen={readCustomJsonLd(meta) !== ""}>
           <CustomJsonLdField
             value={readCustomJsonLd(meta)}
+            mode={readCustomJsonLdMode(meta)}
             onChange={(value) => onChange(CUSTOM_JSONLD_META_KEY, value)}
+            onChangeMode={(mode) => onChange(CUSTOM_JSONLD_MODE_META_KEY, mode)}
           />
         </PanelBody>
       ) : null}

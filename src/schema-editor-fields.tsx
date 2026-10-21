@@ -1,6 +1,7 @@
 import { ExternalLink } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
 
+import { readCustomJsonLd, readCustomJsonLdMode } from "./post-details";
 import { richResultsTestUrl } from "./rich-results-test";
 import { SchemaDetails } from "./schema-details";
 import { SchemaPreviewSection } from "./schema-preview-section";
@@ -28,7 +29,10 @@ export function SchemaEditorFields({
   onChangeDetail,
 }: SchemaEditorFieldsProps) {
   const schemaType = meta._better_schema_type;
-  const preview = useSchemaPreview(postId, schemaType, savedAt);
+  const preview = useSchemaPreview(postId, schemaType, savedAt, {
+    jsonLd: readCustomJsonLd(meta),
+    mode: readCustomJsonLdMode(meta),
+  });
 
   return (
     <>

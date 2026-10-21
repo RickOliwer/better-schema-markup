@@ -242,6 +242,28 @@ function better_schema_get_custom_entities( WP_Post $post ): array {
 }
 
 /**
+ * Returns a valid custom JSON-LD mode, falling back to `add`.
+ *
+ * @param mixed $mode Stored or submitted mode.
+ */
+function better_schema_sanitize_custom_mode( mixed $mode ): string {
+	return in_array( $mode, better_schema_custom_modes(), true ) ? $mode : 'add';
+}
+
+function better_schema_get_custom_mode( WP_Post $post ): string {
+	return better_schema_sanitize_custom_mode( get_post_meta( $post->ID, '_better_schema_custom_mode', true ) );
+}
+
+/**
+ * The custom JSON-LD mode for a context. Only posts have custom JSON-LD.
+ */
+function better_schema_context_custom_mode( array $context ): string {
+	$post = $context['post'] ?? null;
+
+	return 'post' === ( $context['type'] ?? '' ) && $post instanceof WP_Post ? better_schema_get_custom_mode( $post ) : 'add';
+}
+
+/**
  * Registers the detail meta for a post type.
  */
 function better_schema_register_detail_meta( string $post_type ): void {
@@ -310,6 +332,15 @@ function better_schema_register_detail_meta( string $post_type ): void {
 			'default'           => '',
 			'sanitize_callback' => 'better_schema_sanitize_custom_jsonld',
 			'schema'            => $string,
+		),
+		'_better_schema_custom_mode'   => array(
+			'type'              => 'string',
+			'default'           => 'add',
+			'sanitize_callback' => 'better_schema_sanitize_custom_mode',
+			'schema'            => array(
+				'type' => 'string',
+				'enum' => better_schema_custom_modes(),
+			),
 		),
 	);
 

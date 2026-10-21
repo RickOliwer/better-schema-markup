@@ -1,4 +1,4 @@
-(function(_wordpress_plugins, _wordpress_element, _wordpress_core_data, _wordpress_data, _wordpress_editor, _wordpress_i18n, _wordpress_components, react, react_jsx_runtime, _wordpress_api_fetch, _wordpress_url) {
+(function(_wordpress_plugins, _wordpress_element, _wordpress_core_data, _wordpress_data, _wordpress_editor, _wordpress_i18n, _wordpress_components, react, react_jsx_runtime, _wordpress_api_fetch) {
 	//#region \0rolldown/runtime.js
 	var __create = Object.create;
 	var __defProp = Object.defineProperty;
@@ -56,6 +56,16 @@
 	var RECIPE_META_KEY = "_better_schema_recipe";
 	var FAQ_META_KEY = "_better_schema_faq";
 	var CUSTOM_JSONLD_META_KEY = "_better_schema_custom_jsonld";
+	var CUSTOM_JSONLD_MODE_META_KEY = "_better_schema_custom_mode";
+	/**
+	* How custom JSON-LD combines with the generated schema: added to it, replacing
+	* generated entities with the same `@id` or role, or replacing it entirely.
+	*/
+	var CUSTOM_JSONLD_MODES = [
+		"add",
+		"override",
+		"replace"
+	];
 	var EMPTY_EVENT = {
 		start: "",
 		end: "",
@@ -128,6 +138,13 @@
 	function readCustomJsonLd(meta) {
 		return text$1(metaValue(meta, CUSTOM_JSONLD_META_KEY));
 	}
+	function isCustomJsonLdMode(value) {
+		return CUSTOM_JSONLD_MODES.some((mode) => mode === value);
+	}
+	function readCustomJsonLdMode(meta) {
+		const value = metaValue(meta, CUSTOM_JSONLD_MODE_META_KEY);
+		return isCustomJsonLdMode(value) ? value : "add";
+	}
 	/**
 	* Checks custom JSON-LD the way the server will: a JSON object or list whose
 	* entities each have an `@type`, or a document with an `@graph` of such entities.
@@ -164,27 +181,55 @@
 	//#endregion
 	//#region src/custom-jsonld-field.tsx
 	/**
-	* Edits custom JSON-LD for the post. Only valid JSON, or an empty field, is
-	* passed on to be saved, so the editor never stores a broken value.
+	* Edits custom JSON-LD for the post and how it combines with the generated
+	* schema. Only valid JSON, or an empty field, is passed on to be saved, so the
+	* editor never stores a broken value.
 	*/
-	function CustomJsonLdField({ value, onChange }) {
+	function CustomJsonLdField({ value, mode, onChange, onChangeMode }) {
 		const [draft, setDraft] = (0, react.useState)(value);
 		const check = checkCustomJsonLd(draft);
-		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextareaControl, {
-			label: (0, _wordpress_i18n.__)("Custom JSON-LD", "better-schema-markup"),
-			help: (0, _wordpress_i18n.__)("For advanced use. Paste one schema.org object, a list of objects, or a document with @graph. It is added to this page’s schema.", "better-schema-markup"),
-			rows: 8,
-			value: draft,
-			onChange: (next) => {
-				setDraft(next);
-				if (checkCustomJsonLd(next).status !== "invalid") onChange(next);
-			},
-			__nextHasNoMarginBottom: true
-		}), check.status === "invalid" ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Notice, {
-			status: "error",
-			isDismissible: false,
-			children: check.reason === "syntax" ? (0, _wordpress_i18n.__)("This is not valid JSON, so it will not be saved.", "better-schema-markup") : (0, _wordpress_i18n.__)("Each object needs an @type, so this will not be saved.", "better-schema-markup")
-		}) : null] });
+		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
+			/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.TextareaControl, {
+				label: (0, _wordpress_i18n.__)("Custom JSON-LD", "better-schema-markup"),
+				help: (0, _wordpress_i18n.__)("For advanced use. Paste one schema.org object, a list of objects, or a document with @graph.", "better-schema-markup"),
+				rows: 8,
+				value: draft,
+				onChange: (next) => {
+					setDraft(next);
+					if (checkCustomJsonLd(next).status !== "invalid") onChange(next);
+				},
+				__nextHasNoMarginBottom: true
+			}),
+			check.status === "invalid" ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.Notice, {
+				status: "error",
+				isDismissible: false,
+				children: check.reason === "syntax" ? (0, _wordpress_i18n.__)("This is not valid JSON, so it will not be saved.", "better-schema-markup") : (0, _wordpress_i18n.__)("Each object needs an @type, so this will not be saved.", "better-schema-markup")
+			}) : null,
+			/* @__PURE__ */ (0, react_jsx_runtime.jsx)(_wordpress_components.RadioControl, {
+				label: (0, _wordpress_i18n.__)("How to use it", "better-schema-markup"),
+				selected: mode,
+				options: [
+					{
+						label: (0, _wordpress_i18n.__)("Add to generated schema", "better-schema-markup"),
+						value: "add",
+						description: (0, _wordpress_i18n.__)("Output it alongside the schema this plugin generates.", "better-schema-markup")
+					},
+					{
+						label: (0, _wordpress_i18n.__)("Override matching schema", "better-schema-markup"),
+						value: "override",
+						description: (0, _wordpress_i18n.__)("Replace generated entities with the same @id or kind, such as WebSite, the organization or WebPage. Links between entities are kept.", "better-schema-markup")
+					},
+					{
+						label: (0, _wordpress_i18n.__)("Replace generated schema", "better-schema-markup"),
+						value: "replace",
+						description: (0, _wordpress_i18n.__)("Output only this JSON-LD on this page.", "better-schema-markup")
+					}
+				],
+				onChange: (next) => {
+					if (isCustomJsonLdMode(next)) onChangeMode(next);
+				}
+			})
+		] });
 	}
 	//#endregion
 	//#region src/event-fields.tsx
@@ -468,7 +513,9 @@
 				initialOpen: readCustomJsonLd(meta) !== "",
 				children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(CustomJsonLdField, {
 					value: readCustomJsonLd(meta),
-					onChange: (value) => onChange(CUSTOM_JSONLD_META_KEY, value)
+					mode: readCustomJsonLdMode(meta),
+					onChange: (value) => onChange(CUSTOM_JSONLD_META_KEY, value),
+					onChangeMode: (mode) => onChange(CUSTOM_JSONLD_MODE_META_KEY, mode)
 				})
 			}) : null
 		] });
@@ -498,7 +545,7 @@
 				children: hint.message
 			}, `${hint.type}-${hint.property}`)), preview.document ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("details", { children: [
 				/* @__PURE__ */ (0, react_jsx_runtime.jsx)("summary", { children: (0, _wordpress_i18n.__)("Show JSON-LD", "better-schema-markup") }),
-				/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: (0, _wordpress_i18n.__)("What this page outputs, using the type above. Save to include your other changes.", "better-schema-markup") }),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: (0, _wordpress_i18n.__)("What this page outputs, using the type and custom JSON-LD above. Save to include your other changes.", "better-schema-markup") }),
 				/* @__PURE__ */ (0, react_jsx_runtime.jsx)("pre", {
 					style: {
 						overflowX: "auto",
@@ -607,16 +654,33 @@
 		return isRecord$1(value) && (value.document === null || isJsonLdDocument(value.document)) && Array.isArray(value.hints) && value.hints.every(isValidationHint);
 	}
 	//#endregion
+	//#region src/use-debounced-value.ts
+	/** Returns the value once it has stopped changing for `delay` milliseconds. */
+	function useDebouncedValue(value, delay) {
+		const [debounced, setDebounced] = (0, react.useState)(value);
+		(0, react.useEffect)(() => {
+			const timeout = setTimeout(() => setDebounced(value), delay);
+			return () => clearTimeout(timeout);
+		}, [value, delay]);
+		return debounced;
+	}
+	//#endregion
 	//#region src/use-schema-preview.ts
+	/** Wait for typing to pause before previewing custom JSON-LD. */
+	var CUSTOM_JSONLD_DELAY = 500;
 	/**
 	* Fetches the JSON-LD the frontend would output for a post, using the schema
-	* type picked in the editor. Refetches when the type changes or the post is saved.
+	* type and custom JSON-LD in the editor. Refetches when they change or the
+	* post is saved.
 	*
 	* @param postId     Post being edited.
 	* @param schemaType Type picked in the editor, which may not be saved yet.
 	* @param savedAt    Changes on every save, for example the post's `modified` date.
+	* @param custom     Custom JSON-LD and its mode in the editor, which may not be saved yet.
 	*/
-	function useSchemaPreview(postId, schemaType, savedAt) {
+	function useSchemaPreview(postId, schemaType, savedAt, custom) {
+		const customJsonLd = useDebouncedValue(custom.jsonLd, CUSTOM_JSONLD_DELAY);
+		const customMode = custom.mode;
 		const [state, setState] = (0, react.useState)({
 			preview: null,
 			isLoading: true,
@@ -629,7 +693,13 @@
 				isLoading: true
 			}));
 			schemaApiFetch({
-				path: (0, _wordpress_url.addQueryArgs)(`/better-schema/v1/preview/${postId}`, { type: schemaType }),
+				path: `/better-schema/v1/preview/${postId}`,
+				method: "POST",
+				data: {
+					type: schemaType,
+					custom: customJsonLd,
+					custom_mode: customMode
+				},
 				signal: controller.signal
 			}).then((response) => {
 				setState(isSchemaPreview(response) ? {
@@ -652,7 +722,9 @@
 		}, [
 			postId,
 			schemaType,
-			savedAt
+			savedAt,
+			customJsonLd,
+			customMode
 		]);
 		return state;
 	}
@@ -660,7 +732,10 @@
 	//#region src/schema-editor-fields.tsx
 	function SchemaEditorFields({ postId, meta, savedAt, testableUrl, onChangeType, onChangeDetail }) {
 		const schemaType = meta._better_schema_type;
-		const preview = useSchemaPreview(postId, schemaType, savedAt);
+		const preview = useSchemaPreview(postId, schemaType, savedAt, {
+			jsonLd: readCustomJsonLd(meta),
+			mode: readCustomJsonLdMode(meta)
+		});
 		return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
 			/* @__PURE__ */ (0, react_jsx_runtime.jsx)(SchemaTypePicker, {
 				value: schemaType,
@@ -1574,7 +1649,8 @@
 				_better_schema_event: readEventDetails(value.meta),
 				_better_schema_recipe: readRecipeDetails(value.meta),
 				_better_schema_faq: readFaqItems(value.meta),
-				_better_schema_custom_jsonld: readCustomJsonLd(value.meta)
+				_better_schema_custom_jsonld: readCustomJsonLd(value.meta),
+				_better_schema_custom_mode: readCustomJsonLdMode(value.meta)
 			}
 		};
 	}
@@ -1590,4 +1666,4 @@
 		if (config) (0, _wordpress_element.createRoot)(classicRoot).render(/* @__PURE__ */ (0, react_jsx_runtime.jsx)(ClassicEditor, { config }));
 	} else (0, _wordpress_plugins.registerPlugin)("better-schema", { render: SchemaPanel });
 	//#endregion
-})(wp.plugins, wp.element, wp.coreData, wp.data, wp.editor, wp.i18n, wp.components, React, ReactJSXRuntime, wp.apiFetch, wp.url);
+})(wp.plugins, wp.element, wp.coreData, wp.data, wp.editor, wp.i18n, wp.components, React, ReactJSXRuntime, wp.apiFetch);

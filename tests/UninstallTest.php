@@ -26,7 +26,7 @@ class UninstallTest extends WP_UnitTestCase {
 		foreach ( array( 'better_schema_identity', 'better_schema_business', 'better_schema_frontend_url', 'better_schema_type_defaults', 'better_schema_setup_complete', 'better_schema_takeover' ) as $key ) {
 			update_option( $key, 'test' );
 		}
-		foreach ( array( '_better_schema_type', '_better_schema_event', '_better_schema_recipe', '_better_schema_faq', '_better_schema_custom_jsonld' ) as $key ) {
+		foreach ( array( '_better_schema_type', '_better_schema_event', '_better_schema_recipe', '_better_schema_faq', '_better_schema_custom_jsonld', '_better_schema_custom_mode' ) as $key ) {
 			add_post_meta( $id, $key, 'test' );
 		}
 		update_option( 'unrelated_option', 'keep' );

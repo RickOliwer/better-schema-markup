@@ -22,9 +22,19 @@ function better_schema_rewrite_urls( array $graph ): array {
 	if ( '' === $frontend ) {
 		return $graph;
 	}
+	return better_schema_map_urls( $graph, better_schema_backend_url_bases(), $frontend );
+}
+
+/** WordPress base URLs, longest first, so the most specific base is replaced. */
+function better_schema_backend_url_bases(): array {
 	$bases = array_unique( array( untrailingslashit( home_url() ), untrailingslashit( site_url() ) ) );
 	usort( $bases, static fn( $a, $b ) => strlen( $b ) <=> strlen( $a ) );
-	return better_schema_map_urls( $graph, $bases, $frontend );
+	return $bases;
+}
+
+/** The URL visitors see: a WordPress URL on the frontend URL when one is set. */
+function better_schema_public_url( string $url ): string {
+	return better_schema_rewrite_urls( array( '@id' => $url ) )['@id'];
 }
 
 /** Recursively map URL values, including lists and nested entity references. */

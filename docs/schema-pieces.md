@@ -32,6 +32,8 @@ Do not extract trivial wrappers or one-off property assignments that are clearer
 
 Provide focused filters that let developers refine or replace a piece without rebuilding the whole graph.
 
+When adding a built-in piece whose entity custom JSON-LD should be able to override, give it a role in `better_schema_piece_roles()` and its types in `better_schema_custom_role_types()`.
+
 Filter names must use the `better_schema_` prefix. Pass the minimum useful context to filters and document the expected return value.
 
 ## Correctness
