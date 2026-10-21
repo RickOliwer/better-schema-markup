@@ -45,9 +45,17 @@ export function FieldGroup({ className, children }: ChildrenProps) {
   return <div className={cn("bsm:grid bsm:gap-6", className)}>{children}</div>;
 }
 
-/** Puts two short related fields side by side on wider screens. */
+/**
+ * Puts two short related fields side by side when there is room. It follows the
+ * width of the nearest `FormRoot`, not the screen, so it stacks in the editor sidebar.
+ */
 export function FieldRow({ children }: { readonly children: ReactNode }) {
-  return <div className="bsm:grid bsm:gap-6 bsm:sm:grid-cols-2">{children}</div>;
+  return <div className="bsm:grid bsm:gap-6 bsm:@md:grid-cols-2">{children}</div>;
+}
+
+/** The outer wrapper of every plugin form, so `FieldRow` can measure the available width. */
+export function FormRoot({ className, children }: ChildrenProps) {
+  return <div className={cn("bsm:@container bsm:text-foreground", className)}>{children}</div>;
 }
 
 interface FieldSetProps {

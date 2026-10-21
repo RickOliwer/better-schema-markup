@@ -5,7 +5,7 @@ import { schemaApiFetch } from "./admin-api";
 import { BusinessFields } from "./business-fields";
 import { Alert } from "./components/ui/alert";
 import { Button, Spinner } from "./components/ui/button";
-import { FieldDescription, FieldGroup, FieldRow, FieldSeparator, FieldSet } from "./components/ui/field";
+import { FieldDescription, FieldGroup, FieldRow, FieldSeparator, FieldSet, FormRoot } from "./components/ui/field";
 import { SCHEMA_TYPES, isSchemaType } from "./schema-types";
 import type { SchemaType } from "./schema-types";
 import { SeoSettings } from "./seo-settings";
@@ -209,7 +209,7 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
   const postTypeOptions = SCHEMA_TYPES.map(({ label, value }) => ({ label, value }));
 
   return (
-    <div className="bsm:mt-4 bsm:max-w-2xl bsm:rounded-xl bsm:border bsm:border-solid bsm:border-border bsm:bg-card bsm:p-6 bsm:text-foreground bsm:shadow-xs bsm:sm:p-8">
+    <FormRoot className="bsm:mt-4 bsm:max-w-2xl bsm:rounded-xl bsm:border bsm:border-solid bsm:border-border bsm:bg-card bsm:p-6 bsm:shadow-xs bsm:sm:p-8">
       <div className="bsm:grid bsm:gap-8">
         <p className="bsm:m-0 bsm:text-sm bsm:text-muted-foreground">
           {showSetup
@@ -335,6 +335,6 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
           ) : null}
         </div>
       </div>
-    </div>
+    </FormRoot>
   );
 }

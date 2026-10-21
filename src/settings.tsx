@@ -1,6 +1,6 @@
 import { createRoot } from "@wordpress/element";
 
-import "./settings.css";
+import "./admin.css";
 import { readSettingsConfig } from "./settings-data";
 import { SettingsScreen } from "./settings-screen";
 

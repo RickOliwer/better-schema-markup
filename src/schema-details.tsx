@@ -1,5 +1,5 @@
-import { PanelBody } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
+import { useState } from "react";
 
 import { CustomJsonLdField } from "./custom-jsonld-field";
 import { EventFields } from "./event-fields";
@@ -28,6 +28,10 @@ interface SchemaDetailsProps {
 
 /** The fields for the chosen schema type, and the advanced custom JSON-LD field. */
 export function SchemaDetails({ meta, schemaType, onChange }: SchemaDetailsProps) {
+  // Open at first when the post has custom JSON-LD; after that the user decides,
+  // so clearing the field while typing does not collapse it.
+  const [advancedOpen] = useState(() => readCustomJsonLd(meta) !== "");
+
   return (
     <>
       {schemaType === "Event" ? (
@@ -40,14 +44,26 @@ export function SchemaDetails({ meta, schemaType, onChange }: SchemaDetailsProps
         <FaqFields value={readFaqItems(meta)} onChange={(value) => onChange(FAQ_META_KEY, value)} />
       ) : null}
       {schemaType !== "none" ? (
-        <PanelBody title={__("Advanced", "better-schema-markup")} initialOpen={readCustomJsonLd(meta) !== ""}>
-          <CustomJsonLdField
-            value={readCustomJsonLd(meta)}
-            mode={readCustomJsonLdMode(meta)}
-            onChange={(value) => onChange(CUSTOM_JSONLD_META_KEY, value)}
-            onChangeMode={(mode) => onChange(CUSTOM_JSONLD_MODE_META_KEY, mode)}
-          />
-        </PanelBody>
+        <details
+          open={advancedOpen || undefined}
+          className="bsm:group bsm:rounded-lg bsm:border bsm:border-solid bsm:border-border"
+        >
+          <summary className="bsm:flex bsm:cursor-pointer bsm:list-none bsm:items-center bsm:justify-between bsm:gap-2 bsm:px-4 bsm:py-3 bsm:text-sm bsm:font-medium bsm:text-foreground bsm:select-none bsm:hover:bg-accent bsm:[&::-webkit-details-marker]:hidden">
+            {__("Advanced", "better-schema-markup")}
+            <svg className="bsm:text-muted-foreground bsm:transition-transform bsm:group-open:rotate-180" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+              <path d="m4 6 4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </summary>
+          <div aria-hidden="true" className="bsm:h-px bsm:bg-border" />
+          <div className="bsm:p-4">
+            <CustomJsonLdField
+              value={readCustomJsonLd(meta)}
+              mode={readCustomJsonLdMode(meta)}
+              onChange={(value) => onChange(CUSTOM_JSONLD_META_KEY, value)}
+              onChangeMode={(mode) => onChange(CUSTOM_JSONLD_MODE_META_KEY, mode)}
+            />
+          </div>
+        </details>
       ) : null}
     </>
   );

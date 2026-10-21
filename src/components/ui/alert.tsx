@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { cn } from "./utils";
 
 interface AlertProps {
-  readonly tone?: "info" | "success" | "error";
+  readonly tone?: "info" | "success" | "warning" | "error";
   readonly onDismiss?: () => void;
   readonly children: ReactNode;
 }
@@ -18,6 +18,7 @@ export function Alert({ tone = "info", onDismiss, children }: AlertProps) {
         "bsm:flex bsm:items-start bsm:justify-between bsm:gap-3 bsm:rounded-md bsm:border bsm:border-solid bsm:px-4 bsm:py-3 bsm:text-sm bsm:leading-normal",
         tone === "info" && "bsm:border-border bsm:bg-muted bsm:text-foreground",
         tone === "success" && "bsm:border-success/30 bsm:bg-success/10 bsm:text-foreground",
+        tone === "warning" && "bsm:border-warning/40 bsm:bg-warning/10 bsm:text-foreground",
         tone === "error" && "bsm:border-destructive/30 bsm:bg-destructive/10 bsm:text-destructive",
       )}
     >

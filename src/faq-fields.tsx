@@ -1,7 +1,9 @@
-import { Button, TextareaControl, TextControl } from "@wordpress/components";
-import { __ } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
 
+import { Button } from "./components/ui/button";
+import { FieldDescription } from "./components/ui/field";
 import type { FaqItem } from "./post-details";
+import { TextareaField, TextField } from "./settings-fields";
 
 interface FaqFieldsProps {
   readonly value: readonly FaqItem[];
@@ -14,40 +16,41 @@ export function FaqFields({ value, onChange }: FaqFieldsProps) {
   }
 
   return (
-    <>
+    <div className="bsm:grid bsm:gap-3">
       {value.map((item, index) => (
         // Items have no id, so the position is the identity; removing one re-keys the rest.
-        <div key={index} className="bsm-fields" style={{ paddingBottom: "16px", borderBottom: "1px solid #dcdcde" }}>
-          <TextControl
+        <fieldset key={index} className="bsm:m-0 bsm:grid bsm:min-w-0 bsm:gap-4 bsm:rounded-lg bsm:border bsm:border-solid bsm:border-border bsm:p-4">
+          <legend className="bsm:sr-only">
+            {sprintf(
+              /* translators: %d: question number. */
+              __("Question %d", "better-schema-markup"),
+              index + 1,
+            )}
+          </legend>
+          <TextField
             label={__("Question", "better-schema-markup")}
             value={item.question}
             onChange={(question) => update(index, { ...item, question })}
-            __next40pxDefaultSize
-            __nextHasNoMarginBottom
           />
-          <TextareaControl
+          <TextareaField
             label={__("Answer", "better-schema-markup")}
+            rows={3}
             value={item.answer}
             onChange={(answer) => update(index, { ...item, answer })}
-            __nextHasNoMarginBottom
           />
           <div>
-            <Button
-              variant="link"
-              isDestructive
-              onClick={() => onChange(value.filter((_, position) => position !== index))}
-            >
+            <Button variant="destructive" size="sm" onClick={() => onChange(value.filter((_, position) => position !== index))}>
               {__("Remove question", "better-schema-markup")}
             </Button>
           </div>
-        </div>
+        </fieldset>
       ))}
-      <div>
-        <Button variant="secondary" onClick={() => onChange([...value, { question: "", answer: "" }])}>
+      <div className="bsm:grid bsm:justify-items-start bsm:gap-2">
+        <Button variant="outline" size="sm" onClick={() => onChange([...value, { question: "", answer: "" }])}>
           {__("Add question", "better-schema-markup")}
         </Button>
-        <p className="bsm-help">{__("Questions without an answer are not saved.", "better-schema-markup")}</p>
+        <FieldDescription>{__("Questions without an answer are not saved.", "better-schema-markup")}</FieldDescription>
       </div>
-    </>
+    </div>
   );
 }

@@ -1,6 +1,8 @@
 import { registerPlugin } from "@wordpress/plugins";
 import { createRoot } from "@wordpress/element";
 
+import "./admin.css";
+
 import { SchemaPanel } from "./schema-panel";
 import { ClassicEditor } from "./classic-editor";
 import { readClassicEditorConfig } from "./classic-editor-data";

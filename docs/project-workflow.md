@@ -33,7 +33,7 @@ Do not commit or push. After completing a task, provide one short suggested conv
 
 Do not manually edit generated files under `build/`. Regenerate them with the project build command when required.
 
-`vp build` creates two admin scripts: `build/index.js` for the block and classic editors, and `build/settings.js` with `build/settings.css` for the settings page. Each has a `.asset.php` file listing the WordPress scripts it depends on. `bin/package.py` must list every file under `build/` that the plugin loads.
+`vp build` creates two admin scripts, each with a stylesheet: `build/index.js` and `build/index.css` for the block and classic editors, and `build/settings.js` and `build/settings.css` for the settings page. Each has a `.asset.php` file listing the WordPress scripts it depends on. `bin/package.py` must list every file under `build/` that the plugin loads.
 
 `package.json` aliases `vite` to Vite+'s core (`@voidzero-dev/vite-plus-core`) and pins `vitest`, so Vite plugins such as `@tailwindcss/vite` use the same Vite as `vp`. Keep these versions aligned with `vite-plus` when upgrading.
 
