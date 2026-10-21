@@ -1,6 +1,6 @@
 # Release preparation
 
-Use `vp check --no-fmt`, `vp run test`, `vp build`, and `vp run i18n` before `vp run package`.
+Use `vp check`, `vp run test`, `vp build`, and `vp run i18n` before `vp run package`.
 Packaging needs Python 3 and creates `dist/better-schema-markup-<version>.zip` from an explicit allowlist. Original UI sources and build inputs are included for GPL reproducibility; tests, dependencies, secrets, Git internals, and directory artwork are excluded. The ZIP has one `better-schema-markup` root. Do not upload a ZIP of the whole repository.
 
 ## Local integrations

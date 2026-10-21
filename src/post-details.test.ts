@@ -69,7 +69,9 @@ describe("readRecipeDetails", () => {
 describe("readFaqItems", () => {
   it("reads question and answer pairs and ignores non-objects", () => {
     expect(
-      readFaqItems({ _better_schema_faq: [{ question: "Q", answer: "A" }, "junk", { question: 1 }] }),
+      readFaqItems({
+        _better_schema_faq: [{ question: "Q", answer: "A" }, "junk", { question: 1 }],
+      }),
     ).toEqual([
       { question: "Q", answer: "A" },
       { question: "", answer: "" },
@@ -81,7 +83,9 @@ describe("readFaqItems", () => {
 
 describe("readCustomJsonLd", () => {
   it("returns the stored string or an empty string", () => {
-    expect(readCustomJsonLd({ _better_schema_custom_jsonld: '[{"@type":"A"}]' })).toBe('[{"@type":"A"}]');
+    expect(readCustomJsonLd({ _better_schema_custom_jsonld: '[{"@type":"A"}]' })).toBe(
+      '[{"@type":"A"}]',
+    );
     expect(readCustomJsonLd({ _better_schema_custom_jsonld: 5 })).toBe("");
   });
 });
@@ -90,7 +94,12 @@ describe("readCustomJsonLdMode", () => {
   it("reads a valid mode and defaults to add", () => {
     expect(readCustomJsonLdMode({ _better_schema_custom_mode: "override" })).toBe("override");
     expect(readCustomJsonLdMode({ _better_schema_custom_mode: "replace" })).toBe("replace");
-    for (const meta of [{}, null, { _better_schema_custom_mode: "merge" }, { _better_schema_custom_mode: 1 }]) {
+    for (const meta of [
+      {},
+      null,
+      { _better_schema_custom_mode: "merge" },
+      { _better_schema_custom_mode: 1 },
+    ]) {
       expect(readCustomJsonLdMode(meta)).toBe("add");
     }
   });
@@ -106,7 +115,9 @@ describe("checkCustomJsonLd", () => {
   it("accepts an entity, a list and a graph document", () => {
     expect(checkCustomJsonLd('{"@type":"Course"}').status).toBe("valid");
     expect(checkCustomJsonLd('[{"@type":"A"},{"@type":"B"}]').status).toBe("valid");
-    expect(checkCustomJsonLd('{"@context":"https://schema.org","@graph":[{"@type":"A"}]}').status).toBe("valid");
+    expect(
+      checkCustomJsonLd('{"@context":"https://schema.org","@graph":[{"@type":"A"}]}').status,
+    ).toBe("valid");
   });
 
   it("treats blank input as empty", () => {

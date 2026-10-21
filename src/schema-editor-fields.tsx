@@ -41,9 +41,16 @@ export function SchemaEditorFields({
       <SchemaPreviewSection state={preview} />
       {testableUrl && schemaType !== "none" ? (
         <p className="bsm:m-0 bsm:text-sm">
-          <a href={richResultsTestUrl(testableUrl)} target="_blank" rel="noopener noreferrer" className="bsm:font-medium bsm:text-foreground bsm:underline bsm:underline-offset-4">
+          <a
+            href={richResultsTestUrl(testableUrl)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bsm:font-medium bsm:text-foreground bsm:underline bsm:underline-offset-4"
+          >
             {__("Test with Google", "better-schema-markup")}
-            <span className="bsm:sr-only">{__("(opens in a new tab)", "better-schema-markup")}</span>
+            <span className="bsm:sr-only">
+              {__("(opens in a new tab)", "better-schema-markup")}
+            </span>
             <span aria-hidden="true"> ↗</span>
           </a>
         </p>

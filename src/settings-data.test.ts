@@ -12,7 +12,10 @@ import {
 } from "./settings-data";
 
 const config = {
-  postTypes: [{ name: "post", label: "Posts" }, { name: "book", label: "Books" }],
+  postTypes: [
+    { name: "post", label: "Posts" },
+    { name: "book", label: "Books" },
+  ],
   showSetup: true,
   logoUrl: "",
   siteName: "My Site",
@@ -26,11 +29,21 @@ describe("settings data from WordPress", () => {
   });
 
   it("reads valid settings and fills a missing custom post type default", () => {
-    expect(readPluginSettings({
-      better_schema_frontend_url: "",
-      better_schema_identity: { type: "Person", name: "Ada", logo: 7, same_as: ["https://example.com"] },
-      better_schema_type_defaults: { post: "BlogPosting" },
-    }, config)).toEqual({
+    expect(
+      readPluginSettings(
+        {
+          better_schema_frontend_url: "",
+          better_schema_identity: {
+            type: "Person",
+            name: "Ada",
+            logo: 7,
+            same_as: ["https://example.com"],
+          },
+          better_schema_type_defaults: { post: "BlogPosting" },
+        },
+        config,
+      ),
+    ).toEqual({
       frontendUrl: "",
       identity: { type: "Person", name: "Ada", logo: 7, same_as: ["https://example.com"] },
       defaults: { post: "BlogPosting", book: "WebPage" },
@@ -43,14 +56,32 @@ describe("settings data from WordPress", () => {
       better_schema_identity: { type: "Organization", name: "Acme", logo: 0, same_as: [] },
       better_schema_type_defaults: {},
     };
-    expect(readPluginSettings({ ...valid, better_schema_identity: { ...valid.better_schema_identity, logo: "7" } }, config)).toBeNull();
-    expect(readPluginSettings({ ...valid, better_schema_identity: { ...valid.better_schema_identity, same_as: "https://example.com" } }, config)).toBeNull();
+    expect(
+      readPluginSettings(
+        { ...valid, better_schema_identity: { ...valid.better_schema_identity, logo: "7" } },
+        config,
+      ),
+    ).toBeNull();
+    expect(
+      readPluginSettings(
+        {
+          ...valid,
+          better_schema_identity: {
+            ...valid.better_schema_identity,
+            same_as: "https://example.com",
+          },
+        },
+        config,
+      ),
+    ).toBeNull();
   });
 });
 
 describe("social profiles", () => {
   it("parses one URL per line and rejects unsafe or malformed URLs", () => {
-    const urls = parseSocialProfiles(" https://example.com/a \n\n javascript:alert(1)\nhttp://example.org/x");
+    const urls = parseSocialProfiles(
+      " https://example.com/a \n\n javascript:alert(1)\nhttp://example.org/x",
+    );
     expect(urls).toEqual(["https://example.com/a", "javascript:alert(1)", "http://example.org/x"]);
     expect(invalidSocialProfiles(urls)).toEqual(["javascript:alert(1)"]);
   });
@@ -58,7 +89,8 @@ describe("social profiles", () => {
 
 describe("invalidSocialProfileLines", () => {
   it("numbers the filled-in lines that are not full http or https URLs", () => {
-    const text = "https://example.com/a\n\nlinkedin.com/company/acme\r\n  @acme  \nhttp://example.org/x\njavascript:alert(1)";
+    const text =
+      "https://example.com/a\n\nlinkedin.com/company/acme\r\n  @acme  \nhttp://example.org/x\njavascript:alert(1)";
     expect(invalidSocialProfileLines(text)).toEqual([3, 4, 6]);
     expect(invalidSocialProfileLines("")).toEqual([]);
     expect(invalidSocialProfileLines("https://example.com\n\n")).toEqual([]);
@@ -67,8 +99,16 @@ describe("invalidSocialProfileLines", () => {
 
 describe("frontend URL", () => {
   it("accepts empty or absolute web bases and rejects credentials and suffixes", () => {
-    for (const url of ["", "https://example.com", "http://localhost:3000/blog/"]) expect(isFrontendUrl(url)).toBe(true);
-    for (const url of ["/blog", "javascript:alert(1)", "https://user:pass@example.com", "https://example.com?q=1", "https://example.com#x"]) expect(isFrontendUrl(url)).toBe(false);
+    for (const url of ["", "https://example.com", "http://localhost:3000/blog/"])
+      expect(isFrontendUrl(url)).toBe(true);
+    for (const url of [
+      "/blog",
+      "javascript:alert(1)",
+      "https://user:pass@example.com",
+      "https://example.com?q=1",
+      "https://example.com#x",
+    ])
+      expect(isFrontendUrl(url)).toBe(false);
   });
 });
 
@@ -78,7 +118,13 @@ describe("local business settings", () => {
       enabled: true,
       telephone: "+46 8 123",
       price_range: "$$",
-      address: { street: "Storgatan 1", locality: "Stockholm", region: "", postal_code: "111 22", country: "SE" },
+      address: {
+        street: "Storgatan 1",
+        locality: "Stockholm",
+        region: "",
+        postal_code: "111 22",
+        country: "SE",
+      },
       geo: { lat: "59.33", lng: "18.06" },
       hours: [{ days: ["Monday", "Friday"], opens: "09:00", closes: "17:00" }],
     };
@@ -88,12 +134,16 @@ describe("local business settings", () => {
   it("falls back to empty settings for missing or malformed values", () => {
     expect(readBusinessSettings({})).toEqual(EMPTY_BUSINESS);
     expect(readBusinessSettings({ better_schema_business: "yes" })).toEqual(EMPTY_BUSINESS);
-    expect(readBusinessSettings({ better_schema_business: { enabled: "true", address: 5, hours: "x" } })).toEqual(EMPTY_BUSINESS);
+    expect(
+      readBusinessSettings({ better_schema_business: { enabled: "true", address: 5, hours: "x" } }),
+    ).toEqual(EMPTY_BUSINESS);
   });
 
   it("drops unknown weekdays and non-object hours", () => {
     const { hours } = readBusinessSettings({
-      better_schema_business: { hours: [{ days: ["Monday", "Funday"], opens: "09:00", closes: "17:00" }, "x"] },
+      better_schema_business: {
+        hours: [{ days: ["Monday", "Funday"], opens: "09:00", closes: "17:00" }, "x"],
+      },
     });
     expect(hours).toEqual([{ days: ["Monday"], opens: "09:00", closes: "17:00" }]);
   });

@@ -9,7 +9,13 @@ interface SwitchProps {
 }
 
 /** An on/off switch built on Base UI's Switch, styled like shadcn/ui. */
-export function Switch({ id, checked, onChange, disabled, "aria-describedby": describedBy }: SwitchProps) {
+export function Switch({
+  id,
+  checked,
+  onChange,
+  disabled,
+  "aria-describedby": describedBy,
+}: SwitchProps) {
   return (
     <BaseSwitch.Root
       id={id}

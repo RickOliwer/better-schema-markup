@@ -28,7 +28,15 @@ function useFieldIds(hasMessage: boolean) {
   return { id, messageId: hasMessage ? `${id}-message` : undefined };
 }
 
-function FieldHeader({ id, label, tip }: { readonly id: string; readonly label: string; readonly tip?: ReactNode }) {
+function FieldHeader({
+  id,
+  label,
+  tip,
+}: {
+  readonly id: string;
+  readonly label: string;
+  readonly tip?: ReactNode;
+}) {
   return (
     <div className="bsm:flex bsm:min-h-6 bsm:items-center bsm:gap-1">
       <FieldLabel htmlFor={id}>{label}</FieldLabel>
@@ -37,7 +45,15 @@ function FieldHeader({ id, label, tip }: { readonly id: string; readonly label: 
   );
 }
 
-function FieldMessage({ id, help, error }: { readonly id?: string; readonly help?: ReactNode; readonly error?: ReactNode }) {
+function FieldMessage({
+  id,
+  help,
+  error,
+}: {
+  readonly id?: string;
+  readonly help?: ReactNode;
+  readonly error?: ReactNode;
+}) {
   if (error) return <FieldError id={id}>{error}</FieldError>;
   return help ? <FieldDescription id={id}>{help}</FieldDescription> : null;
 }
@@ -48,7 +64,15 @@ type TextFieldProps = FieldTextProps &
     readonly onChange: (value: string) => void;
   };
 
-export function TextField({ label, tip, help, error, value, onChange, ...inputProps }: TextFieldProps) {
+export function TextField({
+  label,
+  tip,
+  help,
+  error,
+  value,
+  onChange,
+  ...inputProps
+}: TextFieldProps) {
   const { id, messageId } = useFieldIds(Boolean(help || error));
   return (
     <Field>
@@ -72,7 +96,15 @@ type TextareaFieldProps = FieldTextProps &
     readonly onChange: (value: string) => void;
   };
 
-export function TextareaField({ label, tip, help, error, value, onChange, ...textareaProps }: TextareaFieldProps) {
+export function TextareaField({
+  label,
+  tip,
+  help,
+  error,
+  value,
+  onChange,
+  ...textareaProps
+}: TextareaFieldProps) {
   const { id, messageId } = useFieldIds(Boolean(help || error));
   return (
     <Field>
@@ -97,12 +129,28 @@ interface SelectFieldProps<Value extends string> extends FieldTextProps {
   readonly disabled?: boolean;
 }
 
-export function SelectField<Value extends string>({ label, tip, help, error, value, options, onChange, disabled }: SelectFieldProps<Value>) {
+export function SelectField<Value extends string>({
+  label,
+  tip,
+  help,
+  error,
+  value,
+  options,
+  onChange,
+  disabled,
+}: SelectFieldProps<Value>) {
   const { id, messageId } = useFieldIds(Boolean(help || error));
   return (
     <Field>
       <FieldHeader id={id} label={label} tip={tip} />
-      <Select id={id} value={value} options={options} onChange={onChange} disabled={disabled} aria-describedby={messageId} />
+      <Select
+        id={id}
+        value={value}
+        options={options}
+        onChange={onChange}
+        disabled={disabled}
+        aria-describedby={messageId}
+      />
       <FieldMessage id={messageId} help={help} error={error} />
     </Field>
   );
@@ -125,7 +173,13 @@ export function SwitchField({ label, help, checked, onChange, disabled }: Switch
         <FieldLabel htmlFor={id}>{label}</FieldLabel>
         {help ? <FieldDescription id={messageId}>{help}</FieldDescription> : null}
       </div>
-      <Switch id={id} checked={checked} onChange={onChange} disabled={disabled} aria-describedby={messageId} />
+      <Switch
+        id={id}
+        checked={checked}
+        onChange={onChange}
+        disabled={disabled}
+        aria-describedby={messageId}
+      />
     </div>
   );
 }

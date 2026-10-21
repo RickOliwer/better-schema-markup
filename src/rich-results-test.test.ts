@@ -11,7 +11,9 @@ describe("richResultsTestUrl", () => {
 
 describe("testablePostUrl", () => {
   it("returns the link of a published post", () => {
-    expect(testablePostUrl("publish", "https://example.com/hello/")).toBe("https://example.com/hello/");
+    expect(testablePostUrl("publish", "https://example.com/hello/")).toBe(
+      "https://example.com/hello/",
+    );
   });
 
   it("returns null for posts Google cannot load", () => {

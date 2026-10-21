@@ -22,8 +22,7 @@ jobs:
         with:
           node-version: "24"
           cache: true
-      # TODO: switch to plain `vp check` once `vp fmt` has been run on the whole repo.
-      - run: vp check --no-fmt
+      - run: vp check
       - run: vp build
       - run: vp run test:js
 

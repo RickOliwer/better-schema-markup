@@ -35,10 +35,16 @@ export function SchemaDetails({ meta, schemaType, onChange }: SchemaDetailsProps
   return (
     <>
       {schemaType === "Event" ? (
-        <EventFields value={readEventDetails(meta)} onChange={(value) => onChange(EVENT_META_KEY, value)} />
+        <EventFields
+          value={readEventDetails(meta)}
+          onChange={(value) => onChange(EVENT_META_KEY, value)}
+        />
       ) : null}
       {schemaType === "Recipe" ? (
-        <RecipeFields value={readRecipeDetails(meta)} onChange={(value) => onChange(RECIPE_META_KEY, value)} />
+        <RecipeFields
+          value={readRecipeDetails(meta)}
+          onChange={(value) => onChange(RECIPE_META_KEY, value)}
+        />
       ) : null}
       {schemaType === "FAQPage" ? (
         <FaqFields value={readFaqItems(meta)} onChange={(value) => onChange(FAQ_META_KEY, value)} />
@@ -50,7 +56,16 @@ export function SchemaDetails({ meta, schemaType, onChange }: SchemaDetailsProps
         >
           <summary className="bsm:flex bsm:cursor-pointer bsm:list-none bsm:items-center bsm:justify-between bsm:gap-2 bsm:px-4 bsm:py-3 bsm:text-sm bsm:font-medium bsm:text-foreground bsm:select-none bsm:hover:bg-accent bsm:[&::-webkit-details-marker]:hidden">
             {__("Advanced", "better-schema-markup")}
-            <svg className="bsm:text-muted-foreground bsm:transition-transform bsm:group-open:rotate-180" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+            <svg
+              className="bsm:text-muted-foreground bsm:transition-transform bsm:group-open:rotate-180"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              aria-hidden="true"
+            >
               <path d="m4 6 4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </summary>

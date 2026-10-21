@@ -1,6 +1,14 @@
 {
   "name": "better-schema-markup",
   "version": "0.19.0",
+  "description": "Schema.org JSON-LD for better SEO and rich results. Replaces the schema output of Yoast SEO and Rank Math, with WPGraphQL support.",
+  "keywords": [],
+  "license": "GPL-2.0-or-later",
+  "author": {
+    "name": "Rick Centerhall",
+    "url": "https://rickcenterhall.com/"
+  },
+  "type": "module",
   "scripts": {
     "start": "wp-env start",
     "stop": "wp-env stop",
@@ -16,13 +24,6 @@
     "package": "vp build && python3 bin/package.py",
     "i18n": "vp run wp i18n make-pot wp-content/plugins/schema-ld wp-content/plugins/schema-ld/languages/better-schema-markup.pot --domain=better-schema-markup --slug=better-schema-markup --exclude=node_modules,vendor,tests,src,dist,release-assets"
   },
-  "keywords": [],
-  "author": {
-    "name": "Rick Centerhall",
-    "url": "https://rickcenterhall.com/"
-  },
-  "license": "GPL-2.0-or-later",
-  "description": "Schema.org JSON-LD for better SEO and rich results. Replaces the schema output of Yoast SEO and Rank Math, with WPGraphQL support.",
   "devDependencies": {
     "@base-ui/react": "^1.9.0",
     "@tailwindcss/vite": "^4.3.3",
@@ -45,6 +46,5 @@
   "overrides": {
     "vite": "npm:@voidzero-dev/vite-plus-core@1.3.0",
     "vitest": "5.0.5"
-  },
-  "type": "module"
+  }
 }

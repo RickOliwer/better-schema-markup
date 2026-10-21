@@ -17,8 +17,18 @@ interface SchemaApiOptions {
 /** Use explicit backend URLs without changing other plugins' apiFetch routing. */
 export async function schemaApiFetch({ path, ...options }: SchemaApiOptions): Promise<unknown> {
   const config = window.betterSchemaApi;
-  if (typeof config !== "object" || config === null || !("rootUrl" in config) || typeof config.rootUrl !== "string") {
-    throw new Error(__("Could not configure the WordPress backend request. Reload this page and try again.", "better-schema-markup"));
+  if (
+    typeof config !== "object" ||
+    config === null ||
+    !("rootUrl" in config) ||
+    typeof config.rootUrl !== "string"
+  ) {
+    throw new Error(
+      __(
+        "Could not configure the WordPress backend request. Reload this page and try again.",
+        "better-schema-markup",
+      ),
+    );
   }
 
   const url = new URL(config.rootUrl);

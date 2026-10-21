@@ -16,7 +16,20 @@ export interface ClassicEditorConfig {
 }
 
 export function readClassicEditorConfig(value: unknown): ClassicEditorConfig | null {
-  if (typeof value !== "object" || value === null || !("postId" in value) || typeof value.postId !== "number" || !Number.isSafeInteger(value.postId) || value.postId <= 0 || !("savedAt" in value) || typeof value.savedAt !== "string" || !("testableUrl" in value) || (value.testableUrl !== null && typeof value.testableUrl !== "string") || !("meta" in value) || !isSchemaMeta(value.meta)) {
+  if (
+    typeof value !== "object" ||
+    value === null ||
+    !("postId" in value) ||
+    typeof value.postId !== "number" ||
+    !Number.isSafeInteger(value.postId) ||
+    value.postId <= 0 ||
+    !("savedAt" in value) ||
+    typeof value.savedAt !== "string" ||
+    !("testableUrl" in value) ||
+    (value.testableUrl !== null && typeof value.testableUrl !== "string") ||
+    !("meta" in value) ||
+    !isSchemaMeta(value.meta)
+  ) {
     return null;
   }
 

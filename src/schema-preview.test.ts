@@ -44,7 +44,9 @@ describe("isSchemaPreview", () => {
     expect(isSchemaPreview({ hints: [] })).toBe(false);
     expect(isSchemaPreview({ document: [], hints: [] })).toBe(false);
     expect(isSchemaPreview({ document: { "@graph": [] }, hints: [] })).toBe(false);
-    expect(isSchemaPreview({ document: { "@context": "https://schema.org", "@graph": {} }, hints: [] })).toBe(false);
+    expect(
+      isSchemaPreview({ document: { "@context": "https://schema.org", "@graph": {} }, hints: [] }),
+    ).toBe(false);
     expect(isSchemaPreview({ document, hints: [hint, { message: "x" }] })).toBe(false);
     expect(isSchemaPreview({ code: "rest_forbidden", message: "Sorry" })).toBe(false);
   });

@@ -29,8 +29,8 @@ Its goals are to:
 ## Checks and tests
 
 - Linting, formatting, and TypeScript settings are configured in `vite.config.ts`.
-- After making changes, run `vp check --no-fmt` and fix all reported errors.
-- Run `vp fmt` only when intentionally formatting files. A repository-wide formatting cleanup is tracked separately.
+- After making changes, run `vp check` and fix all reported errors.
+- Run `vp fmt` only when intentionally formatting files. CI checks formatting across the repository; generated files under `build/` are excluded.
 - Run all tests with `vp run test`.
 - Write tests next to the code they test when that matches the existing repository pattern.
 - Use the repository’s existing Vitest and PHPUnit test setup. Do not change test frameworks or imports without a task that requires it.
@@ -62,7 +62,6 @@ Read only the documentation relevant to the current task:
 - Before creating or modifying tests, read `docs/testing.md`.
 - Before changing dependencies, build tooling, scripts, CI, releases, or repository metadata, read `docs/project-workflow.md`.
 
-
 ## Test integrity
 
 - Treat existing tests as specifications of intended behavior.
@@ -72,7 +71,6 @@ Read only the documentation relevant to the current task:
 - Do not replace meaningful assertions with weaker assertions such as checking only that a value exists, has a type, or matches a snapshot if the previous test verified important behavior.
 - Do not add `.skip`, `.only`, broad mocks, or error suppression to hide a failure unless the task explicitly requires it.
 - When fixing a bug, add a regression test that fails before the fix and passes after it.
-
 
 ## Issue tracking
 

@@ -8,7 +8,7 @@ Use the project toolchain only:
 - `vp run dev` for watch rebuilding;
 - `vp run start` and `vp run stop` for local WordPress;
 - `vp run wp <arguments>` for WP-CLI;
-- `vp check --no-fmt` for the current lint and type-check workflow; and
+- `vp check` for formatting, linting, and type checks; and
 - `vp run test` for the test suites.
 
 Do not use npm, pnpm, or Yarn.

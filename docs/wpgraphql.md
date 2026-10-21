@@ -7,7 +7,9 @@ Query posts, pages, or custom post types exposed by WPGraphQL through `ContentNo
 ```graphql
 query Schema($id: ID!) {
   contentNode(id: $id, idType: DATABASE_ID) {
-    betterSchema { raw }
+    betterSchema {
+      raw
+    }
     betterSchemaType
   }
 }

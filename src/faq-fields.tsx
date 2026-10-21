@@ -19,7 +19,10 @@ export function FaqFields({ value, onChange }: FaqFieldsProps) {
     <div className="bsm:grid bsm:gap-3">
       {value.map((item, index) => (
         // Items have no id, so the position is the identity; removing one re-keys the rest.
-        <fieldset key={index} className="bsm:m-0 bsm:grid bsm:min-w-0 bsm:gap-4 bsm:rounded-lg bsm:border bsm:border-solid bsm:border-border bsm:p-4">
+        <fieldset
+          key={index}
+          className="bsm:m-0 bsm:grid bsm:min-w-0 bsm:gap-4 bsm:rounded-lg bsm:border bsm:border-solid bsm:border-border bsm:p-4"
+        >
           <legend className="bsm:sr-only">
             {sprintf(
               /* translators: %d: question number. */
@@ -39,17 +42,27 @@ export function FaqFields({ value, onChange }: FaqFieldsProps) {
             onChange={(answer) => update(index, { ...item, answer })}
           />
           <div>
-            <Button variant="destructive" size="sm" onClick={() => onChange(value.filter((_, position) => position !== index))}>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => onChange(value.filter((_, position) => position !== index))}
+            >
               {__("Remove question", "better-schema-markup")}
             </Button>
           </div>
         </fieldset>
       ))}
       <div className="bsm:grid bsm:justify-items-start bsm:gap-2">
-        <Button variant="outline" size="sm" onClick={() => onChange([...value, { question: "", answer: "" }])}>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => onChange([...value, { question: "", answer: "" }])}
+        >
           {__("Add question", "better-schema-markup")}
         </Button>
-        <FieldDescription>{__("Questions without an answer are not saved.", "better-schema-markup")}</FieldDescription>
+        <FieldDescription>
+          {__("Questions without an answer are not saved.", "better-schema-markup")}
+        </FieldDescription>
       </div>
     </div>
   );

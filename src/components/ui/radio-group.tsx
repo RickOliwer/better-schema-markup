@@ -20,7 +20,12 @@ interface RadioGroupProps<Value extends string> {
  * Radio buttons as bordered choice cards, like shadcn/ui's Choice Card, built on
  * Base UI's RadioGroup. Clicking anywhere on a card selects it.
  */
-export function RadioGroup<Value extends string>({ labelledBy, value, choices, onChange }: RadioGroupProps<Value>) {
+export function RadioGroup<Value extends string>({
+  labelledBy,
+  value,
+  choices,
+  onChange,
+}: RadioGroupProps<Value>) {
   const id = useId();
 
   return (
@@ -46,9 +51,14 @@ export function RadioGroup<Value extends string>({ labelledBy, value, choices, o
             <Radio.Indicator className="bsm:size-2 bsm:rounded-full bsm:bg-primary bsm:data-unchecked:hidden" />
           </Radio.Root>
           <span className="bsm:grid bsm:gap-0.5">
-            <span className="bsm:text-sm bsm:leading-snug bsm:font-medium bsm:text-foreground">{choice.label}</span>
+            <span className="bsm:text-sm bsm:leading-snug bsm:font-medium bsm:text-foreground">
+              {choice.label}
+            </span>
             {choice.description ? (
-              <span id={`${id}-${choice.value}`} className="bsm:text-sm bsm:leading-normal bsm:text-muted-foreground">
+              <span
+                id={`${id}-${choice.value}`}
+                className="bsm:text-sm bsm:leading-normal bsm:text-muted-foreground"
+              >
                 {choice.description}
               </span>
             ) : null}
