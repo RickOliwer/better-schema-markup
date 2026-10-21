@@ -21,6 +21,7 @@ export interface SettingsConfig {
 }
 
 export interface PluginSettings {
+  readonly vimeoEnabled: boolean;
   readonly frontendUrl: string;
   readonly identity: SiteIdentity;
   readonly defaults: Readonly<Record<string, SchemaType>>;
@@ -84,6 +85,7 @@ export function readPluginSettings(value: unknown, config: SettingsConfig): Plug
   }
 
   return {
+    vimeoEnabled: value.better_schema_vimeo_enabled === true,
     frontendUrl: value.better_schema_frontend_url,
     identity: {
       type: identity.type,

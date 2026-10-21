@@ -5,6 +5,25 @@
 
 class SettingsTest extends WP_UnitTestCase {
 
+	public function test_vimeo_consent_rest_permissions_validation_and_reload() {
+		do_action( 'rest_api_init' );
+		$this->assertFalse( get_option( 'better_schema_vimeo_enabled' ) );
+		$request = new WP_REST_Request( 'POST', '/wp/v2/settings' );
+		$request->set_body_params( array( 'better_schema_vimeo_enabled' => true ) );
+		wp_set_current_user( 0 );
+		$this->assertSame( 401, rest_do_request( $request )->get_status() );
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'editor' ) ) );
+		$this->assertSame( 403, rest_do_request( $request )->get_status() );
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		$this->assertSame( 200, rest_do_request( $request )->get_status() );
+		$this->assertTrue( rest_do_request( new WP_REST_Request( 'GET', '/wp/v2/settings' ) )->get_data()['better_schema_vimeo_enabled'] );
+		$request->set_body_params( array( 'better_schema_vimeo_enabled' => array( 'invalid' ) ) );
+		$this->assertSame( 400, rest_do_request( $request )->get_status() );
+		$request->set_body_params( array( 'better_schema_vimeo_enabled' => false ) );
+		$this->assertSame( 200, rest_do_request( $request )->get_status() );
+		$this->assertFalse( rest_do_request( new WP_REST_Request( 'GET', '/wp/v2/settings' ) )->get_data()['better_schema_vimeo_enabled'] );
+	}
+
 	public function set_up() {
 		parent::set_up();
 		better_schema_register_settings();

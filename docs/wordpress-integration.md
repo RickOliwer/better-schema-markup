@@ -53,3 +53,9 @@ Do not duplicate graph-building logic between `wp_head` and WPGraphQL.
 - Prefix constants with `BETTER_SCHEMA_`.
 - Use the `better-schema-markup` text domain.
 - Use descriptive WordPress hook and filter names prefixed with `better_schema_`.
+
+## Vimeo consent
+
+`better_schema_vimeo_enabled` is a site-local boolean option, false by default, exposed through the authenticated WordPress settings REST API. Only administrators with `manage_options` may change it. The full settings form saves permission explicitly; completing first-run setup does not enable it. Existing installations must also opt in.
+
+The shared Vimeo metadata helper checks permission before reading cached metadata or contacting Vimeo. With permission off, automatic Vimeo entities are omitted consistently from frontend output, previews and WPGraphQL. YouTube schema is unaffected. Uninstall removes the option on each site along with existing video caches.

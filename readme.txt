@@ -3,7 +3,7 @@ Tags: schema, json-ld, seo, structured data, wpgraphql
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.19.0
+Stable tag: 0.19.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,7 +49,7 @@ WP-CLI: `wp better-schema import --source=yoast --dry-run` or `wp better-schema 
 
 = Does the plugin send data to external services? =
 
-For Vimeo links or embeds already in post content, the server requests https://vimeo.com/api/oembed.json with the public video URL to obtain its title and thumbnail. Successful results are cached for a week; failures for an hour. No account credentials or post content are sent. See [Vimeo terms](https://vimeo.com/terms) and [privacy policy](https://vimeo.com/privacy).
+Vimeo metadata requests are off by default, including after upgrading. To enable them, turn on "Allow Vimeo metadata requests" in Settings → Better Schema and save. Turning the setting off stops requests and omits generated Vimeo schema, including cached metadata. With permission, for Vimeo links or embeds already in post content, the server requests https://vimeo.com/api/oembed.json with the public video URL to obtain its title and thumbnail. Successful results are cached for a week; failures for an hour. No account credentials or full post content are sent. Vimeo receives the public video URL, your server IP address, and standard WordPress HTTP request headers. See [Vimeo terms](https://vimeo.com/terms) and [privacy policy](https://vimeo.com/privacy).
 
 YouTube embed and thumbnail URLs are derived locally without an API request. Video schema contains public YouTube or Vimeo URLs. The optional Test with Google link opens Google's Rich Results Test with the published page URL only when clicked. See [Google terms](https://policies.google.com/terms) and [privacy policy](https://policies.google.com/privacy). The plugin does not add analytics or tracking.
 
@@ -155,6 +155,9 @@ Entities refer to each other by `@id`. If you remove a piece, also remove refere
 
 == Upgrade Notice ==
 
+= 0.19.1 =
+Vimeo schema now requires explicit permission in Settings → Better Schema. Existing sites must opt in; YouTube schema is unchanged.
+
 = 0.19.0 =
 A redesigned Settings → Better Schema page and editor schema fields. Your settings are unchanged.
 
@@ -174,6 +177,11 @@ Fix admin API requests on headless WordPress sites with a separate frontend doma
 Release preparation adds SEO schema takeover and migration, translations and uninstall cleanup. Review migration reports before switching production sites. Deleting the plugin removes its saved settings and per-post choices.
 
 == Changelog ==
+
+= 0.19.1 =
+* Require opt-in before requesting Vimeo metadata or using cached Vimeo metadata for schema.
+* Show SEO takeover notices only on the plugin settings page.
+* Include bundled third-party license notices in release packages.
 
 = 0.19.0 =
 * Redesign the Settings → Better Schema page with clearer fields, dropdowns, switches and help popovers.

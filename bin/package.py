@@ -12,7 +12,7 @@ header = (root / 'better-schema-markup.php').read_text()
 readme = (root / 'readme.txt').read_text()
 assert re.search(r'Version:\s+' + re.escape(version) + r'\s', header), 'Plugin version differs'
 assert 'Stable tag: ' + version in readme, 'Readme version differs'
-required = ['better-schema-markup.php', 'uninstall.php', 'readme.txt', 'LICENSE',
+required = ['better-schema-markup.php', 'uninstall.php', 'readme.txt', 'LICENSE', 'THIRD-PARTY-NOTICES.txt',
             'build/index.js', 'build/index.asset.php', 'build/index.css',
             'build/settings.js', 'build/settings.asset.php', 'build/settings.css',
             'languages/better-schema-markup.pot']

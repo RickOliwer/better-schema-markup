@@ -1,3 +1,30 @@
+# Release validation: 0.19.1
+
+Validated locally on 2026-10-21, on `fix/plugin-guidelines`.
+
+## Results
+
+- `vp check`: formatting, linting and TypeScript checks passed, including after building.
+- `vp run test`: 61 Vitest tests; 269 PHPUnit tests, 922 assertions.
+- New Vimeo consent and admin notice regression tests failed before the fixes and passed afterward. Existing Vimeo success/failure tests now opt in explicitly; their original assertions remain intact.
+- Multisite uninstall: 2 tests, 19 assertions, including removal of the new consent option from another site and restoration of blog context.
+- `vp build`, `vp run i18n`, and `vp run package` completed. Builds retain Base UI module-directive warnings. POT generation reports existing translator-comment and plural-placeholder warnings in editor/import strings; these are not new consent strings.
+- Installed the 0.19.1 ZIP under the distributable slug on the disposable wp-env test site. Plugin Check 2.1.0, including runtime checks through its CLI bootstrap, reported no errors and no warning findings; no exclusions were used.
+- Real Chrome smoke test on the installed ZIP: initial consent off, enable/save/reload, revoke/save/reload, no JavaScript errors. With Yoast active, the takeover notice appeared on Better Schema settings and not on the dashboard.
+- ZIP inspection confirmed one plugin root, matching 0.19.1 versions, original TypeScript/build inputs, and the complete generated third-party notices. The nine bundled dependency packages declare MIT licenses; full upstream copyright and permission texts are included.
+
+## Artifact
+
+`dist/better-schema-markup-0.19.1.zip`: 332,380 bytes, 92 files.
+
+SHA-256: `9b34dee19157d2c5f89c0e5f711070e026ff8e46c925248d08373abfa2cd2b99`
+
+## Remaining owner action
+
+Register a WordPress.org account, add its exact contributor username, rebuild/recheck the final ZIP, and submit it. Submission task 40 remains incomplete. No commits, pushes or WordPress.org submission were performed. These checks do not guarantee directory approval.
+
+---
+
 # Release validation: 0.16.0
 
 Validated locally on 2026-10-20, on `feat/release-prep`.

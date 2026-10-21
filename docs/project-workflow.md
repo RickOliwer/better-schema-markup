@@ -40,3 +40,7 @@ Do not manually edit generated files under `build/`. Regenerate them with the pr
 ## Documentation
 
 Update user-facing or developer documentation when a change introduces new configuration, extension points, schema behavior, or workflow requirements.
+
+## Bundled third-party licenses
+
+`vp build` regenerates `THIRD-PARTY-NOTICES.txt` from packages included in the admin JavaScript bundles and Tailwind CSS. The release ZIP includes this file. Builds fail when an included package has no license text. After dependency changes, review the generated inventory for GPL compatibility and any additional attribution or source requirements before releasing. Keep upstream notices intact.

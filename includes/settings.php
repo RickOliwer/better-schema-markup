@@ -8,6 +8,12 @@ declare( strict_types=1 );
 defined( 'ABSPATH' ) || exit;
 
 function better_schema_register_settings(): void {
+	register_setting( 'better_schema', 'better_schema_vimeo_enabled', array(
+		'type' => 'boolean',
+		'default' => false,
+		'sanitize_callback' => 'rest_sanitize_boolean',
+		'show_in_rest' => true,
+	) );
 	register_setting( 'better_schema', 'better_schema_frontend_url', array(
 		'type' => 'string',
 		'default' => '',

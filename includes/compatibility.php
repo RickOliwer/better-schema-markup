@@ -31,6 +31,10 @@ function better_schema_register_takeover(): void {
 add_action( 'init', 'better_schema_register_takeover', 100 );
 
 function better_schema_takeover_notice(): void {
+	if ( 'settings_page_better-schema-markup' !== get_current_screen()?->id ) {
+		return;
+	}
+
 	if ( ! current_user_can( 'manage_options' ) || ! better_schema_other_seo_active() ) {
 		return;
 	}

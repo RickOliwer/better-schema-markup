@@ -32,7 +32,7 @@ import type {
   SettingsConfig,
   SiteIdentity,
 } from "./settings-data";
-import { SelectField, TextareaField, TextField } from "./settings-fields";
+import { SelectField, SwitchField, TextareaField, TextField } from "./settings-fields";
 
 interface MediaFrame {
   on(event: "select", callback: () => void): void;
@@ -148,6 +148,7 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
   const [defaults, setDefaults] = useState<Readonly<Record<string, SchemaType>>>({});
   const [business, setBusiness] = useState<BusinessSettings>(EMPTY_BUSINESS);
   const [logoUrl, setLogoUrl] = useState(config.logoUrl);
+  const [vimeoEnabled, setVimeoEnabled] = useState(false);
   const [frontendUrl, setFrontendUrl] = useState("");
   const [socialText, setSocialText] = useState("");
   const [showSetup, setShowSetup] = useState(config.showSetup);
@@ -164,6 +165,7 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
         if (!parsed) throw new Error(__("Could not read schema settings.", "better-schema-markup"));
         setSettings(parsed);
         setFrontendUrl(parsed.frontendUrl);
+        setVimeoEnabled(parsed.vimeoEnabled);
         setIdentity(parsed.identity);
         setDefaults(parsed.defaults);
         setSocialText(parsed.identity.same_as.join("\n"));
@@ -222,7 +224,9 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
         data: {
           better_schema_identity: nextIdentity,
           // Setup only asks for identity, so it keeps the saved business settings.
-          ...(setupOnly ? {} : { better_schema_business: business }),
+          ...(setupOnly
+            ? {}
+            : { better_schema_business: business, better_schema_vimeo_enabled: vimeoEnabled }),
           better_schema_frontend_url: frontendUrl.trim(),
           better_schema_type_defaults: defaults,
           better_schema_setup_complete: true,
@@ -233,6 +237,7 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
         throw new Error(__("The saved settings could not be read.", "better-schema-markup"));
       setSettings(parsed);
       setFrontendUrl(parsed.frontendUrl);
+      setVimeoEnabled(parsed.vimeoEnabled);
       setIdentity(parsed.identity);
       setDefaults(parsed.defaults);
       setSocialText(parsed.identity.same_as.join("\n"));
@@ -367,6 +372,27 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
 
         {!showSetup ? (
           <>
+            <FieldSeparator />
+            <FieldSet title={__("Video metadata", "better-schema-markup")}>
+              <SwitchField
+                label={__("Allow Vimeo metadata requests", "better-schema-markup")}
+                checked={vimeoEnabled}
+                onChange={setVimeoEnabled}
+                help={__(
+                  "When enabled and saved, sends public Vimeo video URLs found in your posts to Vimeo to retrieve titles and thumbnails for schema. Vimeo also receives your server’s IP address. Off by default; turning it off stops requests and omits generated Vimeo schema, including cached metadata. YouTube schema is unaffected.",
+                  "better-schema-markup",
+                )}
+              />
+              <FieldDescription>
+                <a href="https://vimeo.com/terms" target="_blank" rel="noreferrer">
+                  {__("Vimeo terms", "better-schema-markup")}
+                </a>
+                {" · "}
+                <a href="https://vimeo.com/privacy" target="_blank" rel="noreferrer">
+                  {__("Vimeo privacy policy", "better-schema-markup")}
+                </a>
+              </FieldDescription>
+            </FieldSet>
             <FieldSeparator />
             <FieldSet
               title={__("Headless sites", "better-schema-markup")}
