@@ -3,7 +3,7 @@ Tags: schema, json-ld, seo, structured data, wpgraphql
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.3
-Stable tag: 0.19.2
+Stable tag: 0.19.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -155,6 +155,9 @@ Entities refer to each other by `@id`. If you remove a piece, also remove refere
 
 == Upgrade Notice ==
 
+= 0.19.3 =
+Maintenance release with a cleaner build. No change to schema output or settings.
+
 = 0.19.2 =
 Settings now use the available page width, with responsive columns on larger screens.
 
@@ -180,6 +183,9 @@ Fix admin API requests on headless WordPress sites with a separate frontend doma
 Release preparation adds SEO schema takeover and migration, translations and uninstall cleanup. Review migration reports before switching production sites. Deleting the plugin removes its saved settings and per-post choices.
 
 == Changelog ==
+
+= 0.19.3 =
+* Remove build warnings about "use client" directives in bundled dependencies.
 
 = 0.19.2 =
 * Use the available settings-page width with two columns on larger screens and stacked sections on smaller screens.

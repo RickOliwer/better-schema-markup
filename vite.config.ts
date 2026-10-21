@@ -143,6 +143,12 @@ function adminScript(
     rolldownOptions: {
       external: isExternal,
       output: { globals: toGlobal },
+      // Dependencies such as Base UI start with 'use client' for React Server Components.
+      // The admin scripts run only in the browser, so dropping the directive is correct.
+      onwarn(warning, defaultHandler) {
+        if (warning.code === "MODULE_LEVEL_DIRECTIVE") return;
+        defaultHandler(warning);
+      },
     },
   };
 }
