@@ -12,6 +12,18 @@ Both editors share the schema type picker, detail fields, validation hints and J
 
 The preview uses the selected type, the custom JSON-LD and its mode from the editor, and the post's saved content and other detail fields. Custom JSON-LD is debounced before it is previewed. It does not persist changes. The backend API routing applies in both editors, including headless sites. Classic controls require JavaScript; if mounting fails, saving the post must preserve all existing schema values.
 
+## Settings page
+
+The settings page (`src/settings.tsx`) is built separately from the editor script (`src/index.tsx`), so the block editor never loads its code. It uses:
+
+- Base UI (`@base-ui/react`) for interactive controls: Select, Switch, Checkbox and Popover;
+- Tailwind CSS v4, with every class prefixed `bsm:`, utilities marked `!important` so they beat wp-admin's form styles, and no Preflight reset (see `src/settings.css`); and
+- shadcn/ui-style components in `src/components/ui/`, combined into labelled fields in `src/settings-fields.tsx`.
+
+Base UI popups render at the end of the page, so styles must not depend on an ancestor of the settings container. Theme colors are CSS variables on `:root` (`--bsm-color-*`).
+
+The block editor sidebar and classic editor meta box keep WordPress components, so they match the rest of the editor.
+
 ## Entry points
 
 Keep editor entry files focused on:
