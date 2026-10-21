@@ -13,12 +13,18 @@ describe("summarizeImport", () => {
 
   it("explains a real import where nothing was imported", () => {
     const text = summarizeImport({ ...none, skipped: 3 }, false, "Rank Math");
-    expect(text).toContain("Nothing was imported. None of your 3 posts have a Rank Math schema choice to import.");
+    expect(text).toContain(
+      "Nothing was imported. None of your 3 posts have a Rank Math schema choice to import.",
+    );
     expect(text).not.toContain("preserved");
   });
 
   it("counts imported posts and mentions skipped, unsupported and failed ones", () => {
-    const text = summarizeImport({ imported: 2, skipped: 1, unsupported: 1, failed: 1 }, false, "Yoast SEO");
+    const text = summarizeImport(
+      { imported: 2, skipped: 1, unsupported: 1, failed: 1 },
+      false,
+      "Yoast SEO",
+    );
     expect(text).toContain("Imported 2 of 4 posts.");
     expect(text).toContain("1 was skipped");
     expect(text).toContain("1 has settings that cannot be transferred");

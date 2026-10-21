@@ -82,7 +82,9 @@ function whole(value: unknown): number {
 }
 
 function textList(value: unknown): string[] {
-  return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string")
+    : [];
 }
 
 function oneOf<T extends string>(options: readonly T[], value: unknown, fallback: T): T {

@@ -41,7 +41,7 @@ Test invalid external values as well as valid values when those cases matter.
 
 Run the relevant test suite during implementation. Before handoff, run the applicable project checks and tests:
 
-`vp check --no-fmt`
+`vp check`
 
 `vp run test`
 

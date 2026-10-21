@@ -6,7 +6,8 @@ import { cn } from "./utils";
 // a shared `border-0` would override the outline variant's `border`.
 const VARIANTS = {
   default: "bsm:border-0 bsm:bg-primary bsm:text-primary-foreground bsm:hover:bg-primary/90",
-  outline: "bsm:border bsm:border-solid bsm:border-input bsm:bg-background bsm:text-foreground bsm:shadow-xs bsm:hover:bg-accent",
+  outline:
+    "bsm:border bsm:border-solid bsm:border-input bsm:bg-background bsm:text-foreground bsm:shadow-xs bsm:hover:bg-accent",
   ghost: "bsm:border-0 bsm:bg-transparent bsm:text-foreground bsm:hover:bg-accent",
   destructive: "bsm:border-0 bsm:bg-transparent bsm:text-destructive bsm:hover:bg-destructive/10",
 } as const;
@@ -23,7 +24,16 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly isBusy?: boolean;
 }
 
-export function Button({ variant = "default", size = "default", isBusy = false, className, type = "button", disabled, children, ...props }: ButtonProps) {
+export function Button({
+  variant = "default",
+  size = "default",
+  isBusy = false,
+  className,
+  type = "button",
+  disabled,
+  children,
+  ...props
+}: ButtonProps) {
   return (
     <button
       type={type}
@@ -46,7 +56,12 @@ export function Button({ variant = "default", size = "default", isBusy = false, 
 
 export function Spinner({ className }: { readonly className?: string }) {
   return (
-    <svg className={cn("bsm:size-4 bsm:animate-spin", className)} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <svg
+      className={cn("bsm:size-4 bsm:animate-spin", className)}
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
       <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity="0.25" strokeWidth="3" />
       <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
     </svg>

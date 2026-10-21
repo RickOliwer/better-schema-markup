@@ -26,9 +26,14 @@ describe("admin API requests", () => {
   });
 
   it("preserves preview query parameters and request cancellation", async () => {
-    vi.stubGlobal("window", { betterSchemaApi: { rootUrl: "https://cloud.example.org/index.php?rest_route=/" } });
+    vi.stubGlobal("window", {
+      betterSchemaApi: { rootUrl: "https://cloud.example.org/index.php?rest_route=/" },
+    });
     const controller = new AbortController();
-    await schemaApiFetch({ path: "/better-schema/v1/preview/42?type=BlogPosting&_locale=sv_SE", signal: controller.signal });
+    await schemaApiFetch({
+      path: "/better-schema/v1/preview/42?type=BlogPosting&_locale=sv_SE",
+      signal: controller.signal,
+    });
     const options = vi.mocked(apiFetch).mock.calls[0]?.[0];
     const url = new URL(options?.url ?? "");
     expect(url.searchParams.get("rest_route")).toBe("/better-schema/v1/preview/42");
@@ -37,12 +42,17 @@ describe("admin API requests", () => {
     expect(options?.signal).toBe(controller.signal);
   });
 
-  it.each(["/wp/v2/settings", "/better-schema/v1/import"])("preserves POST data for %s", async (path) => {
-    vi.stubGlobal("window", { betterSchemaApi: { rootUrl: "https://cloud.example.org/index.php?rest_route=/" } });
-    const data = { source: "yoast", dry_run: true, better_schema_takeover: false };
-    await schemaApiFetch({ path, method: "POST", data });
-    expect(apiFetch).toHaveBeenCalledWith(expect.objectContaining({ method: "POST", data }));
-  });
+  it.each(["/wp/v2/settings", "/better-schema/v1/import"])(
+    "preserves POST data for %s",
+    async (path) => {
+      vi.stubGlobal("window", {
+        betterSchemaApi: { rootUrl: "https://cloud.example.org/index.php?rest_route=/" },
+      });
+      const data = { source: "yoast", dry_run: true, better_schema_takeover: false };
+      await schemaApiFetch({ path, method: "POST", data });
+      expect(apiFetch).toHaveBeenCalledWith(expect.objectContaining({ method: "POST", data }));
+    },
+  );
 
   it("fails without configuration instead of requesting the frontend", async () => {
     vi.stubGlobal("window", {});

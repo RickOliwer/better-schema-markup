@@ -16,23 +16,46 @@ export function Field({ className, children }: ChildrenProps) {
   return <div className={cn("bsm:grid bsm:content-start bsm:gap-2", className)}>{children}</div>;
 }
 
-export function FieldLabel({ htmlFor, className, children }: ChildrenProps & { readonly htmlFor?: string }) {
+export function FieldLabel({
+  htmlFor,
+  className,
+  children,
+}: ChildrenProps & { readonly htmlFor?: string }) {
   return (
-    <label htmlFor={htmlFor} className={cn("bsm:flex bsm:items-center bsm:gap-1 bsm:text-sm bsm:leading-snug bsm:font-medium bsm:text-foreground", className)}>
+    <label
+      htmlFor={htmlFor}
+      className={cn(
+        "bsm:flex bsm:items-center bsm:gap-1 bsm:text-sm bsm:leading-snug bsm:font-medium bsm:text-foreground",
+        className,
+      )}
+    >
       {children}
     </label>
   );
 }
 
-export function FieldDescription({ id, className, children }: ChildrenProps & { readonly id?: string }) {
+export function FieldDescription({
+  id,
+  className,
+  children,
+}: ChildrenProps & { readonly id?: string }) {
   return (
-    <p id={id} className={cn("bsm:m-0 bsm:text-sm bsm:leading-normal bsm:text-muted-foreground", className)}>
+    <p
+      id={id}
+      className={cn("bsm:m-0 bsm:text-sm bsm:leading-normal bsm:text-muted-foreground", className)}
+    >
       {children}
     </p>
   );
 }
 
-export function FieldError({ id, children }: { readonly id?: string; readonly children: ReactNode }) {
+export function FieldError({
+  id,
+  children,
+}: {
+  readonly id?: string;
+  readonly children: ReactNode;
+}) {
   return (
     <p id={id} role="alert" className="bsm:m-0 bsm:text-sm bsm:leading-normal bsm:text-destructive">
       {children}
@@ -69,8 +92,12 @@ export function FieldSet({ title, description, children }: FieldSetProps) {
   return (
     <section className="bsm:grid bsm:gap-6">
       <div className="bsm:grid bsm:gap-1">
-        <h2 className="bsm:m-0 bsm:flex bsm:items-center bsm:gap-1 bsm:p-0 bsm:text-base bsm:leading-snug bsm:font-semibold bsm:text-foreground">{title}</h2>
-        {description ? <p className="bsm:m-0 bsm:text-sm bsm:text-muted-foreground">{description}</p> : null}
+        <h2 className="bsm:m-0 bsm:flex bsm:items-center bsm:gap-1 bsm:p-0 bsm:text-base bsm:leading-snug bsm:font-semibold bsm:text-foreground">
+          {title}
+        </h2>
+        {description ? (
+          <p className="bsm:m-0 bsm:text-sm bsm:text-muted-foreground">{description}</p>
+        ) : null}
       </div>
       {children}
     </section>

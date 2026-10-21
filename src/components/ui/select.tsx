@@ -17,7 +17,14 @@ interface SelectProps<Value extends string> {
 }
 
 /** A single-choice dropdown built on Base UI's Select, styled like shadcn/ui. */
-export function Select<Value extends string>({ id, value, options, onChange, disabled, "aria-describedby": describedBy }: SelectProps<Value>) {
+export function Select<Value extends string>({
+  id,
+  value,
+  options,
+  onChange,
+  disabled,
+  "aria-describedby": describedBy,
+}: SelectProps<Value>) {
   return (
     <BaseSelect.Root
       items={options.map((option) => ({ label: option.label, value: option.value }))}
@@ -38,13 +45,25 @@ export function Select<Value extends string>({ id, value, options, onChange, dis
       >
         <BaseSelect.Value className="bsm:truncate" />
         <BaseSelect.Icon className="bsm:flex bsm:text-muted-foreground">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            aria-hidden="true"
+          >
             <path d="m4 6 4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </BaseSelect.Icon>
       </BaseSelect.Trigger>
       <BaseSelect.Portal>
-        <BaseSelect.Positioner className="bsm:z-[100000] bsm:outline-none" sideOffset={4} alignItemWithTrigger={false}>
+        <BaseSelect.Positioner
+          className="bsm:z-[100000] bsm:outline-none"
+          sideOffset={4}
+          alignItemWithTrigger={false}
+        >
           <BaseSelect.Popup
             className={cn(
               "bsm:min-w-[var(--anchor-width)] bsm:origin-[var(--transform-origin)] bsm:rounded-md bsm:border bsm:border-solid bsm:border-border bsm:bg-background bsm:p-1 bsm:text-foreground bsm:shadow-md bsm:outline-none",
@@ -59,11 +78,21 @@ export function Select<Value extends string>({ id, value, options, onChange, dis
                   className="bsm:grid bsm:cursor-pointer bsm:grid-cols-[1rem_1fr] bsm:items-center bsm:gap-2 bsm:rounded-sm bsm:py-1.5 bsm:pr-3 bsm:pl-2 bsm:text-sm bsm:outline-none bsm:select-none bsm:data-highlighted:bg-accent bsm:data-highlighted:text-accent-foreground"
                 >
                   <BaseSelect.ItemIndicator className="bsm:col-start-1 bsm:flex">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      aria-hidden="true"
+                    >
                       <path d="m3.5 8.5 3 3 6-7" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </BaseSelect.ItemIndicator>
-                  <BaseSelect.ItemText className="bsm:col-start-2">{option.label}</BaseSelect.ItemText>
+                  <BaseSelect.ItemText className="bsm:col-start-2">
+                    {option.label}
+                  </BaseSelect.ItemText>
                 </BaseSelect.Item>
               ))}
             </BaseSelect.List>

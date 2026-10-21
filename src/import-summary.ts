@@ -30,13 +30,23 @@ export function summarizeImport(totals: ImportTotals, dryRun: boolean, source: s
       dryRun
         ? sprintf(
             /* translators: 1: number of posts that would be imported, 2: number of posts checked. */
-            _n("Preview: %1$d of %2$d post would be imported.", "Preview: %1$d of %2$d posts would be imported.", checked, "better-schema-markup"),
+            _n(
+              "Preview: %1$d of %2$d post would be imported.",
+              "Preview: %1$d of %2$d posts would be imported.",
+              checked,
+              "better-schema-markup",
+            ),
             totals.imported,
             checked,
           )
         : sprintf(
             /* translators: 1: number of posts imported, 2: number of posts checked. */
-            _n("Imported %1$d of %2$d post.", "Imported %1$d of %2$d posts.", checked, "better-schema-markup"),
+            _n(
+              "Imported %1$d of %2$d post.",
+              "Imported %1$d of %2$d posts.",
+              checked,
+              "better-schema-markup",
+            ),
             totals.imported,
             checked,
           ),
@@ -51,7 +61,9 @@ export function summarizeImport(totals: ImportTotals, dryRun: boolean, source: s
           checked,
           "better-schema-markup",
         ),
-        dryRun ? __("Preview: nothing to import.", "better-schema-markup") : __("Nothing was imported.", "better-schema-markup"),
+        dryRun
+          ? __("Preview: nothing to import.", "better-schema-markup")
+          : __("Nothing was imported.", "better-schema-markup"),
         checked,
         source,
       ),
@@ -92,13 +104,22 @@ export function summarizeImport(totals: ImportTotals, dryRun: boolean, source: s
     parts.push(
       sprintf(
         /* translators: %d: number of posts that failed. */
-        _n("%d post failed. See the details below.", "%d posts failed. See the details below.", totals.failed, "better-schema-markup"),
+        _n(
+          "%d post failed. See the details below.",
+          "%d posts failed. See the details below.",
+          totals.failed,
+          "better-schema-markup",
+        ),
         totals.failed,
       ),
     );
   }
 
-  parts.push(dryRun ? __("Nothing was saved.", "better-schema-markup") : __("Your Yoast and Rank Math data was not changed.", "better-schema-markup"));
+  parts.push(
+    dryRun
+      ? __("Nothing was saved.", "better-schema-markup")
+      : __("Your Yoast and Rank Math data was not changed.", "better-schema-markup"),
+  );
 
   return parts.join(" ");
 }

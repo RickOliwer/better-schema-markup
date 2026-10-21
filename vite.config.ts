@@ -55,10 +55,12 @@ function requireExternalsAsGlobals(): Plugin {
   return {
     name: "require-externals-as-globals",
     renderChunk(code) {
-      const replaced = code.replace(/\brequire\((["'])([^"']+)\1\)/g, (call: string, _quote: string, id: string) =>
-        // Read the global through `window`: the call is often `var React = require("react")`,
-        // where a bare `React` would be the local variable, not the global.
-        isExternal(id) ? `window.${toGlobal(id)}` : call,
+      const replaced = code.replace(
+        /\brequire\((["'])([^"']+)\1\)/g,
+        (call: string, _quote: string, id: string) =>
+          // Read the global through `window`: the call is often `var React = require("react")`,
+          // where a bare `React` would be the local variable, not the global.
+          isExternal(id) ? `window.${toGlobal(id)}` : call,
       );
       return replaced === code ? null : { code: replaced, map: null };
     },
@@ -67,7 +69,11 @@ function requireExternalsAsGlobals(): Plugin {
 
 // Each admin screen gets its own script, so the block editor never loads the
 // settings page's Base UI and Tailwind code. IIFE builds allow one entry each.
-function adminScript(entry: string, fileName: string, emptyOutDir: boolean): BuildEnvironmentOptions {
+function adminScript(
+  entry: string,
+  fileName: string,
+  emptyOutDir: boolean,
+): BuildEnvironmentOptions {
   return {
     outDir: "build",
     minify: true,
@@ -91,6 +97,9 @@ export default defineConfig({
   // Library builds leave `process.env.NODE_ENV` from dependencies untouched, and
   // browsers have no `process`. Replace it so React libraries use production code.
   define: { "process.env.NODE_ENV": JSON.stringify("production") },
+  fmt: {
+    ignorePatterns: ["build/**"],
+  },
   lint: {
     ignorePatterns: ["build/**"],
     options: {

@@ -8,10 +8,25 @@ const CONTROL =
   "bsm:placeholder:text-muted-foreground bsm:focus-visible:border-ring bsm:focus-visible:ring-[3px] bsm:focus-visible:ring-ring/50 " +
   "bsm:aria-invalid:border-destructive bsm:aria-invalid:ring-destructive/20 bsm:disabled:cursor-not-allowed bsm:disabled:opacity-50";
 
-export function Input({ className, type = "text", ...props }: InputHTMLAttributes<HTMLInputElement>) {
-  return <input type={type} className={cn(CONTROL, "bsm:h-9 bsm:min-h-0 bsm:py-1 bsm:leading-normal", className)} {...props} />;
+export function Input({
+  className,
+  type = "text",
+  ...props
+}: InputHTMLAttributes<HTMLInputElement>) {
+  return (
+    <input
+      type={type}
+      className={cn(CONTROL, "bsm:h-9 bsm:min-h-0 bsm:py-1 bsm:leading-normal", className)}
+      {...props}
+    />
+  );
 }
 
 export function Textarea({ className, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return <textarea className={cn(CONTROL, "bsm:min-h-16 bsm:py-2 bsm:leading-normal", className)} {...props} />;
+  return (
+    <textarea
+      className={cn(CONTROL, "bsm:min-h-16 bsm:py-2 bsm:leading-normal", className)}
+      {...props}
+    />
+  );
 }

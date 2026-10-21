@@ -36,7 +36,8 @@ export function readSettingsConfig(value: unknown): SettingsConfig | null {
     typeof value.showSetup !== "boolean" ||
     typeof value.logoUrl !== "string" ||
     typeof value.siteName !== "string"
-  ) return null;
+  )
+    return null;
 
   const postTypes: PostTypeChoice[] = [];
   for (const item of value.postTypes) {
@@ -66,7 +67,8 @@ export function readPluginSettings(value: unknown, config: SettingsConfig): Plug
     (identity.logo as number) < 0 ||
     !Array.isArray(identity.same_as) ||
     !identity.same_as.every((url: unknown) => typeof url === "string")
-  ) return null;
+  )
+    return null;
 
   const rawDefaults = value.better_schema_type_defaults;
   if (!isRecord(rawDefaults)) return null;
@@ -76,7 +78,9 @@ export function readPluginSettings(value: unknown, config: SettingsConfig): Plug
     const schemaType = rawDefaults[postType.name];
     defaults[postType.name] = isSchemaType(schemaType)
       ? schemaType
-      : postType.name === "post" ? "Article" : "WebPage";
+      : postType.name === "post"
+        ? "Article"
+        : "WebPage";
   }
 
   return {
@@ -92,14 +96,19 @@ export function readPluginSettings(value: unknown, config: SettingsConfig): Plug
 }
 
 export function parseSocialProfiles(value: string): string[] {
-  return value.split(/\r?\n/).map((url) => url.trim()).filter(Boolean);
+  return value
+    .split(/\r?\n/)
+    .map((url) => url.trim())
+    .filter(Boolean);
 }
 
 /** The 1-based numbers of the lines that are filled in but are not full http or https URLs. */
 export function invalidSocialProfileLines(value: string): number[] {
   return value
     .split(/\r?\n/)
-    .flatMap((line, index) => (line.trim() !== "" && invalidSocialProfiles([line.trim()]).length > 0 ? [index + 1] : []));
+    .flatMap((line, index) =>
+      line.trim() !== "" && invalidSocialProfiles([line.trim()]).length > 0 ? [index + 1] : [],
+    );
 }
 
 export function invalidSocialProfiles(urls: readonly string[]): string[] {
@@ -117,8 +126,14 @@ export function isFrontendUrl(value: string): boolean {
   if (!value.trim()) return true;
   try {
     const url = new URL(value);
-    return ["http:", "https:"].includes(url.protocol) && !!url.hostname &&
-      !url.username && !url.password && !value.includes("?") && !value.includes("#");
+    return (
+      ["http:", "https:"].includes(url.protocol) &&
+      !!url.hostname &&
+      !url.username &&
+      !url.password &&
+      !value.includes("?") &&
+      !value.includes("#")
+    );
   } catch {
     return false;
   }

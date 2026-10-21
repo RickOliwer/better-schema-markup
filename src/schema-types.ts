@@ -14,12 +14,18 @@ export const SCHEMA_TYPES = [
   {
     label: __("Regular page", "better-schema-markup"),
     value: "WebPage",
-    description: __("A page that is not an article, such as About or Contact.", "better-schema-markup"),
+    description: __(
+      "A page that is not an article, such as About or Contact.",
+      "better-schema-markup",
+    ),
   },
   {
     label: __("Event", "better-schema-markup"),
     value: "Event",
-    description: __("A concert, class, meetup or other event with a date and place.", "better-schema-markup"),
+    description: __(
+      "A concert, class, meetup or other event with a date and place.",
+      "better-schema-markup",
+    ),
   },
   {
     label: __("Recipe", "better-schema-markup"),

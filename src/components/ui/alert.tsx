@@ -30,7 +30,15 @@ export function Alert({ tone = "info", onDismiss, children }: AlertProps) {
           aria-label={__("Dismiss", "better-schema-markup")}
           className="bsm:-my-1 bsm:-mr-2 bsm:inline-flex bsm:size-7 bsm:cursor-pointer bsm:items-center bsm:justify-center bsm:rounded-md bsm:border-0 bsm:bg-transparent bsm:p-0 bsm:text-current bsm:hover:bg-black/5"
         >
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            aria-hidden="true"
+          >
             <path d="m4 4 8 8M12 4l-8 8" strokeLinecap="round" />
           </svg>
         </button>
