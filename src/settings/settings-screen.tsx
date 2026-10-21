@@ -281,7 +281,7 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
   const postTypeOptions = SCHEMA_TYPES.map(({ label, value }) => ({ label, value }));
 
   return (
-    <FormRoot className="bsm:mt-4 bsm:max-w-2xl bsm:rounded-xl bsm:border bsm:border-solid bsm:border-border bsm:bg-card bsm:p-6 bsm:shadow-xs bsm:sm:p-8">
+    <FormRoot className="bsm:mt-4 bsm:rounded-xl bsm:border bsm:border-solid bsm:border-border bsm:bg-card bsm:p-6 bsm:shadow-xs bsm:sm:p-8">
       <div className="bsm:grid bsm:gap-8">
         <p className="bsm:m-0 bsm:text-sm bsm:text-muted-foreground">
           {showSetup
@@ -301,167 +301,172 @@ export function SettingsScreen({ config }: SettingsScreenProps) {
           </Alert>
         ) : null}
 
-        <FieldSet
-          title={__("Site identity", "better-schema-markup")}
-          description={__(
-            "Who is behind this site. Search engines show this as the publisher.",
-            "better-schema-markup",
-          )}
-        >
-          <FieldGroup>
-            <SelectField
-              label={__("Who publishes this site?", "better-schema-markup")}
-              tip={__(
-                "Choose Organization for a company, club or brand. Choose Person if the site belongs to you as an individual, such as a personal blog or portfolio. This sets the publisher in your schema.",
-                "better-schema-markup",
-              )}
-              value={identity.type}
-              options={[
-                { label: __("Organization", "better-schema-markup"), value: "Organization" },
-                { label: __("Person", "better-schema-markup"), value: "Person" },
-              ]}
-              onChange={(type) => setIdentity({ ...identity, type })}
-            />
-            <TextField
-              label={__("Name", "better-schema-markup")}
-              help={__("Leave empty to use the site title.", "better-schema-markup")}
-              placeholder={config.siteName}
-              value={identity.name}
-              onChange={(name) => setIdentity({ ...identity, name })}
-            />
-            <LogoPicker
-              id={identity.logo}
-              url={logoUrl}
-              onChange={(logo, url) => {
-                setIdentity({ ...identity, logo });
-                setLogoUrl(url);
-              }}
-            />
-            {!showSetup ? (
-              <TextareaField
-                label={__("Social profiles", "better-schema-markup")}
-                tip={__(
-                  "Links to your official profiles, such as Facebook, LinkedIn, Instagram, YouTube or Wikipedia. Search engines use them to connect these accounts to your site. Optional.",
-                  "better-schema-markup",
-                )}
-                help={__("One full URL per line, starting with https://.", "better-schema-markup")}
-                error={
-                  socialProblems.length > 0
-                    ? sprintf(
-                        /* translators: %s: comma-separated line numbers. */
-                        _n(
-                          "Line %s is not a full URL. Start it with https://.",
-                          "Lines %s are not full URLs. Start them with https://.",
-                          socialProblems.length,
-                          "better-schema-markup",
-                        ),
-                        socialProblems.join(", "),
-                      )
-                    : undefined
-                }
-                placeholder={
-                  "https://www.facebook.com/yourpage\nhttps://www.linkedin.com/company/yourcompany\nhttps://www.instagram.com/yourhandle"
-                }
-                rows={4}
-                value={socialText}
-                onChange={setSocialText}
-              />
-            ) : null}
-          </FieldGroup>
-        </FieldSet>
-
-        {!showSetup ? (
-          <>
-            <FieldSeparator />
-            <FieldSet title={__("Video metadata", "better-schema-markup")}>
-              <SwitchField
-                label={__("Allow Vimeo metadata requests", "better-schema-markup")}
-                checked={vimeoEnabled}
-                onChange={setVimeoEnabled}
-                help={__(
-                  "When enabled and saved, sends public Vimeo video URLs found in your posts to Vimeo to retrieve titles and thumbnails for schema. Vimeo also receives your server’s IP address. Off by default; turning it off stops requests and omits generated Vimeo schema, including cached metadata. YouTube schema is unaffected.",
-                  "better-schema-markup",
-                )}
-              />
-              <FieldDescription>
-                <a href="https://vimeo.com/terms" target="_blank" rel="noreferrer">
-                  {__("Vimeo terms", "better-schema-markup")}
-                </a>
-                {" · "}
-                <a href="https://vimeo.com/privacy" target="_blank" rel="noreferrer">
-                  {__("Vimeo privacy policy", "better-schema-markup")}
-                </a>
-              </FieldDescription>
-            </FieldSet>
-            <FieldSeparator />
+        <div className="bsm:grid bsm:items-start bsm:gap-8 bsm:@4xl:grid-cols-2">
+          <div className="bsm:@container bsm:grid bsm:min-w-0 bsm:content-start bsm:gap-8">
             <FieldSet
-              title={__("Headless sites", "better-schema-markup")}
+              title={__("Site identity", "better-schema-markup")}
               description={__(
-                "Only needed if visitors see a different address than WordPress.",
+                "Who is behind this site. Search engines show this as the publisher.",
                 "better-schema-markup",
               )}
             >
-              <TextField
-                label={__("Frontend URL", "better-schema-markup")}
-                tip={__(
-                  "Enter the public address, for example https://example.com. Schema URLs, including media, then use it instead of the WordPress address.",
-                  "better-schema-markup",
-                )}
-                help={__(
-                  "Leave empty if visitors use the WordPress address.",
-                  "better-schema-markup",
-                )}
-                error={
-                  isFrontendUrl(frontendUrl)
-                    ? undefined
-                    : __(
-                        "Enter a full URL starting with https://, without a query or #fragment.",
-                        "better-schema-markup",
-                      )
-                }
-                type="url"
-                placeholder="https://example.com"
-                value={frontendUrl}
-                onChange={setFrontendUrl}
-              />
+              <FieldGroup>
+                <SelectField
+                  label={__("Who publishes this site?", "better-schema-markup")}
+                  tip={__(
+                    "Choose Organization for a company, club or brand. Choose Person if the site belongs to you as an individual, such as a personal blog or portfolio. This sets the publisher in your schema.",
+                    "better-schema-markup",
+                  )}
+                  value={identity.type}
+                  options={[
+                    { label: __("Organization", "better-schema-markup"), value: "Organization" },
+                    { label: __("Person", "better-schema-markup"), value: "Person" },
+                  ]}
+                  onChange={(type) => setIdentity({ ...identity, type })}
+                />
+                <TextField
+                  label={__("Name", "better-schema-markup")}
+                  help={__("Leave empty to use the site title.", "better-schema-markup")}
+                  placeholder={config.siteName}
+                  value={identity.name}
+                  onChange={(name) => setIdentity({ ...identity, name })}
+                />
+                <LogoPicker
+                  id={identity.logo}
+                  url={logoUrl}
+                  onChange={(logo, url) => {
+                    setIdentity({ ...identity, logo });
+                    setLogoUrl(url);
+                  }}
+                />
+                {!showSetup ? (
+                  <TextareaField
+                    label={__("Social profiles", "better-schema-markup")}
+                    tip={__(
+                      "Links to your official profiles, such as Facebook, LinkedIn, Instagram, YouTube or Wikipedia. Search engines use them to connect these accounts to your site. Optional.",
+                      "better-schema-markup",
+                    )}
+                    help={__(
+                      "One full URL per line, starting with https://.",
+                      "better-schema-markup",
+                    )}
+                    error={
+                      socialProblems.length > 0
+                        ? sprintf(
+                            /* translators: %s: comma-separated line numbers. */
+                            _n(
+                              "Line %s is not a full URL. Start it with https://.",
+                              "Lines %s are not full URLs. Start them with https://.",
+                              socialProblems.length,
+                              "better-schema-markup",
+                            ),
+                            socialProblems.join(", "),
+                          )
+                        : undefined
+                    }
+                    placeholder={
+                      "https://www.facebook.com/yourpage\nhttps://www.linkedin.com/company/yourcompany\nhttps://www.instagram.com/yourhandle"
+                    }
+                    rows={4}
+                    value={socialText}
+                    onChange={setSocialText}
+                  />
+                ) : null}
+              </FieldGroup>
             </FieldSet>
 
-            {identity.type === "Organization" ? (
+            {!showSetup && identity.type === "Organization" ? (
               <>
                 <FieldSeparator />
                 <BusinessFields value={business} onChange={setBusiness} />
               </>
             ) : null}
-
-            <FieldSeparator />
-            <SeoSettings />
-
-            <FieldSeparator />
-            <FieldSet
-              title={__("Default schema by post type", "better-schema-markup")}
-              description={__(
-                "An individual post’s schema choice takes precedence over its post type default.",
-                "better-schema-markup",
-              )}
-            >
-              <FieldRow>
-                {config.postTypes.map((postType) => (
-                  <SelectField
-                    key={postType.name}
-                    label={postType.label}
-                    value={
-                      defaults[postType.name] ?? (postType.name === "post" ? "Article" : "WebPage")
-                    }
-                    options={postTypeOptions}
-                    onChange={(value) => {
-                      if (isSchemaType(value)) setDefaults({ ...defaults, [postType.name]: value });
-                    }}
-                  />
-                ))}
-              </FieldRow>
-            </FieldSet>
-          </>
-        ) : null}
+          </div>
+          {!showSetup ? (
+            <div className="bsm:@container bsm:grid bsm:min-w-0 bsm:content-start bsm:gap-8">
+              <FieldSet
+                title={__("Default schema by post type", "better-schema-markup")}
+                description={__(
+                  "An individual post’s schema choice takes precedence over its post type default.",
+                  "better-schema-markup",
+                )}
+              >
+                <FieldRow>
+                  {config.postTypes.map((postType) => (
+                    <SelectField
+                      key={postType.name}
+                      label={postType.label}
+                      value={
+                        defaults[postType.name] ??
+                        (postType.name === "post" ? "Article" : "WebPage")
+                      }
+                      options={postTypeOptions}
+                      onChange={(value) => {
+                        if (isSchemaType(value))
+                          setDefaults({ ...defaults, [postType.name]: value });
+                      }}
+                    />
+                  ))}
+                </FieldRow>
+              </FieldSet>
+              <FieldSeparator />
+              <FieldSet title={__("Video metadata", "better-schema-markup")}>
+                <SwitchField
+                  label={__("Allow Vimeo metadata requests", "better-schema-markup")}
+                  checked={vimeoEnabled}
+                  onChange={setVimeoEnabled}
+                  help={__(
+                    "When enabled and saved, sends public Vimeo video URLs found in your posts to Vimeo to retrieve titles and thumbnails for schema. Vimeo also receives your server’s IP address. Off by default; turning it off stops requests and omits generated Vimeo schema, including cached metadata. YouTube schema is unaffected.",
+                    "better-schema-markup",
+                  )}
+                />
+                <FieldDescription>
+                  <a href="https://vimeo.com/terms" target="_blank" rel="noreferrer">
+                    {__("Vimeo terms", "better-schema-markup")}
+                  </a>
+                  {" · "}
+                  <a href="https://vimeo.com/privacy" target="_blank" rel="noreferrer">
+                    {__("Vimeo privacy policy", "better-schema-markup")}
+                  </a>
+                </FieldDescription>
+              </FieldSet>
+              <FieldSeparator />
+              <FieldSet
+                title={__("Headless sites", "better-schema-markup")}
+                description={__(
+                  "Only needed if visitors see a different address than WordPress.",
+                  "better-schema-markup",
+                )}
+              >
+                <TextField
+                  label={__("Frontend URL", "better-schema-markup")}
+                  tip={__(
+                    "Enter the public address, for example https://example.com. Schema URLs, including media, then use it instead of the WordPress address.",
+                    "better-schema-markup",
+                  )}
+                  help={__(
+                    "Leave empty if visitors use the WordPress address.",
+                    "better-schema-markup",
+                  )}
+                  error={
+                    isFrontendUrl(frontendUrl)
+                      ? undefined
+                      : __(
+                          "Enter a full URL starting with https://, without a query or #fragment.",
+                          "better-schema-markup",
+                        )
+                  }
+                  type="url"
+                  placeholder="https://example.com"
+                  value={frontendUrl}
+                  onChange={setFrontendUrl}
+                />
+              </FieldSet>
+              <FieldSeparator />
+              <SeoSettings />
+            </div>
+          ) : null}
+        </div>
 
         <FieldSeparator />
         <div className="bsm:flex bsm:gap-2">
