@@ -59,6 +59,11 @@ function better_schema_find_videos( string $content ): array {
  * @return array{title: string, thumbnail: string}|null Null when Vimeo gave no usable answer.
  */
 function better_schema_vimeo_details( string $id ): ?array {
+	// Consent applies to cached metadata too, and is shared by every graph consumer.
+	if ( ! in_array( get_option( 'better_schema_vimeo_enabled', false ), array( true, 1, '1' ), true ) ) {
+		return null;
+	}
+
 	$key    = 'better_schema_vimeo_' . $id;
 	$cached = get_transient( $key );
 

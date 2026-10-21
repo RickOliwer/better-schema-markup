@@ -1,6 +1,36 @@
 <?php
 /** Schema takeover contracts, independent of optional SEO plugin installation. */
 class CompatibilityTest extends WP_UnitTestCase {
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_notice_is_limited_to_settings_and_administrators() {
+		if ( ! defined( 'WPSEO_VERSION' ) ) {
+			define( 'WPSEO_VERSION', 'test' );
+		}
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		foreach ( array( 'dashboard', 'edit-post', 'plugins' ) as $screen ) {
+			set_current_screen( $screen );
+			ob_start();
+			better_schema_takeover_notice();
+			$this->assertSame( '', ob_get_clean() );
+		}
+		set_current_screen( 'settings_page_better-schema-markup' );
+		ob_start();
+		better_schema_takeover_notice();
+		$this->assertStringContainsString( 'now handles your schema', ob_get_clean() );
+		update_option( 'better_schema_takeover', false );
+		ob_start();
+		better_schema_takeover_notice();
+		$this->assertStringContainsString( 'Your SEO plugin handles frontend schema', ob_get_clean() );
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'editor' ) ) );
+		ob_start();
+		better_schema_takeover_notice();
+		$this->assertSame( '', ob_get_clean() );
+		set_current_screen( 'front' );
+	}
+
 	public function test_takeover_only_changes_schema_filters() {
 		$schema = array( 'WebSite' => array( '@type' => 'WebSite' ) );
 		$this->assertSame( array(), apply_filters( 'wpseo_json_ld_output', $schema ) );

@@ -7,6 +7,31 @@ class VideoPieceTest extends WP_UnitTestCase {
 
 	use GraphAssertions;
 
+	public function test_vimeo_requires_consent_even_with_cached_details() {
+		$calls = 0;
+		add_filter( 'pre_http_request', function () use ( &$calls ) {
+			++$calls;
+			return new WP_Error( 'unexpected', 'No request should be made.' );
+		} );
+		$post = self::factory()->post->create_and_get( array( 'post_content' => 'https://vimeo.com/123456789' ) );
+		$context = better_schema_post_context( $post );
+		$this->assertSame( array(), better_schema_piece_video( $context ) );
+		set_transient( 'better_schema_vimeo_123456789', array( 'title' => 'Cached', 'thumbnail' => 'https://example.com/video.jpg' ), 60 );
+		$this->assertNull( better_schema_vimeo_details( '123456789' ) );
+		update_option( 'better_schema_vimeo_enabled', true );
+		$this->assertCount( 1, better_schema_piece_video( $context ) );
+		update_option( 'better_schema_vimeo_enabled', false );
+		$this->assertSame( array(), better_schema_piece_video( $context ) );
+		foreach ( array( 'yes', 'false', array( true ), 2 ) as $invalid ) {
+			// Simulate malformed legacy data without the registered sanitizer normalizing it.
+			$filter = static fn () => $invalid;
+			add_filter( 'pre_option_better_schema_vimeo_enabled', $filter );
+			$this->assertNull( better_schema_vimeo_details( '123456789' ) );
+			remove_filter( 'pre_option_better_schema_vimeo_enabled', $filter );
+		}
+		$this->assertSame( 0, $calls );
+	}
+
 	public function test_finds_youtube_urls_in_every_common_form() {
 		$content = implode(
 			"\n",
@@ -61,6 +86,7 @@ class VideoPieceTest extends WP_UnitTestCase {
 	}
 
 	public function test_vimeo_details_come_from_oembed_and_are_cached() {
+		update_option( 'better_schema_vimeo_enabled', true );
 		$calls = 0;
 		add_filter(
 			'pre_http_request',
@@ -86,6 +112,7 @@ class VideoPieceTest extends WP_UnitTestCase {
 	}
 
 	public function test_a_vimeo_video_without_a_thumbnail_is_left_out() {
+		update_option( 'better_schema_vimeo_enabled', true );
 		add_filter( 'pre_http_request', fn () => new WP_Error( 'down', 'Offline' ) );
 		$post_id = self::factory()->post->create( array( 'post_content' => 'https://vimeo.com/123456789' ) );
 

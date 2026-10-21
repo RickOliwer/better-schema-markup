@@ -44,10 +44,27 @@ describe("settings data from WordPress", () => {
         config,
       ),
     ).toEqual({
+      vimeoEnabled: false,
       frontendUrl: "",
       identity: { type: "Person", name: "Ada", logo: 7, same_as: ["https://example.com"] },
       defaults: { post: "BlogPosting", book: "WebPage" },
     });
+  });
+
+  it("only enables Vimeo when the REST setting is explicitly true", () => {
+    const valid = {
+      better_schema_frontend_url: "",
+      better_schema_identity: { type: "Organization", name: "Acme", logo: 0, same_as: [] },
+      better_schema_type_defaults: {},
+    };
+    for (const value of [undefined, null, false, "true", "false", 1, {}, []]) {
+      expect(
+        readPluginSettings({ ...valid, better_schema_vimeo_enabled: value }, config)?.vimeoEnabled,
+      ).toBe(false);
+    }
+    expect(
+      readPluginSettings({ ...valid, better_schema_vimeo_enabled: true }, config)?.vimeoEnabled,
+    ).toBe(true);
   });
 
   it("rejects invalid identity settings from the REST API", () => {
