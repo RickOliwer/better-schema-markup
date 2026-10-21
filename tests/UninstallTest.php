@@ -1,6 +1,6 @@
 <?php
 /** Uninstall deletes only owned data and preserves content. */
-require_once dirname( __DIR__ ) . '/includes/uninstall-data.php';
+require_once dirname( __DIR__ ) . '/includes/lifecycle/uninstall-data.php';
 class UninstallTest extends WP_UnitTestCase {
 	public function test_network_cleanup_restores_the_current_blog() {
 		$original = get_current_blog_id();

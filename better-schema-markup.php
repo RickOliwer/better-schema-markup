@@ -20,39 +20,45 @@ defined( 'ABSPATH' ) || exit;
 define( 'BETTER_SCHEMA_PATH', plugin_dir_path( __FILE__ ) );
 define( 'BETTER_SCHEMA_URL', plugin_dir_url( __FILE__ ) );
 
-require_once BETTER_SCHEMA_PATH . 'includes/helpers.php';
-require_once BETTER_SCHEMA_PATH . 'includes/meta.php';
-require_once BETTER_SCHEMA_PATH . 'includes/post-details.php';
-require_once BETTER_SCHEMA_PATH . 'includes/admin-api.php';
-require_once BETTER_SCHEMA_PATH . 'includes/editor.php';
-require_once BETTER_SCHEMA_PATH . 'includes/classic-editor.php';
-require_once BETTER_SCHEMA_PATH . 'includes/context.php';
-require_once BETTER_SCHEMA_PATH . 'includes/identity.php';
-require_once BETTER_SCHEMA_PATH . 'includes/business.php';
-require_once BETTER_SCHEMA_PATH . 'includes/settings.php';
-require_once BETTER_SCHEMA_PATH . 'includes/settings-page.php';
-require_once BETTER_SCHEMA_PATH . 'includes/pieces/website.php';
-require_once BETTER_SCHEMA_PATH . 'includes/pieces/identity.php';
-require_once BETTER_SCHEMA_PATH . 'includes/pieces/webpage.php';
-require_once BETTER_SCHEMA_PATH . 'includes/pieces/breadcrumb.php';
-require_once BETTER_SCHEMA_PATH . 'includes/pieces/article.php';
-require_once BETTER_SCHEMA_PATH . 'includes/pieces/author.php';
-require_once BETTER_SCHEMA_PATH . 'includes/pieces/product.php';
-require_once BETTER_SCHEMA_PATH . 'includes/pieces/event.php';
-require_once BETTER_SCHEMA_PATH . 'includes/pieces/recipe.php';
-require_once BETTER_SCHEMA_PATH . 'includes/pieces/faq.php';
-require_once BETTER_SCHEMA_PATH . 'includes/pieces/video.php';
-require_once BETTER_SCHEMA_PATH . 'includes/pieces/custom.php';
-require_once BETTER_SCHEMA_PATH . 'includes/custom-merge.php';
-require_once BETTER_SCHEMA_PATH . 'includes/graph.php';
-require_once BETTER_SCHEMA_PATH . 'includes/render.php';
-require_once BETTER_SCHEMA_PATH . 'includes/output.php';
-require_once BETTER_SCHEMA_PATH . 'includes/validation.php';
-require_once BETTER_SCHEMA_PATH . 'includes/preview.php';
+// Shared helpers and post data.
+require_once BETTER_SCHEMA_PATH . 'includes/support/helpers.php';
+require_once BETTER_SCHEMA_PATH . 'includes/data/meta.php';
+require_once BETTER_SCHEMA_PATH . 'includes/data/post-details.php';
+// Editor assets and classic editor saving.
+require_once BETTER_SCHEMA_PATH . 'includes/admin/admin-api.php';
+require_once BETTER_SCHEMA_PATH . 'includes/admin/block-editor.php';
+require_once BETTER_SCHEMA_PATH . 'includes/admin/classic-editor.php';
+// Schema context and site settings.
+require_once BETTER_SCHEMA_PATH . 'includes/schema/context.php';
+require_once BETTER_SCHEMA_PATH . 'includes/data/identity.php';
+require_once BETTER_SCHEMA_PATH . 'includes/data/business.php';
+require_once BETTER_SCHEMA_PATH . 'includes/data/settings.php';
+require_once BETTER_SCHEMA_PATH . 'includes/admin/settings-page.php';
+// Schema entities and graph assembly.
+require_once BETTER_SCHEMA_PATH . 'includes/schema/pieces/website.php';
+require_once BETTER_SCHEMA_PATH . 'includes/schema/pieces/identity.php';
+require_once BETTER_SCHEMA_PATH . 'includes/schema/pieces/webpage.php';
+require_once BETTER_SCHEMA_PATH . 'includes/schema/pieces/breadcrumb.php';
+require_once BETTER_SCHEMA_PATH . 'includes/schema/pieces/article.php';
+require_once BETTER_SCHEMA_PATH . 'includes/schema/pieces/author.php';
+require_once BETTER_SCHEMA_PATH . 'includes/schema/pieces/product.php';
+require_once BETTER_SCHEMA_PATH . 'includes/schema/pieces/event.php';
+require_once BETTER_SCHEMA_PATH . 'includes/schema/pieces/recipe.php';
+require_once BETTER_SCHEMA_PATH . 'includes/schema/pieces/faq.php';
+require_once BETTER_SCHEMA_PATH . 'includes/schema/pieces/video.php';
+require_once BETTER_SCHEMA_PATH . 'includes/schema/pieces/custom.php';
+require_once BETTER_SCHEMA_PATH . 'includes/schema/custom-merge.php';
+require_once BETTER_SCHEMA_PATH . 'includes/schema/graph.php';
+require_once BETTER_SCHEMA_PATH . 'includes/schema/render.php';
+// Frontend output and editor preview.
+require_once BETTER_SCHEMA_PATH . 'includes/integrations/output.php';
+require_once BETTER_SCHEMA_PATH . 'includes/schema/validation.php';
+require_once BETTER_SCHEMA_PATH . 'includes/admin/preview.php';
 
-require_once BETTER_SCHEMA_PATH . 'includes/frontend-url.php';
-require_once BETTER_SCHEMA_PATH . 'includes/graphql.php';
+// Headless output and third-party SEO integrations.
+require_once BETTER_SCHEMA_PATH . 'includes/integrations/frontend-url.php';
+require_once BETTER_SCHEMA_PATH . 'includes/integrations/graphql.php';
 
-require_once BETTER_SCHEMA_PATH . 'includes/compatibility.php';
-require_once BETTER_SCHEMA_PATH . 'includes/import.php';
-require_once BETTER_SCHEMA_PATH . 'includes/import-api.php';
+require_once BETTER_SCHEMA_PATH . 'includes/integrations/compatibility.php';
+require_once BETTER_SCHEMA_PATH . 'includes/integrations/import.php';
+require_once BETTER_SCHEMA_PATH . 'includes/integrations/import-api.php';

@@ -14,11 +14,11 @@ The preview uses the selected type, the custom JSON-LD and its mode from the edi
 
 ## Components and styling
 
-The settings page and the schema fields in both editors share one set of components. There are two scripts: `src/index.tsx` for the block and classic editors, and `src/settings.tsx` for the settings page. Both import `src/admin.css`. They use:
+The settings page and the schema fields in both editors share one set of components. There are two scripts: `src/editor/index.tsx` for the block and classic editors, and `src/settings/index.tsx` for the settings page. Both import `src/styles/admin.css`. They use:
 
 - Base UI (`@base-ui/react`) for interactive controls: Select, Switch, Checkbox, RadioGroup and Popover;
 - Tailwind CSS v4, with every class prefixed `bsm:`, utilities marked `!important` so they beat wp-admin's form styles, and no Preflight reset; and
-- shadcn/ui-style components in `src/components/ui/`, combined into labelled fields in `src/settings-fields.tsx`.
+- shadcn/ui-style components in `src/components/ui/`, combined into labelled fields in `src/components/form-fields.tsx`.
 
 Rules that follow from this setup:
 

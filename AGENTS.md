@@ -53,6 +53,8 @@ When adding a feature or fixing a bug, update all of the following:
 
 Read only the documentation relevant to the current task:
 
+- For source navigation and file placement, read [docs/project-structure.md](docs/project-structure.md).
+
 - Before creating or modifying schema-generation code, read `docs/schema-architecture.md`.
 - Before creating or modifying a schema.org entity or its rules, read `docs/schema-pieces.md`.
 - Before creating or modifying WordPress hooks, post meta, options, REST exposure, frontend output, or WPGraphQL integration, read `docs/wordpress-integration.md`.
